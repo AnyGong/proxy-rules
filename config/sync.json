@@ -5,5 +5,12 @@
   "upstream_branch": "master",
   "upstream_path": "sing-box",
   "upstream_checkout_dir": "upstream/sing-box",
-  "local_output_dir": "sing-box"
+  "local_output_dir": "sing-box",
+
+  "sing_box_bin": "sing-box",
+
+  "cdn_base_url": "https://testingcf.jsdelivr.net/gh",
+  "cdn_ref_mode": "tag",
+  "cdn_branch": "master",
+  "_cdn_note": "cdn_owner/cdn_repo are only used as a fallback — normally the workflow's GITHUB_REPOSITORY env var supplies them automatically. cdn_ref_mode 'tag' links to the exact release tag just created this run; 'branch' always points at cdn_branch (may be briefly stale right after a run, but never 404s)."
 }

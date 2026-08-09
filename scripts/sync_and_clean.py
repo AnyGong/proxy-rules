@@ -18,6 +18,7 @@ is communicated via the `changed` output, not exit code.
 """
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -91,6 +92,31 @@ def clean_ruleset_document(doc: dict, blacklist_lower):
 
 def canonical_dump(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, indent=2) + "\n"
+
+
+def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
+    """Compile a sing-box rule-set JSON file into binary .srs format.
+    Returns (ok: bool, message: str)."""
+    srs_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        result = subprocess.run(
+            [sing_box_bin, "rule-set", "compile", str(json_path), "-o", str(srs_path)],
+            capture_output=True, text=True, timeout=60,
+        )
+    except FileNotFoundError:
+        return False, (f"'{sing_box_bin}' binary not found on PATH — install the sing-box "
+                       f"CLI in the workflow before running this script.")
+    except subprocess.TimeoutExpired:
+        return False, "compile timed out after 60s"
+
+    if result.returncode != 0:
+        return False, (result.stderr or result.stdout or "unknown compile error").strip()
+    return True, "ok"
+
+
+def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) -> str:
+    rel_path = rel_path.replace(os.sep, "/")
+    return f"{base_url.rstrip('/')}/{owner}/{repo}@{ref}/{rel_path}"
 
 
 def main():
@@ -194,6 +220,64 @@ def main():
 
     changed = bool(added or updated or deleted)
 
+    # ---------- Compile every kept JSON file to .srs (sing-box binary format) ----------
+    sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
+    kept_relpaths = sorted(set(added) | set(updated) | set(unchanged))
+    compile_results = []  # (rel_path, ok, message)
+
+    for rel_path in kept_relpaths:
+        json_path = output_dir / rel_path
+        srs_path = json_path.with_suffix(".srs")
+        ok, msg = compile_to_srs(sing_box_bin, json_path, srs_path)
+        compile_results.append((rel_path, ok, msg))
+        if not ok:
+            print(f"  ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
+
+    compile_failures = [r for r in compile_results if not r[1]]
+
+    # ---------- Build jsDelivr access links for every kept file (json + srs) ----------
+    cdn_base_url = sync_cfg.get("cdn_base_url", "https://testingcf.jsdelivr.net/gh")
+    cdn_ref_mode = sync_cfg.get("cdn_ref_mode", "tag")  # "tag" or "branch"
+    tag_name = f"v{run_ts}"
+    if cdn_ref_mode == "branch":
+        cdn_ref = sync_cfg.get("cdn_branch", "master")
+    else:
+        cdn_ref = tag_name
+
+    repo_slug = os.environ.get("GITHUB_REPOSITORY")  # "owner/repo", set by GitHub Actions
+    if repo_slug and "/" in repo_slug:
+        cdn_owner, cdn_repo = repo_slug.split("/", 1)
+    else:
+        cdn_owner = sync_cfg.get("cdn_owner", "YOUR_GITHUB_USERNAME")
+        cdn_repo = sync_cfg.get("cdn_repo", "YOUR_REPO_NAME")
+
+    output_dir_name = sync_cfg["local_output_dir"]
+    access_links = []  # (rel_path_with_ext, url)
+    for rel_path in kept_relpaths:
+        json_rel = f"{output_dir_name}/{rel_path}"
+        access_links.append((json_rel, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, json_rel)))
+        ok = next((r[1] for r in compile_results if r[0] == rel_path), False)
+        if ok:
+            srs_rel = f"{output_dir_name}/{Path(rel_path).with_suffix('.srs')}"
+            access_links.append((srs_rel, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, srs_rel)))
+
+    access_links.sort(key=lambda x: x[0])
+
+    # Single manifest file logging every accessed/generated file's CDN link,
+    # overwritten each run so it always reflects the current file set.
+    links_path = ROOT / "access-links.txt"
+    with open(links_path, "w", encoding="utf-8") as f:
+        f.write(f"# Access links generated {run_ts} UTC\n")
+        f.write(f"# CDN ref: {cdn_ref} (mode={cdn_ref_mode})\n")
+        f.write(f"# Total files: {len(access_links)} "
+                f"({len(kept_relpaths)} json, {len(kept_relpaths) - len(compile_failures)} srs)\n")
+        if compile_failures:
+            f.write(f"# WARNING: {len(compile_failures)} file(s) failed SRS compilation "
+                    f"and have no .srs link below — see logs/sync_{run_ts}.log\n")
+        f.write("#\n")
+        for rel_path, url in access_links:
+            f.write(f"{rel_path}\t{url}\n")
+
     detail_log_path = LOG_DIR / f"sync_{run_ts}.log"
     with open(detail_log_path, "w", encoding="utf-8") as f:
         f.write(f"Sync run: {run_ts} UTC\n")
@@ -204,6 +288,12 @@ def main():
         f.write(f"Files updated: {len(updated)}\n")
         f.write(f"Files deleted: {len(deleted)}\n")
         f.write(f"Files unchanged: {len(unchanged)}\n\n")
+        f.write(f"SRS compiled: {len(kept_relpaths) - len(compile_failures)}/{len(kept_relpaths)}\n")
+        if compile_failures:
+            f.write("SRS compile failures:\n")
+            for rel_path, ok, msg in compile_failures:
+                f.write(f"  - {rel_path}: {msg}\n")
+        f.write("\n")
         f.write("=" * 70 + "\n")
         for r in per_file_reports:
             f.write(f"\nFile: {r['file']}  [{r['action']}]\n")
@@ -224,7 +314,7 @@ def main():
     total_removed_all = sum(sum(r["removed_counts"].values()) for r in per_file_reports)
     total_discarded_rules = sum(r["rules_discarded"] for r in per_file_reports)
     discarded_files = [r["file"] for r in per_file_reports
-                        if r["action"] == "discarded_all_rules_empty_file"]
+                       if r["action"] == "discarded_all_rules_empty_file"]
 
     with open(summary_path, "w", encoding="utf-8") as f:
         f.write(f"## Sync summary — {run_ts} UTC\n\n")
@@ -237,7 +327,12 @@ def main():
         f.write(f"- Files unchanged: {len(unchanged)}\n")
         f.write(f"- Blacklisted entries removed: **{total_removed_all}**\n")
         f.write(f"- Empty rules discarded: **{total_discarded_rules}**\n")
-        f.write(f"- Files dropped entirely (all rules emptied): **{len(discarded_files)}**\n\n")
+        f.write(f"- Files dropped entirely (all rules emptied): **{len(discarded_files)}**\n")
+        f.write(f"- SRS files compiled: **{len(kept_relpaths) - len(compile_failures)}/{len(kept_relpaths)}**\n\n")
+
+        if compile_failures:
+            f.write("### SRS compile failures\n" +
+                    "\n".join(f"- `{r[0]}`: {r[2]}" for r in compile_failures) + "\n\n")
 
         if added:
             f.write("### Added\n" + "\n".join(f"- `{p}`" for p in sorted(added)) + "\n\n")
@@ -247,10 +342,12 @@ def main():
             f.write("### Deleted\n" + "\n".join(f"- `{p}`" for p in sorted(deleted)) + "\n\n")
         if discarded_files:
             f.write("### Dropped (all rules removed by blacklist)\n" +
-                     "\n".join(f"- `{p}`" for p in sorted(discarded_files)) + "\n\n")
+                    "\n".join(f"- `{p}`" for p in sorted(discarded_files)) + "\n\n")
 
         f.write("Full per-file cleanup detail is attached in the workflow logs "
-                 f"(`logs/sync_{run_ts}.log`).\n")
+                f"(`logs/sync_{run_ts}.log`).\n\n")
+        f.write(f"CDN access links for every file in this release are in "
+                f"[`access-links.txt`](../access-links.txt) (ref: `{cdn_ref}`).\n")
 
     changelog_path = ROOT / "CHANGELOG.md"
     body = summary_path.read_text(encoding="utf-8")
@@ -262,12 +359,14 @@ def main():
     if gha_output:
         with open(gha_output, "a", encoding="utf-8") as f:
             f.write(f"changed={'true' if changed else 'false'}\n")
-            f.write(f"tag=v{run_ts}\n")
+            f.write(f"tag={tag_name}\n")
             f.write(f"summary_path={summary_path.relative_to(ROOT)}\n")
+            f.write(f"links_path={links_path.relative_to(ROOT)}\n")
 
     print(f"\nDone. changed={changed}")
     print(f"Detail log:   {detail_log_path}")
     print(f"Summary:      {summary_path}")
+    print(f"Access links: {links_path}")
 
 
 if __name__ == "__main__":
