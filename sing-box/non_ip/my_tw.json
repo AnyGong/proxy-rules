@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "javdb.com",
+        "mhgui.com",
+        "avbebe.com",
+        "hanime1.me",
+        "yymanhua.com",
+        "av.jkforum.net",
+        "www.yymanhua.com",
+        "www.manhuagui.com"
+      ],
+      "domain_suffix": [
+        "cdn.hinet.net"
+      ]
+    }
+  ]
+}
