@@ -1,16 +1,24 @@
 {
-  "_comment": "Upstream repository to sync sing-box rule files from. The workflow does `git clone --sparse` of this repo/branch/path into `upstream_checkout_dir` BEFORE running the script; the script only reads local files.",
-  "upstream_owner": "SukkaLab",
-  "upstream_repo": "ruleset.skk.moe",
-  "upstream_branch": "master",
-  "upstream_path": "sing-box",
-  "upstream_checkout_dir": "upstream/sing-box",
-  "local_output_dir": "sing-box",
+  "_comment": "One or more upstream sources to sync. Each source is cloned by the workflow via `git clone --sparse` into upstream_checkout_root/<repo_name>/<directory_name>/ BEFORE this script runs. Every output file — both the cleaned JSON under local_output_root and its compiled SRS under SRS/ — is namespaced the same way: <repo_name>/<directory_name>/... This keeps multiple sources from colliding and keeps the SRS tree's top-level naming identical to the synced-file tree's.",
+  "sources": [
+    {
+      "repo_name": "ruleset.skk.moe",
+      "owner": "SukkaLab",
+      "repo": "ruleset.skk.moe",
+      "branch": "master",
+      "upstream_path": "sing-box",
+      "directory_name": "sing-box"
+    }
+  ],
+  "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with repo_name 'sing-geosite', owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own repo_name/directory_name namespace in both local_output_root and SRS/, so nothing overwrites another source's files even if filenames match.",
+
+  "local_output_root": "rules",
+  "upstream_checkout_root": "upstream",
 
   "sing_box_bin": "sing-box",
 
   "cdn_base_url": "https://testingcf.jsdelivr.net/gh",
   "cdn_ref_mode": "tag",
   "cdn_branch": "master",
-  "_cdn_note": "cdn_owner/cdn_repo are only used as a fallback — normally the workflow's GITHUB_REPOSITORY env var supplies them automatically. cdn_ref_mode 'tag' links to the exact release tag just created this run; 'branch' always points at cdn_branch (may be briefly stale right after a run, but never 404s)."
+  "_cdn_note": "cdn_owner/cdn_repo (used only as a fallback if GITHUB_REPOSITORY isn't set) identify the repo HOSTING these files for jsDelivr — i.e. this repo, not any upstream source. cdn_ref_mode 'tag' links dated SRS snapshots and JSON to the exact release tag just created this run; the 'latest' SRS catalog always links against cdn_branch regardless of this setting, since its contents change every run."
 }
