@@ -1,0 +1,77 @@
+name: Sync and Clean Rulesets
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'   # 每12小时
+  workflow_dispatch:          # 允许手动触发
+
+permissions:
+  contents: write             # 允许推送代码、标签、创建 Release
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 签出本仓库
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      # 2. 签出上游仓库到临时目录
+      - name: Checkout upstream repo
+        uses: actions/checkout@v4
+        with:
+          repository: SukkaLab/ruleset.skk.moe
+          path: upstream_repo
+
+      # 3. 设置 Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 4. 执行清理与同步脚本
+      - name: Clean and sync rules
+        run: python sync_and_convert.py
+
+      # 5. 提交变更并推送（若有变更则设置输出变量）
+      - name: Commit and push if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            SUMMARY_TITLE=$(head -n 1 sync_summary.txt)
+            SUMMARY_BODY=$(tail -n +2 sync_summary.txt)
+            git commit -m "${SUMMARY_TITLE}" -m "${SUMMARY_BODY}"
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 6. 生成时间戳标签名称（仅在有变更时）
+      - name: Generate tag name
+        id: tag
+        if: steps.commit.outputs.changed == 'true'
+        run: echo "tag=v$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
+
+      # 7. 创建并推送 Git 标签
+      - name: Create tag
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          git tag ${{ steps.tag.outputs.tag }}
+          git push origin ${{ steps.tag.outputs.tag }}
+
+      # 8. 创建 GitHub Release（正文为清理摘要）
+      - name: Create release
+        if: steps.commit.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          body_path: sync_summary.txt
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

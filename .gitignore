@@ -1,0 +1,13 @@
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.temp
+.DS_Store
