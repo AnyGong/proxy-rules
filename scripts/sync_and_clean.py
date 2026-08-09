@@ -18,6 +18,7 @@ is communicated via the `changed` output, not exit code.
 """
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -220,29 +221,11 @@ def main():
 
     changed = bool(added or updated or deleted)
 
-    # ---------- Compile every kept JSON file to .srs (sing-box binary format) ----------
-    sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
-    kept_relpaths = sorted(set(added) | set(updated) | set(unchanged))
-    compile_results = []  # (rel_path, ok, message)
-
-    for rel_path in kept_relpaths:
-        json_path = output_dir / rel_path
-        srs_path = json_path.with_suffix(".srs")
-        ok, msg = compile_to_srs(sing_box_bin, json_path, srs_path)
-        compile_results.append((rel_path, ok, msg))
-        if not ok:
-            print(f"  ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
-
-    compile_failures = [r for r in compile_results if not r[1]]
-
-    # ---------- Build jsDelivr access links for every kept file (json + srs) ----------
+    # ---------- CDN identity (needed for both the SRS output path and the links) ----------
     cdn_base_url = sync_cfg.get("cdn_base_url", "https://testingcf.jsdelivr.net/gh")
     cdn_ref_mode = sync_cfg.get("cdn_ref_mode", "tag")  # "tag" or "branch"
     tag_name = f"v{run_ts}"
-    if cdn_ref_mode == "branch":
-        cdn_ref = sync_cfg.get("cdn_branch", "master")
-    else:
-        cdn_ref = tag_name
+    cdn_ref = sync_cfg.get("cdn_branch", "master") if cdn_ref_mode == "branch" else tag_name
 
     repo_slug = os.environ.get("GITHUB_REPOSITORY")  # "owner/repo", set by GitHub Actions
     if repo_slug and "/" in repo_slug:
@@ -251,15 +234,65 @@ def main():
         cdn_owner = sync_cfg.get("cdn_owner", "YOUR_GITHUB_USERNAME")
         cdn_repo = sync_cfg.get("cdn_repo", "YOUR_REPO_NAME")
 
+    date_str = run_ts.split("_")[0]  # YYYYMMDD
+
+    # ---------- Compile every kept JSON file to .srs (sing-box binary format) ----------
+    # Stored two ways under SRS/:
+    #   - dated snapshot:  SRS/<repo>/<directory>/<date>/<file>.srs   (history, never overwritten)
+    #   - latest catalog:  SRS/<repo>/<directory>/<file>.srs          (always current, overwritten every run)
+    # (the "<directory>" segment is omitted for files that sit at the top level
+    # of local_output_dir, since there's nothing to mirror).
+    sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
+    srs_root = ROOT / "SRS"
+    kept_relpaths = sorted(set(added) | set(updated) | set(unchanged))
+    compile_results = []  # (rel_path, ok, message, dated_relpath_or_None, latest_relpath_or_None)
+
+    for rel_path in kept_relpaths:
+        json_path = output_dir / rel_path
+        rel = Path(rel_path)
+        srs_filename = rel.with_suffix(".srs").name
+        dir_part = rel.parent
+        if str(dir_part) in (".", ""):
+            dated_rel = Path(cdn_repo) / date_str / srs_filename
+            latest_rel = Path(cdn_repo) / srs_filename
+        else:
+            dated_rel = Path(cdn_repo) / dir_part / date_str / srs_filename
+            latest_rel = Path(cdn_repo) / dir_part / srs_filename
+        dated_path = srs_root / dated_rel
+        latest_path = srs_root / latest_rel
+
+        ok, msg = compile_to_srs(sing_box_bin, json_path, dated_path)
+        if ok:
+            latest_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(dated_path, latest_path)
+        compile_results.append((
+            rel_path, ok, msg,
+            str(dated_rel) if ok else None,
+            str(latest_rel) if ok else None,
+        ))
+        if not ok:
+            print(f"  ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
+
+    compile_failures = [r for r in compile_results if not r[1]]
+
+    # ---------- Build jsDelivr access links for every kept file (json + srs) ----------
     output_dir_name = sync_cfg["local_output_dir"]
     access_links = []  # (rel_path_with_ext, url)
     for rel_path in kept_relpaths:
         json_rel = f"{output_dir_name}/{rel_path}"
         access_links.append((json_rel, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, json_rel)))
-        ok = next((r[1] for r in compile_results if r[0] == rel_path), False)
-        if ok:
-            srs_rel = f"{output_dir_name}/{Path(rel_path).with_suffix('.srs')}"
-            access_links.append((srs_rel, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, srs_rel)))
+        match = next((r for r in compile_results if r[0] == rel_path), None)
+        if match and match[1]:
+            dated_full = f"SRS/{match[3]}"
+            latest_full = f"SRS/{match[4]}"
+            access_links.append((dated_full, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, dated_full)))
+            # The "latest" catalog is meant to be a stable link that never changes URL,
+            # so always resolve it against the branch, regardless of cdn_ref_mode —
+            # a tag-pinned link to a file whose content changes on the next run would
+            # be misleading (the tag's contents would silently update after the fact
+            # relative to what the tag "should" represent).
+            latest_branch_ref = sync_cfg.get("cdn_branch", "master")
+            access_links.append((latest_full, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, latest_branch_ref, latest_full)))
 
     access_links.sort(key=lambda x: x[0])
 
@@ -269,8 +302,12 @@ def main():
     with open(links_path, "w", encoding="utf-8") as f:
         f.write(f"# Access links generated {run_ts} UTC\n")
         f.write(f"# CDN ref: {cdn_ref} (mode={cdn_ref_mode})\n")
+        f.write(f"# SRS dated snapshots: SRS/{cdn_repo}/<directory>/{date_str}/<file>.srs\n")
+        f.write(f"# SRS latest catalog:  SRS/{cdn_repo}/<directory>/<file>.srs "
+                f"(always current, pinned to branch '{sync_cfg.get('cdn_branch', 'master')}')\n")
         f.write(f"# Total files: {len(access_links)} "
-                f"({len(kept_relpaths)} json, {len(kept_relpaths) - len(compile_failures)} srs)\n")
+                f"({len(kept_relpaths)} json, "
+                f"{2 * (len(kept_relpaths) - len(compile_failures))} srs [dated+latest])\n")
         if compile_failures:
             f.write(f"# WARNING: {len(compile_failures)} file(s) failed SRS compilation "
                     f"and have no .srs link below — see logs/sync_{run_ts}.log\n")
@@ -291,7 +328,7 @@ def main():
         f.write(f"SRS compiled: {len(kept_relpaths) - len(compile_failures)}/{len(kept_relpaths)}\n")
         if compile_failures:
             f.write("SRS compile failures:\n")
-            for rel_path, ok, msg in compile_failures:
+            for rel_path, ok, msg, _dated, _latest in compile_failures:
                 f.write(f"  - {rel_path}: {msg}\n")
         f.write("\n")
         f.write("=" * 70 + "\n")
