@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "stats.grafana.org",
+        "stat.youpin.mi.com",
+        "dataflow.biliapi.com",
+        "nom.telemetrydeck.com"
+      ],
+      "domain_suffix": [
+        "null",
+        "jpush.cn",
+        "jpush.io",
+        "getui.com",
+        "getui.net",
+        "undefined",
+        "gepush.com",
+        "slackb.com",
+        "trace.qq.com",
+        "beacon.qq.com",
+        "geo2.adobe.com",
+        "easytomessage.com",
+        "femetrics.qagr.io",
+        "tracking.miui.com",
+        "data.grammarly.com",
+        "data.microsoft.com",
+        "telemetry.mozilla.org",
+        "femetrics.grammarly.io",
+        "tracking.intl.miui.com",
+        "f-log-assistant.grammarly.io",
+        "f-log-extension.grammarly.io",
+        "in.applicationinsights.azure.com"
+      ]
+    }
+  ]
+}

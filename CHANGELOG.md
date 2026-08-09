@@ -1,0 +1,89 @@
+# Changelog
+
+
+## Sync summary — 20260809_165348 UTC
+
+Upstream checkout: `SukkaLab/ruleset.skk.moe` @ `master` (`sing-box`)
+
+- Files added: **56**
+- Files updated: **0**
+- Files deleted: **0**
+- Files unchanged: 0
+- Blacklisted entries removed: **127**
+- Empty rules discarded: **10**
+- Files dropped entirely (all rules emptied): **10**
+
+### Added
+- `domainset/apple_cdn.json`
+- `domainset/cdn.json`
+- `domainset/download.json`
+- `domainset/game-download.json`
+- `domainset/icloud_private_relay.json`
+- `domainset/reject.json`
+- `domainset/reject_extra.json`
+- `domainset/reject_phishing.json`
+- `domainset/speedtest.json`
+- `ip/ai.json`
+- `ip/apple_services.json`
+- `ip/cdn.json`
+- `ip/china_ip.json`
+- `ip/china_ip_ipv6.json`
+- `ip/domestic.json`
+- `ip/download.json`
+- `ip/lan.json`
+- `ip/neteasemusic.json`
+- `ip/reject.json`
+- `ip/stream.json`
+- `ip/stream_biliintl.json`
+- `ip/telegram.json`
+- `non_ip/ai.json`
+- `non_ip/apple_cdn.json`
+- `non_ip/apple_cn.json`
+- `non_ip/apple_intelligence.json`
+- `non_ip/apple_services.json`
+- `non_ip/cdn.json`
+- `non_ip/direct.json`
+- `non_ip/domestic.json`
+- `non_ip/gitlab.json`
+- `non_ip/global.json`
+- `non_ip/lan.json`
+- `non_ip/microsoft.json`
+- `non_ip/microsoft_cdn.json`
+- `non_ip/my_direct.json`
+- `non_ip/my_git.json`
+- `non_ip/my_plus.json`
+- `non_ip/my_proxy.json`
+- `non_ip/my_reject.json`
+- `non_ip/my_tw.json`
+- `non_ip/my_us.json`
+- `non_ip/neteasemusic.json`
+- `non_ip/reject-drop.json`
+- `non_ip/reject-no-drop.json`
+- `non_ip/reject.json`
+- `non_ip/sogouinput.json`
+- `non_ip/stream.json`
+- `non_ip/stream_biliintl.json`
+- `non_ip/stream_eu.json`
+- `non_ip/stream_hk.json`
+- `non_ip/stream_jp.json`
+- `non_ip/stream_kr.json`
+- `non_ip/stream_tw.json`
+- `non_ip/stream_us.json`
+- `non_ip/telegram.json`
+
+### Dropped (all rules removed by blacklist)
+- `ip/stream_eu.json`
+- `ip/stream_hk.json`
+- `ip/stream_jp.json`
+- `ip/stream_kr.json`
+- `ip/stream_tw.json`
+- `ip/stream_us.json`
+- `ip/telegram_asn.json`
+- `non_ip/cloudmounter.json`
+- `non_ip/download.json`
+- `non_ip/reject-url-regex.json`
+
+Full per-file cleanup detail is attached in the workflow logs (`logs/sync_20260809_165348.log`).
+
+---
+
