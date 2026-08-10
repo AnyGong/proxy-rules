@@ -37,7 +37,7 @@ import os
 import shutil
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -45,6 +45,10 @@ CONFIG_DIR = ROOT
 LOG_DIR = ROOT / "logs"
 
 CLEAN_FIELDS = ("domain", "domain_suffix", "domain_keyword")
+
+# All generated timestamps use this fixed UTC+8 offset — never labeled "UTC"
+# in any output, since the offset is the implicit default throughout.
+DISPLAY_TZ = timezone(timedelta(hours=8))
 
 
 def load_json(path: Path):
@@ -285,7 +289,7 @@ def main():
         sys.exit(1)
 
     LOG_DIR.mkdir(exist_ok=True)
-    run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    run_ts = datetime.now(DISPLAY_TZ).strftime("%Y%m%d_%H%M%S")
     date_str = run_ts.split("_")[0]  # YYYYMMDD
 
     source_results = [process_source(src, sync_cfg, blacklist_lower) for src in sources]
@@ -393,7 +397,7 @@ def main():
                         [str(source_namespace(s)) for s in sources]
     with open(links_path, "w", encoding="utf-8") as f:
         f.write("# Access Links\n\n")
-        f.write(f"Generated {run_ts} UTC\n\n")
+        f.write(f"Generated {run_ts}\n\n")
 
         f.write("## Summary\n\n")
         f.write(f"- Total SRS files: {len(latest_entries)}\n")
@@ -424,7 +428,7 @@ def main():
     # ---------- Detailed log ----------
     detail_log_path = LOG_DIR / f"sync_{run_ts}.log"
     with open(detail_log_path, "w", encoding="utf-8") as f:
-        f.write(f"Sync run: {run_ts} UTC\n")
+        f.write(f"Sync run: {run_ts}\n")
         f.write(f"Sources ({len(sources)}{' + custom' if enable_custom else ''}):\n")
         for src in sources:
             f.write(f"  - {source_namespace(src)}  <-  "
@@ -479,7 +483,7 @@ def main():
     deleted_ns = [f"{res['namespace']}/{p}" for res in source_results for p in res["deleted"]]
 
     with open(summary_path, "w", encoding="utf-8") as f:
-        f.write(f"## Sync summary — {run_ts} UTC\n\n")
+        f.write(f"## Sync summary — {run_ts}\n\n")
         f.write("Sources:\n")
         for src in sources:
             f.write(f"- `{source_namespace(src)}` ← "
