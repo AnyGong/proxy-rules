@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "github.com",
+        "github.dev",
+        "api.github.com",
+        "alive.github.com",
+        "android.googlesource.com"
+      ],
+      "domain_suffix": [
+        "huggingface.co",
+        "githubcopilot.com"
+      ]
+    }
+  ]
+}
