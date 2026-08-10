@@ -1,0 +1,81 @@
+{
+  "rules": [
+    {
+      "domain_suffix": [
+        "flutter.dev",
+        "dart.dev",
+        "pub.dev",
+        "pub.dartlang.org",
+        "storage.googleapis.com",
+        "chrome-infra-packages.appspot.com",
+
+        "npmjs.org",
+        "npmjs.com",
+        "registry.npmjs.org",
+        "yarnpkg.com",
+        "registry.yarnpkg.com",
+        "nodejs.org",
+        "unpkg.com",
+        "jsdelivr.net",
+        "cdn.jsdelivr.net",
+
+        "maven.org",
+        "repo.maven.apache.org",
+        "repo1.maven.org",
+        "central.sonatype.com",
+        "oss.sonatype.org",
+        "gradle.org",
+        "services.gradle.org",
+        "jcenter.bintray.com",
+        "dl.google.com",
+        "maven.google.com",
+
+        "pypi.org",
+        "pypi.python.org",
+        "files.pythonhosted.org",
+        "pythonhosted.org",
+        "anaconda.org",
+        "repo.anaconda.com",
+        "conda.anaconda.org",
+
+        "cocoapods.org",
+        "cdn.cocoapods.org",
+        "trunk.cocoapods.org",
+
+        "golang.org",
+        "go.dev",
+        "proxy.golang.org",
+        "sum.golang.org",
+
+        "crates.io",
+        "static.crates.io",
+        "index.crates.io",
+
+        "docker.com",
+        "docker.io",
+        "registry-1.docker.io",
+        "auth.docker.io",
+        "production.cloudflare.docker.com",
+        "ghcr.io",
+
+        "github.com",
+        "githubusercontent.com",
+        "raw.githubusercontent.com",
+        "githubassets.com",
+        "codeload.github.com",
+        "objects.githubusercontent.com",
+
+        "jetbrains.com",
+        "jetbrains.co.jp",
+        "jb.gg",
+        "plugins.jetbrains.com",
+        "download.jetbrains.com",
+        "data.services.jetbrains.com",
+        "resources.jetbrains.com",
+        "cache-redirector.jetbrains.com",
+        "code-with-me.jetbrains.com",
+        "jetbrains-plugins-cdn.com"
+      ]
+    }
+  ]
+}

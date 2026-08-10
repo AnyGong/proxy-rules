@@ -533,7 +533,7 @@ def main():
             dated_path = srs_root / dated_rel
             latest_path = srs_root / latest_rel
 
-            if kind == "json":
+            if kind in ("json", "conf"):
                 json_path = output_dir / rel_path
                 ok, msg = compile_to_srs(sing_box_bin, json_path, dated_path)
                 if ok:
@@ -622,7 +622,7 @@ def main():
         f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
 
     # ---------- Detailed log ----------
-    kind_totals = {"json": 0, "srs": 0, "other": 0}
+    kind_totals = {"json": 0, "conf": 0, "srs": 0, "other": 0}
     other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
@@ -648,10 +648,11 @@ def main():
         f.write(f"Files deleted: {len(all_deleted)}\n")
         f.write(f"Files unchanged: {len(all_unchanged)}\n\n")
         f.write(f"File kinds synced this run: {kind_totals['json']} json (cleaned+compiled), "
+                f"{kind_totals['conf']} conf (converted to json, cleaned, compiled), "
                 f"{kind_totals['srs']} srs (pre-compiled, copied through), "
                 f"{kind_totals['other']} other (synced as-is, not converted)\n")
         if other_files:
-            f.write("Synced but not converted (not json, not srs):\n")
+            f.write("Synced but not converted (not json, not conf, not srs):\n")
             for namespace, rel_path in other_files:
                 f.write(f"  - [{namespace}] {rel_path}\n")
         f.write(f"\nSRS compiled/copied: {compile_ok_count}/{len(compile_results)}\n")
@@ -663,9 +664,26 @@ def main():
         f.write("=" * 70 + "\n")
         for res in source_results:
             for r in res["per_file_reports"]:
-                f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['kind']}] [{r['action']}]\n")
-                if r["kind"] != "json":
+                if r["kind"] == "conf":
+                    f.write(f"\n[{res['namespace']}] File: {r['source_file']} -> {r['file']}  "
+                            f"[{r['kind']}] [{r['action']}]\n")
+                else:
+                    f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['kind']}] [{r['action']}]\n")
+
+                if r["kind"] not in ("json", "conf"):
                     continue
+
+                if r["kind"] == "conf":
+                    cc = r["conf_converted_counts"]
+                    f.write(f"  Converted from .conf -> domain: {cc['domain']}, "
+                            f"domain_suffix: {cc['domain_suffix']}, "
+                            f"domain_keyword: {cc['domain_keyword']}, "
+                            f"ip_cidr: {cc['ip_cidr']}, process_name: {cc['process_name']}\n")
+                    if r["conf_skipped_count"]:
+                        f.write(f"  Skipped {r['conf_skipped_count']} unsupported .conf line(s):\n")
+                        for line in r["conf_skipped_lines"]:
+                            f.write(f"    - {line}\n")
+
                 f.write(f"  Total rules: {r['rules_total']}, discarded rules: {r['rules_discarded']}\n")
                 rc = r["removed_counts"]
                 f.write(f"  Removed -> domain: {rc['domain']}, "
