@@ -1,8 +1,7 @@
 {
-  "_comment": "One or more upstream sources to sync. Each source is cloned by the workflow via `git clone --sparse` into upstream_checkout_root/<repo_name>/<directory_name>/ BEFORE this script runs. Every output file — both the cleaned JSON under local_output_root and its compiled SRS under SRS/ — is namespaced the same way: <repo_name>/<directory_name>/... This keeps multiple sources from colliding and keeps the SRS tree's top-level naming identical to the synced-file tree's.",
+  "_comment": "One or more upstream sources to sync. Each source is cloned by the workflow via `git clone --sparse` into upstream_checkout_root/@<owner>/<repo>/<branch>/<directory_name>/ BEFORE this script runs. Every output file — both the cleaned JSON under local_output_root and its compiled SRS under srs/ — is namespaced the same way: @<owner>/<repo>/<branch>/<directory_name>/... Owner+repo+branch is already globally unique, so this keeps multiple sources from ever colliding, and keeps the srs tree's top-level naming identical to the synced-file tree's.",
   "sources": [
     {
-      "repo_name": "ruleset.skk.moe",
       "owner": "SukkaLab",
       "repo": "ruleset.skk.moe",
       "branch": "master",
@@ -10,7 +9,7 @@
       "directory_name": "sing-box"
     }
   ],
-  "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with repo_name 'sing-geosite', owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own repo_name/directory_name namespace in both local_output_root and SRS/, so nothing overwrites another source's files even if filenames match.",
+  "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own @owner/repo/branch/directory_name namespace in both local_output_root and srs/, so nothing overwrites another source's files even if filenames match. 'directory_name' defaults to the last path segment of upstream_path if omitted.",
 
   "local_output_root": "rules",
   "upstream_checkout_root": "upstream",

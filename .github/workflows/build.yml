@@ -29,17 +29,17 @@ jobs:
             repo=$(echo "$src" | jq -r '.repo')
             branch=$(echo "$src" | jq -r '.branch')
             upstream_path=$(echo "$src" | jq -r '.upstream_path')
-            repo_name=$(echo "$src" | jq -r '.repo_name')
-            directory_name=$(echo "$src" | jq -r '.directory_name')
+            directory_name=$(echo "$src" | jq -r '.directory_name // (.upstream_path | split("/") | last)')
 
-            echo "== Fetching $repo_name/$directory_name  <-  $owner/$repo@$branch:$upstream_path =="
+            namespace="@${owner}/${repo}/${branch}/${directory_name}"
+            echo "== Fetching ${namespace}  <-  ${owner}/${repo}@${branch}:${upstream_path} =="
             rm -rf tmp_clone
             git clone --depth 1 --filter=blob:none --sparse \
               --branch "$branch" \
               "https://github.com/$owner/$repo.git" tmp_clone
             (cd tmp_clone && git sparse-checkout set "$upstream_path")
 
-            dest="$GITHUB_WORKSPACE/upstream/$repo_name/$directory_name"
+            dest="$GITHUB_WORKSPACE/upstream/${namespace}"
             mkdir -p "$dest"
             cp -r "tmp_clone/$upstream_path/." "$dest/"
             rm -rf tmp_clone
@@ -71,7 +71,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add rules SRS CHANGELOG.md logs access-links.txt
+          git add rules srs CHANGELOG.md logs ACCESS_LINKS.md
           git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
           git push
 
