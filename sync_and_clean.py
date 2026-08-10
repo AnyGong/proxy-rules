@@ -11,21 +11,27 @@ The workflow sparse-checks out each source into:
 before this script runs (no GitHub API calls needed for the fetch step).
 
 For every source, this script:
-1. Reads every *.json rule file from its local checkout.
+1. Syncs EVERY file from its local checkout, regardless of format — but
+   only *.json files are parsed and cleaned. Everything else (including
+   pre-compiled .srs) is copied through byte-for-byte, unmodified.
 2. Cleans blacklisted strings out of domain / domain_suffix / domain_keyword
-   arrays, per config/blacklist.json.
-3. Writes cleaned files under:
-       <local_output_root>/@<owner>/<repo>/<branch>/<directory_name>/<...>.json
-4. Compiles each kept file to sing-box's binary .srs format and stores it
-   under the SAME @<owner>/<repo>/<branch>/<directory_name> namespace, two ways:
+   arrays in every *.json file, per config/blacklist.json.
+3. Writes every synced file (cleaned json, or as-is for everything else) under:
+       <local_output_root>/@<owner>/<repo>/<branch>/<directory_name>/<...>
+4. Compiles each kept *.json file to sing-box's binary .srs format. Any
+   file that was ALREADY a pre-compiled .srs upstream is copied through
+   rather than recompiled. Both cases land under the SAME
+   @<owner>/<repo>/<branch>/<directory_name> namespace, two ways:
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.srs  (dated snapshot)
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.srs         (always-current "latest")
    Owner+repo+branch is already globally unique, so using it as the shared
    prefix for both trees means multiple sources never collide, and the srs
-   tree's top-level naming always matches the synced-file tree's.
+   tree's top-level naming always matches the synced-file tree's. Any other
+   file format is synced but never compiled or linked.
 5. Produces a combined detailed log, a release-ready summary, and a single
-   ACCESS_LINKS.md manifest of jsDelivr CDN links for every file touched
-   this run, across all sources.
+   ACCESS_LINKS.md manifest of jsDelivr CDN links for every .srs file
+   (compiled or pre-compiled-and-passed-through) touched this run, across
+   all sources.
 6. Emits GitHub Actions outputs so the workflow can decide whether to
    commit, tag, and cut a release.
 
@@ -122,6 +128,55 @@ def canonical_dump(obj) -> str:
     return json.dumps(obj, ensure_ascii=False, indent=2) + "\n"
 
 
+# Maps Surge/Clash-style .conf directive names to sing-box rule-set JSON fields.
+# Anything not in this map (URL-REGEX, USER-AGENT, DOMAIN-SET, AND/OR logic
+# blocks, GEOIP, etc.) is left untouched — logged as skipped, not guessed at.
+CONF_TYPE_MAP = {
+    "DOMAIN": "domain",
+    "HOST": "domain",
+    "DOMAIN-SUFFIX": "domain_suffix",
+    "HOST-SUFFIX": "domain_suffix",
+    "DOMAIN-KEYWORD": "domain_keyword",
+    "HOST-KEYWORD": "domain_keyword",
+    "IP-CIDR": "ip_cidr",
+    "IP-CIDR6": "ip_cidr",
+    "IP6-CIDR": "ip_cidr",
+    "PROCESS-NAME": "process_name",
+}
+
+
+def convert_conf_to_ruleset(text: str):
+    """Convert a Surge/Clash-style plain-text .conf rule list (lines like
+    `DOMAIN-SUFFIX,example.com`) into a sing-box rule-set JSON document.
+    Comments (#, //, ;) and blank lines are ignored. Returns (doc, stats);
+    stats records per-field converted counts and every line that didn't map
+    to a supported directive, so nothing is silently dropped without a trace."""
+    fields = {"domain": [], "domain_suffix": [], "domain_keyword": [], "ip_cidr": [], "process_name": []}
+    skipped_lines = []
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or line.startswith("//") or line.startswith(";"):
+            continue
+        parts = [p.strip() for p in line.split(",")]
+        rule_type = parts[0].upper() if parts else ""
+        value = parts[1] if len(parts) > 1 else ""
+        field = CONF_TYPE_MAP.get(rule_type)
+        if field is None or not value:
+            skipped_lines.append(line)
+            continue
+        fields[field].append(value)
+
+    rule_obj = {k: v for k, v in fields.items() if v}
+    doc = {"version": 1, "rules": [rule_obj] if rule_obj else []}
+    stats = {
+        "converted_counts": {k: len(v) for k, v in fields.items()},
+        "skipped_count": len(skipped_lines),
+        "skipped_lines": skipped_lines,
+    }
+    return doc, stats
+
+
 def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
     """Compile a sing-box rule-set JSON file into binary .srs format.
     Returns (ok: bool, message: str)."""
@@ -149,10 +204,12 @@ def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) 
 
 def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                     blacklist_lower: list, required: bool = True):
-    """Core sync+clean logic shared by both configured upstream sources and
-    the local custom/ directory. Reads every *.json under upstream_dir,
-    cleans it, and writes the result under output_dir, mirroring the
-    (possibly multi-level) subdirectory structure. Returns a result dict."""
+    """Core sync logic shared by both configured upstream sources and the
+    local custom/ directory. Every file under upstream_dir is synced,
+    regardless of format — but only *.json files are parsed and cleaned;
+    everything else (including pre-compiled .srs) is copied through as-is.
+    Mirrors the (possibly multi-level) subdirectory structure. Returns a
+    result dict."""
     namespace_str = str(namespace)
 
     if not upstream_dir.exists():
@@ -165,13 +222,22 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
             "added": [], "updated": [], "deleted": [], "unchanged": [], "error": required,
         }
 
-    upstream_files = sorted(upstream_dir.rglob("*.json"))
-    print(f"[{namespace_str}] Found {len(upstream_files)} JSON files ({upstream_dir}).")
+    upstream_files = sorted(p for p in upstream_dir.rglob("*") if p.is_file())
+    kind_counts = {"json": 0, "conf": 0, "srs": 0, "other": 0}
+    for p in upstream_files:
+        suf = p.suffix.lower()
+        kind_counts["json" if suf == ".json" else "conf" if suf == ".conf" else
+        "srs" if suf == ".srs" else "other"] += 1
+    print(f"[{namespace_str}] Found {len(upstream_files)} files ({upstream_dir}): "
+          f"{kind_counts['json']} json, {kind_counts['conf']} conf, {kind_counts['srs']} srs, "
+          f"{kind_counts['other']} other — only json and conf are cleaned/converted, "
+          f"the rest sync through as-is.")
 
     existing_before = {}
     if output_dir.exists():
-        for p in output_dir.rglob("*.json"):
-            existing_before[str(p.relative_to(output_dir))] = p.read_bytes()
+        for p in output_dir.rglob("*"):
+            if p.is_file():
+                existing_before[str(p.relative_to(output_dir))] = p.read_bytes()
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -180,63 +246,174 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
     seen_relpaths = set()
 
     for src_path in upstream_files:
-        rel_path = str(src_path.relative_to(upstream_dir))
-        seen_relpaths.add(rel_path)
-        local_path = output_dir / rel_path
+        rel_path_src = str(src_path.relative_to(upstream_dir))
+        suffix = src_path.suffix.lower()
 
-        try:
-            doc = json.loads(src_path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as e:
-            print(f"  [{namespace_str}] ! Skipping {rel_path}: invalid JSON ({e})", file=sys.stderr)
-            continue
+        if suffix == ".json":
+            rel_path = rel_path_src  # output extension unchanged
+            seen_relpaths.add(rel_path)
+            local_path = output_dir / rel_path
 
-        cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
+            try:
+                doc = json.loads(src_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                print(f"  [{namespace_str}] ! Skipping {rel_path}: invalid JSON ({e})", file=sys.stderr)
+                continue
 
-        removed_counts = {k: len(v) for k, v in stats["removed"].items()}
-        total_removed = sum(removed_counts.values())
+            cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
 
-        report = {
-            "file": rel_path,
-            "rules_total": stats["rules_total"],
-            "rules_discarded": stats["rules_discarded"],
-            "removed_counts": removed_counts,
-            "removed_values": stats["removed"],
-            "fields_cleared": stats["fields_cleared"],
-            "action": None,
-        }
+            removed_counts = {k: len(v) for k, v in stats["removed"].items()}
+            total_removed = sum(removed_counts.values())
 
-        old_bytes = existing_before.get(rel_path)
+            report = {
+                "file": rel_path, "kind": "json",
+                "rules_total": stats["rules_total"],
+                "rules_discarded": stats["rules_discarded"],
+                "removed_counts": removed_counts,
+                "removed_values": stats["removed"],
+                "fields_cleared": stats["fields_cleared"],
+                "action": None,
+            }
 
-        if cleaned_doc is None:
-            report["action"] = "discarded_all_rules_empty_file"
-            if old_bytes is not None:
-                deleted.append(rel_path)
-                local_path.unlink(missing_ok=True)
+            old_bytes = existing_before.get(rel_path)
+
+            if cleaned_doc is None:
+                report["action"] = "discarded_all_rules_empty_file"
+                if old_bytes is not None:
+                    deleted.append(rel_path)
+                    local_path.unlink(missing_ok=True)
+                per_file_reports.append(report)
+                continue
+
+            new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
+
+            if old_bytes is None:
+                report["action"] = "added"
+                added.append(rel_path)
+            elif old_bytes != new_bytes:
+                report["action"] = "updated"
+                updated.append(rel_path)
+            else:
+                report["action"] = "unchanged"
+                unchanged.append(rel_path)
+
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            local_path.write_bytes(new_bytes)
             per_file_reports.append(report)
-            continue
 
-        new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
+            if total_removed or stats["rules_discarded"]:
+                print(f"  [{namespace_str}] {rel_path}: -{total_removed} entries "
+                      f"(domain={removed_counts['domain']}, "
+                      f"suffix={removed_counts['domain_suffix']}, "
+                      f"keyword={removed_counts['domain_keyword']}), "
+                      f"{stats['rules_discarded']} rule(s) discarded")
 
-        if old_bytes is None:
-            report["action"] = "added"
-            added.append(rel_path)
-        elif old_bytes != new_bytes:
-            report["action"] = "updated"
-            updated.append(rel_path)
+        elif suffix == ".conf":
+            # Surge/Clash-style plain-text ruleset -> converted to a sing-box
+            # rule-set JSON document, then cleaned exactly like a native .json.
+            # Output filename swaps .conf -> .json since the content format
+            # itself has changed, not just been copied through.
+            rel_path = str(Path(rel_path_src).with_suffix(".json"))
+            seen_relpaths.add(rel_path)
+            local_path = output_dir / rel_path
+
+            try:
+                conf_text = src_path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError) as e:
+                print(f"  [{namespace_str}] ! Skipping {rel_path_src}: unreadable .conf ({e})", file=sys.stderr)
+                continue
+
+            doc, conv_stats = convert_conf_to_ruleset(conf_text)
+            cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
+
+            removed_counts = {k: len(v) for k, v in stats["removed"].items()}
+            total_removed = sum(removed_counts.values())
+
+            report = {
+                "file": rel_path, "kind": "conf", "source_file": rel_path_src,
+                "rules_total": stats["rules_total"],
+                "rules_discarded": stats["rules_discarded"],
+                "removed_counts": removed_counts,
+                "removed_values": stats["removed"],
+                "fields_cleared": stats["fields_cleared"],
+                "action": None,
+                "conf_converted_counts": conv_stats["converted_counts"],
+                "conf_skipped_count": conv_stats["skipped_count"],
+                "conf_skipped_lines": conv_stats["skipped_lines"],
+            }
+
+            old_bytes = existing_before.get(rel_path)
+
+            if cleaned_doc is None:
+                report["action"] = "discarded_all_rules_empty_file"
+                if old_bytes is not None:
+                    deleted.append(rel_path)
+                    local_path.unlink(missing_ok=True)
+                per_file_reports.append(report)
+                continue
+
+            new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
+
+            if old_bytes is None:
+                report["action"] = "added"
+                added.append(rel_path)
+            elif old_bytes != new_bytes:
+                report["action"] = "updated"
+                updated.append(rel_path)
+            else:
+                report["action"] = "unchanged"
+                unchanged.append(rel_path)
+
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            local_path.write_bytes(new_bytes)
+            per_file_reports.append(report)
+
+            convc = conv_stats["converted_counts"]
+            print(f"  [{namespace_str}] {rel_path_src} -> {rel_path}: converted "
+                  f"(domain={convc['domain']}, suffix={convc['domain_suffix']}, "
+                  f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
+                  f"process_name={convc['process_name']}), "
+                  f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
+                  + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
+
         else:
-            report["action"] = "unchanged"
-            unchanged.append(rel_path)
+            # Non-JSON, non-conf file (including pre-compiled .srs): synced through
+            # verbatim, never parsed or cleaned. .srs files still get picked up for
+            # SRS compile-step handling (as a direct copy, not a fresh compile) and
+            # still get an ACCESS_LINKS.md entry; any other format is synced to
+            # rules/ but not touched further.
+            rel_path = rel_path_src
+            seen_relpaths.add(rel_path)
+            local_path = output_dir / rel_path
+            kind = "srs" if suffix == ".srs" else "other"
+            try:
+                new_bytes = src_path.read_bytes()
+            except OSError as e:
+                print(f"  [{namespace_str}] ! Skipping {rel_path}: unreadable ({e})", file=sys.stderr)
+                continue
 
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-        local_path.write_bytes(new_bytes)
-        per_file_reports.append(report)
+            report = {
+                "file": rel_path, "kind": kind,
+                "rules_total": 0, "rules_discarded": 0,
+                "removed_counts": {"domain": 0, "domain_suffix": 0, "domain_keyword": 0},
+                "removed_values": {"domain": [], "domain_suffix": [], "domain_keyword": []},
+                "fields_cleared": [], "action": None,
+            }
 
-        if total_removed or stats["rules_discarded"]:
-            print(f"  [{namespace_str}] {rel_path}: -{total_removed} entries "
-                  f"(domain={removed_counts['domain']}, "
-                  f"suffix={removed_counts['domain_suffix']}, "
-                  f"keyword={removed_counts['domain_keyword']}), "
-                  f"{stats['rules_discarded']} rule(s) discarded")
+            old_bytes = existing_before.get(rel_path)
+            if old_bytes is None:
+                report["action"] = "added"
+                added.append(rel_path)
+            elif old_bytes != new_bytes:
+                report["action"] = "updated"
+                updated.append(rel_path)
+            else:
+                report["action"] = "unchanged"
+                unchanged.append(rel_path)
+
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            local_path.write_bytes(new_bytes)
+            per_file_reports.append(report)
 
     for rel_path in existing_before:
         if rel_path not in seen_relpaths:
@@ -324,7 +501,7 @@ def main():
     srs_root = ROOT / "srs"
     output_root_name = sync_cfg["local_output_root"]
 
-    compile_results = []  # (namespace, rel_path, ok, message, json_out_rel, dated_srs_rel, latest_srs_rel)
+    compile_results = []  # (namespace, rel_path, ok, message, synced_out_rel, dated_srs_rel, latest_srs_rel)
 
     for res in source_results:
         if res["error"]:
@@ -332,10 +509,16 @@ def main():
         namespace_path = res["namespace_path"]
         output_dir = res["output_dir"]
         kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
+        kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
 
         for rel_path in kept_relpaths:
-            json_path = output_dir / rel_path
-            json_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{rel_path}"
+            kind = kind_lookup.get(rel_path)
+            if kind == "other":
+                # Synced to rules/ as-is, but not json and not a pre-compiled .srs —
+                # nothing to compile or copy into srs/, and no ACCESS_LINKS.md entry.
+                continue
+
+            synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{rel_path}"
 
             rel = Path(rel_path)
             srs_filename = rel.with_suffix(".srs").name
@@ -350,15 +533,28 @@ def main():
             dated_path = srs_root / dated_rel
             latest_path = srs_root / latest_rel
 
-            ok, msg = compile_to_srs(sing_box_bin, json_path, dated_path)
-            if ok:
-                latest_path.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(dated_path, latest_path)
-            else:
-                print(f"  [{res['namespace']}] ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
+            if kind == "json":
+                json_path = output_dir / rel_path
+                ok, msg = compile_to_srs(sing_box_bin, json_path, dated_path)
+                if ok:
+                    latest_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(dated_path, latest_path)
+                else:
+                    print(f"  [{res['namespace']}] ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
+            else:  # kind == "srs": already compiled upstream — copy through, don't recompile
+                srs_source_path = output_dir / rel_path
+                try:
+                    dated_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(srs_source_path, dated_path)
+                    latest_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(srs_source_path, latest_path)
+                    ok, msg = True, "synced (pre-compiled upstream .srs, not recompiled)"
+                except OSError as e:
+                    ok, msg = False, f"failed to copy pre-compiled .srs: {e}"
+                    print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
 
             compile_results.append((
-                res["namespace"], rel_path, ok, msg, json_out_rel,
+                res["namespace"], rel_path, ok, msg, synced_out_rel,
                 dated_rel.as_posix() if ok else None, latest_rel.as_posix() if ok else None,
             ))
 
@@ -368,7 +564,7 @@ def main():
     # ---------- Build the "latest" SRS link list (json links and dated snapshots
     # are intentionally excluded from the public manifest — see ACCESS_LINKS.md below) ----------
     latest_entries = []  # (filename, url)
-    for namespace, rel_path, ok, msg, json_out_rel, dated_rel, latest_rel in compile_results:
+    for namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel in compile_results:
         if not ok:
             continue
         latest_full = f"srs/{latest_rel}"
@@ -426,6 +622,16 @@ def main():
         f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
 
     # ---------- Detailed log ----------
+    kind_totals = {"json": 0, "srs": 0, "other": 0}
+    other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
+    for res in source_results:
+        kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
+        for r in res["per_file_reports"]:
+            if r["file"] in kept:
+                kind_totals[r["kind"]] += 1
+                if r["kind"] == "other":
+                    other_files.append((res["namespace"], r["file"]))
+
     detail_log_path = LOG_DIR / f"sync_{run_ts}.log"
     with open(detail_log_path, "w", encoding="utf-8") as f:
         f.write(f"Sync run: {run_ts}\n")
@@ -441,16 +647,25 @@ def main():
         f.write(f"Files updated: {len(all_updated)}\n")
         f.write(f"Files deleted: {len(all_deleted)}\n")
         f.write(f"Files unchanged: {len(all_unchanged)}\n\n")
-        f.write(f"SRS compiled: {compile_ok_count}/{len(compile_results)}\n")
+        f.write(f"File kinds synced this run: {kind_totals['json']} json (cleaned+compiled), "
+                f"{kind_totals['srs']} srs (pre-compiled, copied through), "
+                f"{kind_totals['other']} other (synced as-is, not converted)\n")
+        if other_files:
+            f.write("Synced but not converted (not json, not srs):\n")
+            for namespace, rel_path in other_files:
+                f.write(f"  - [{namespace}] {rel_path}\n")
+        f.write(f"\nSRS compiled/copied: {compile_ok_count}/{len(compile_results)}\n")
         if compile_failures:
-            f.write("SRS compile failures:\n")
+            f.write("SRS compile/copy failures:\n")
             for namespace, rel_path, ok, msg, *_ in compile_failures:
                 f.write(f"  - [{namespace}] {rel_path}: {msg}\n")
         f.write("\n")
         f.write("=" * 70 + "\n")
         for res in source_results:
             for r in res["per_file_reports"]:
-                f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['action']}]\n")
+                f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['kind']}] [{r['action']}]\n")
+                if r["kind"] != "json":
+                    continue
                 f.write(f"  Total rules: {r['rules_total']}, discarded rules: {r['rules_discarded']}\n")
                 rc = r["removed_counts"]
                 f.write(f"  Removed -> domain: {rc['domain']}, "
@@ -498,7 +713,7 @@ def main():
         f.write(f"- Blacklisted entries removed: **{total_removed_all}**\n")
         f.write(f"- Empty rules discarded: **{total_discarded_rules}**\n")
         f.write(f"- Files dropped entirely (all rules emptied): **{len(discarded_files)}**\n")
-        f.write(f"- SRS files compiled: **{compile_ok_count}/{len(compile_results)}**\n\n")
+        f.write(f"- SRS files compiled/copied: **{compile_ok_count}/{len(compile_results)}**\n\n")
 
         if compile_failures:
             f.write("### SRS compile failures\n" +
