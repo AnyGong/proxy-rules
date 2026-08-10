@@ -14,6 +14,10 @@
   "local_output_root": "rules",
   "upstream_checkout_root": "upstream",
 
+  "enable_custom": true,
+  "custom_dir_name": "custom",
+  "_custom_note": "The custom/ directory (multi-level subdirectories supported) holds your own hand-maintained JSON rule-sets — checked into this repo directly, not fetched from anywhere. Every run, files under custom/ go through the same blacklist cleanup as any other source, get written to rules/custom/<...>.json, and get compiled to srs/custom/<...>.srs (dated + latest), exactly like a configured source. If custom/ doesn't exist or is empty, it's silently skipped.",
+
   "sing_box_bin": "sing-box",
 
   "cdn_base_url": "https://testingcf.jsdelivr.net/gh",

@@ -24,7 +24,7 @@ jobs:
       - name: Sparse-checkout every configured source
         run: |
           mkdir -p "$GITHUB_WORKSPACE/upstream"
-          jq -c '.sources[]' config/sync.json | while read -r src; do
+          jq -c '.sources[]' sync.json | while read -r src; do
             owner=$(echo "$src" | jq -r '.owner')
             repo=$(echo "$src" | jq -r '.repo')
             branch=$(echo "$src" | jq -r '.branch')
@@ -64,7 +64,7 @@ jobs:
 
       - name: Run cleanup + SRS compile on the checked-out files
         id: sync
-        run: python3 scripts/sync_and_clean.py
+        run: python3 sync_and_clean.py
 
       - name: Commit changes
         if: steps.sync.outputs.changed == 'true'

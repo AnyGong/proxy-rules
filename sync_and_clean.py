@@ -40,8 +40,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-CONFIG_DIR = ROOT / "config"
+ROOT = Path(__file__).resolve().parent
+CONFIG_DIR = ROOT
 LOG_DIR = ROOT / "logs"
 
 CLEAN_FIELDS = ("domain", "domain_suffix", "domain_keyword")
@@ -143,27 +143,26 @@ def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) 
     return f"{base_url.rstrip('/')}/{owner}/{repo}@{ref}/{rel_path}"
 
 
-def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
-    """Sync + clean one upstream source. Returns a dict of results, all paths
-    namespaced under @<owner>/<repo>/<branch>/<directory_name>/... ."""
-    namespace = source_namespace(source)
+def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
+                    blacklist_lower: list, required: bool = True):
+    """Core sync+clean logic shared by both configured upstream sources and
+    the local custom/ directory. Reads every *.json under upstream_dir,
+    cleans it, and writes the result under output_dir, mirroring the
+    (possibly multi-level) subdirectory structure. Returns a result dict."""
     namespace_str = str(namespace)
 
-    checkout_root = ROOT / sync_cfg.get("upstream_checkout_root", "upstream")
-    upstream_dir = checkout_root / namespace
-    output_dir = ROOT / sync_cfg["local_output_root"] / namespace
-
     if not upstream_dir.exists():
-        print(f"ERROR: upstream checkout dir not found for source '{namespace_str}': {upstream_dir}\n"
-              f"Did the workflow's sparse-checkout step run for this source first?", file=sys.stderr)
+        if required:
+            print(f"ERROR: source dir not found for '{namespace_str}': {upstream_dir}\n"
+                  f"Did the workflow's sparse-checkout step run for this source first?", file=sys.stderr)
         return {
             "namespace": namespace_str, "namespace_path": namespace,
             "output_dir": output_dir, "per_file_reports": [],
-            "added": [], "updated": [], "deleted": [], "unchanged": [], "error": True,
+            "added": [], "updated": [], "deleted": [], "unchanged": [], "error": required,
         }
 
     upstream_files = sorted(upstream_dir.rglob("*.json"))
-    print(f"[{namespace_str}] Found {len(upstream_files)} JSON files in local checkout ({upstream_dir}).")
+    print(f"[{namespace_str}] Found {len(upstream_files)} JSON files ({upstream_dir}).")
 
     existing_before = {}
     if output_dir.exists():
@@ -184,7 +183,7 @@ def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
         try:
             doc = json.loads(src_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as e:
-            print(f"  [{namespace_str}] ! Skipping {rel_path}: invalid JSON upstream ({e})", file=sys.stderr)
+            print(f"  [{namespace_str}] ! Skipping {rel_path}: invalid JSON ({e})", file=sys.stderr)
             continue
 
         cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
@@ -250,6 +249,29 @@ def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
     }
 
 
+def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
+    """Sync + clean one configured upstream source. All paths are namespaced
+    under @<owner>/<repo>/<branch>/<directory_name>/... (each of which may
+    itself be a multi-level path, e.g. directory_name="sing-box/Clash")."""
+    namespace = source_namespace(source)
+    checkout_root = ROOT / sync_cfg.get("upstream_checkout_root", "upstream")
+    upstream_dir = checkout_root / namespace
+    output_dir = ROOT / sync_cfg["local_output_root"] / namespace
+    return sync_local_tree(namespace, upstream_dir, output_dir, blacklist_lower, required=True)
+
+
+def process_custom(sync_cfg: dict, blacklist_lower: list):
+    """Clean the local custom/ directory (checked into this repo directly,
+    not fetched from any upstream). Supports arbitrary multi-level
+    subdirectories under custom/. Optional — if the directory doesn't exist
+    or is empty, this is silently skipped rather than treated as an error."""
+    custom_dir_name = sync_cfg.get("custom_dir_name", "custom")
+    namespace = Path(custom_dir_name)
+    upstream_dir = ROOT / custom_dir_name
+    output_dir = ROOT / sync_cfg["local_output_root"] / custom_dir_name
+    return sync_local_tree(namespace, upstream_dir, output_dir, blacklist_lower, required=False)
+
+
 def main():
     sync_cfg = load_json(CONFIG_DIR / "sync.json")
     blacklist_cfg = load_json(CONFIG_DIR / "blacklist.json")
@@ -257,8 +279,9 @@ def main():
     blacklist_lower = [b.lower() for b in blacklist]
 
     sources = sync_cfg.get("sources", [])
-    if not sources:
-        print("ERROR: config/sync.json has no 'sources' configured.", file=sys.stderr)
+    enable_custom = sync_cfg.get("enable_custom", True)
+    if not sources and not enable_custom:
+        print("ERROR: sync.json has no 'sources' configured and custom/ is disabled.", file=sys.stderr)
         sys.exit(1)
 
     LOG_DIR.mkdir(exist_ok=True)
@@ -266,6 +289,8 @@ def main():
     date_str = run_ts.split("_")[0]  # YYYYMMDD
 
     source_results = [process_source(src, sync_cfg, blacklist_lower) for src in sources]
+    if enable_custom:
+        source_results.append(process_custom(sync_cfg, blacklist_lower))
 
     all_added = sum((r["added"] for r in source_results), [])
     all_updated = sum((r["updated"] for r in source_results), [])
@@ -336,60 +361,76 @@ def main():
     compile_failures = [r for r in compile_results if not r[2]]
     compile_ok_count = len(compile_results) - len(compile_failures)
 
-    # ---------- Build jsDelivr access links for every kept file (json + srs, all sources) ----------
-    access_links = []  # (rel_path_with_ext, url)
+    # ---------- Build the "latest" SRS link list (json links and dated snapshots
+    # are intentionally excluded from the public manifest — see ACCESS_LINKS.md below) ----------
+    latest_entries = []  # (filename, url)
     for namespace, rel_path, ok, msg, json_out_rel, dated_rel, latest_rel in compile_results:
-        access_links.append((json_out_rel, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, json_out_rel)))
-        if ok:
-            dated_full = f"srs/{dated_rel}"
-            latest_full = f"srs/{latest_rel}"
-            access_links.append((dated_full, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_ref, dated_full)))
-            # "latest" is a stable URL whose content changes every run, so it's always
-            # resolved against the branch — pinning it to a release tag would mean the
-            # tag's contents silently drift after the fact, which defeats the point of a tag.
-            access_links.append((latest_full, jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)))
+        if not ok:
+            continue
+        latest_full = f"srs/{latest_rel}"
+        url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
+        filename = Path(latest_rel).name
+        latest_entries.append((filename, url))
 
-    access_links.sort(key=lambda x: x[0])
+    latest_entries.sort(key=lambda x: (x[0].lower(), x[0]))
+
+    groups = {}
+    for filename, url in latest_entries:
+        first_char = filename[0].upper() if filename else "0-9"
+        if not first_char.isalpha():
+            first_char = "0-9"
+        groups.setdefault(first_char, []).append((filename, url))
+    letters_sorted = sorted(groups.keys(), key=lambda k: (k == "0-9", k))
 
     # ---------- Single manifest: ACCESS_LINKS.md ----------
-    # Format per entry:
-    #   <source path>
-    #   ```
-    #   <url>
-    #   ```
+    # SRS-only navigation index, grouped alphabetically by filename. No JSON
+    # links and no source-path text are shown — only the compiled .srs CDN
+    # link for each file, always resolved against the branch (these links are
+    # meant to be permanent, not tied to any one dated snapshot).
     # Overwritten every run so it always reflects the current file set.
     links_path = ROOT / "ACCESS_LINKS.md"
     active_namespaces = sorted(set(r[0] for r in compile_results)) or \
                         [str(source_namespace(s)) for s in sources]
     with open(links_path, "w", encoding="utf-8") as f:
         f.write("# Access Links\n\n")
-        f.write(f"Generated {run_ts} UTC · CDN ref `{cdn_ref}` (mode `{cdn_ref_mode}`)\n\n")
-        f.write(f"Sources: {', '.join(active_namespaces)}\n\n")
-        f.write("Naming convention (identical for synced files and srs): "
-                "`@<owner>/<repo>/<branch>/<directory_name>/<...>`\n\n")
-        f.write(f"- srs dated snapshots: `srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/{date_str}/<file>.srs`\n")
-        f.write(f"- srs latest catalog: `srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.srs` "
-                f"(always current, pinned to branch `{cdn_branch}`)\n\n")
-        f.write(f"Total files: {len(access_links)} "
-                f"({len(compile_results)} json, {2 * compile_ok_count} srs [dated+latest])\n\n")
+        f.write(f"Generated {run_ts} UTC\n\n")
+
+        f.write("## Summary\n\n")
+        f.write(f"- Total SRS files: {len(latest_entries)}\n")
+        f.write(f"- Sources: {len(active_namespaces)}\n")
         if compile_failures:
-            f.write(f"> **Warning:** {len(compile_failures)} file(s) failed SRS compilation "
-                    f"and have no `.srs` entry below — see `logs/sync_{run_ts}.log`.\n\n")
+            f.write(f"- Compile failures this run: {len(compile_failures)} "
+                    f"(see `logs/sync_{run_ts}.log`)\n")
+        f.write("\n---\n\n")
+
+        f.write("## Navigation\n\n")
+        f.write(" · ".join(f"[{letter}](#{letter.lower()})" for letter in letters_sorted) + "\n\n")
         f.write("---\n\n")
-        for rel_path, url in access_links:
-            f.write(f"{rel_path}\n")
-            f.write("```\n")
-            f.write(f"{url}\n")
-            f.write("```\n\n")
+
+        for letter in letters_sorted:
+            f.write(f"## {letter}\n\n")
+            for filename, url in groups[letter]:
+                f.write(f"### {filename}\n")
+                f.write("```\n")
+                f.write(f"{url}\n")
+                f.write("```\n\n")
+            f.write("---\n\n")
+
+        f.write("## Related\n\n")
+        f.write("- [Changelog](CHANGELOG.md)\n")
+        f.write(f"- [Sync log](logs/sync_{run_ts}.log)\n")
+        f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
 
     # ---------- Detailed log ----------
     detail_log_path = LOG_DIR / f"sync_{run_ts}.log"
     with open(detail_log_path, "w", encoding="utf-8") as f:
         f.write(f"Sync run: {run_ts} UTC\n")
-        f.write(f"Sources ({len(sources)}):\n")
+        f.write(f"Sources ({len(sources)}{' + custom' if enable_custom else ''}):\n")
         for src in sources:
             f.write(f"  - {source_namespace(src)}  <-  "
                     f"{src['owner']}/{src['repo']}@{src['branch']}:{src['upstream_path']}\n")
+        if enable_custom:
+            f.write(f"  - {sync_cfg.get('custom_dir_name', 'custom')}  <-  local (not fetched)\n")
         f.write(f"Blacklist entries: {len(blacklist)}\n")
         f.write(f"  {blacklist}\n\n")
         f.write(f"Files added:   {len(all_added)}\n")
@@ -443,6 +484,8 @@ def main():
         for src in sources:
             f.write(f"- `{source_namespace(src)}` ← "
                     f"`{src['owner']}/{src['repo']}` @ `{src['branch']}` (`{src['upstream_path']}`)\n")
+        if enable_custom:
+            f.write(f"- `{sync_cfg.get('custom_dir_name', 'custom')}` ← local files (not fetched)\n")
         f.write("\n")
         f.write(f"- Files added: **{len(all_added)}**\n")
         f.write(f"- Files updated: **{len(all_updated)}**\n")

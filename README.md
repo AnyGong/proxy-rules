@@ -1,56 +1,108 @@
-# sing-box Rule Sync & Cleanup
+# sing-box Rule Sync, Cleanup & SRS Compile
 
-Automatically mirrors `sing-box` JSON rule-set files from an upstream GitHub
-repository, strips blacklisted domains, and cuts a timestamped release
-whenever anything actually changes.
+Mirrors sing-box JSON rule-sets from one or more upstream GitHub repos (plus
+any hand-maintained JSON of your own), strips blacklisted domains, compiles
+everything to sing-box's binary `.srs` format, publishes jsDelivr CDN links,
+and cuts a timestamped release whenever anything actually changes.
+
+## Layout
+
+```
+sync.json               # sources, output paths, CDN settings
+blacklist.json          # strings to strip — edit anytime, no code changes
+sync_and_clean.py        # the whole pipeline
+custom/                  # optional: your own hand-maintained JSON rule-sets
+rules/                   # generated: cleaned JSON, one tree per source
+srs/                     # generated: compiled .srs, one tree per source
+logs/                    # generated: per-run detail log + release summary
+CHANGELOG.md             # generated: running history
+ACCESS_LINKS.md          # generated: jsDelivr link for every file, this run
+.github/workflows/sync.yml
+```
 
 ## How it works
 
-The fetch and the cleanup are now split cleanly between the workflow and the script:
-
-1. **`.github/workflows/sync.yml`** does the fetching with plain `git`:
-   a shallow, blobless, sparse `git clone` that pulls down only the
-   upstream repo's `sing-box` directory (`--filter=blob:none --sparse`).
-   No GitHub API calls, no token needed for public upstream repos, no
-   rate limits. The result lands at `upstream/sing-box/` in the workspace.
-2. **`scripts/sync_and_clean.py`** then reads those local files and:
-   - Removes any entry in `domain`, `domain_suffix`, or `domain_keyword`
-     whose value **contains** a blacklisted substring (case-insensitive).
-   - Drops a field entirely if it becomes empty after cleanup.
-   - Drops a rule entirely if *all* its fields were removed.
-   - Drops a file entirely if *all* its rules were discarded.
-3. Cleaned files are written into `sing-box/` (configurable) in this repo.
-4. A detailed log (`logs/sync_<timestamp>.log`) and a release-ready summary
-   (`logs/summary_<timestamp>.md`) are generated, and the summary is
-   appended to `CHANGELOG.md`.
+1. **`.github/workflows/sync.yml`** fetches every configured source with a
+   shallow, blobless, sparse `git clone` — no GitHub API calls, no token
+   needed for public upstreams, no rate limits. Each source lands at
+   `upstream/@<owner>/<repo>/<branch>/<directory_name>/`.
+2. **`sync_and_clean.py`** then, for every source *and* the local `custom/`
+   directory:
+    - Removes any entry in `domain`, `domain_suffix`, or `domain_keyword`
+      whose value **contains** a blacklisted substring (case-insensitive).
+    - Drops a field entirely if it becomes empty after cleanup.
+    - Drops a rule entirely if *all* its fields were removed.
+    - Drops a file entirely if *all* its rules were discarded.
+    - Writes the cleaned JSON to `rules/<namespace>/<...>.json`.
+    - Compiles it to sing-box's `.srs` binary format, written two ways:
+        - `srs/<namespace>/<...>/<date>/<file>.srs` — dated snapshot, kept forever
+        - `srs/<namespace>/<...>/<file>.srs` — "latest", always current, no date
+3. Every file touched this run gets a jsDelivr link in **`ACCESS_LINKS.md`**
+   (path, then a fenced code block with the URL).
+4. A detailed log (`logs/sync_<ts>.log`) and release summary
+   (`logs/summary_<ts>.md`) are generated; the summary is appended to
+   `CHANGELOG.md`.
 5. The workflow runs every 12 hours (or on manual dispatch), and only if
-   something changed does it:
-   - commit the updated files,
-   - create a tag `vYYYYMMDD_HHMMSS`,
-   - publish a GitHub Release using the generated summary as release notes.
+   something changed does it commit, tag `vYYYYMMDD_HHMMSS`, and publish a
+   GitHub Release using the summary as release notes.
 
-If nothing changed upstream, no commit/tag/release is created.
+If nothing changed, no commit/tag/release happens.
+
+## Namespacing
+
+Both `rules/` and `srs/` use the identical prefix, so multiple sources never
+collide even if they happen to produce a same-named file:
+
+```
+rules/@<owner>/<repo>/<branch>/<directory_name>/<...>.json
+srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.srs
+srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.srs
+```
+
+`upstream_path` and `directory_name` both support multi-level paths (e.g.
+`"sing-box/Clash"`) — everything is built with `pathlib`, and Git's
+sparse-checkout (cone mode, default since Git 2.25) accepts nested
+directories directly.
+
+`custom/` follows the same pattern but with a fixed, ownerless namespace —
+`rules/custom/<...>.json` and `srs/custom/<...>.srs` — and also supports
+arbitrary multi-level subdirectories underneath it (e.g.
+`custom/mygroup/ads/blocklist.json`). Files here aren't fetched from
+anywhere; you maintain them directly in this repo, and every run they go
+through the exact same cleanup + compile pipeline as any other source. If
+`custom/` doesn't exist or is empty, it's silently skipped.
 
 ## Configuration
 
-### `config/sync.json`
+### `sync.json`
 ```jsonc
 {
-  "upstream_owner": "SagerNet",              // <- set to the real upstream owner
-  "upstream_repo": "sing-geosite",           // <- set to the real upstream repo
-  "upstream_branch": "rule-set",
-  "upstream_path": "sing-box",               // directory inside upstream to sync
-  "upstream_checkout_dir": "upstream/sing-box", // where the workflow's sparse-checkout lands
-  "local_output_dir": "sing-box"             // where cleaned files land locally
+  "sources": [
+    {
+      "owner": "SukkaLab",
+      "repo": "ruleset.skk.moe",
+      "branch": "master",
+      "upstream_path": "sing-box",
+      "directory_name": "sing-box"   // optional — defaults to the last segment of upstream_path
+    }
+    // add more entries here for additional upstream repos/directories
+  ],
+
+  "local_output_root": "rules",
+  "upstream_checkout_root": "upstream",
+
+  "enable_custom": true,
+  "custom_dir_name": "custom",
+
+  "sing_box_bin": "sing-box",
+
+  "cdn_base_url": "https://testingcf.jsdelivr.net/gh",
+  "cdn_ref_mode": "tag",      // "tag" (dated files) or "branch" (always-current files)
+  "cdn_branch": "master"
 }
 ```
-**Edit the placeholder `upstream_owner`/`upstream_repo`/`upstream_branch`
-to point at your actual source repository before enabling the workflow —
-and update the matching `env:` block at the top of
-`.github/workflows/sync.yml` (`UPSTREAM_OWNER`/`UPSTREAM_REPO`/
-`UPSTREAM_BRANCH`/`UPSTREAM_PATH`) so both stay in sync.**
 
-### `config/blacklist.json`
+### `blacklist.json`
 ```jsonc
 {
   "blacklist": [
@@ -59,43 +111,34 @@ and update the matching `env:` block at the top of
   ]
 }
 ```
-Add or remove strings any time — no code changes required. Matching is a
-case-insensitive substring check against each array element.
+Matching is a case-insensitive substring check against each array element.
 
 ## Manual run
 
-The script no longer talks to the GitHub API — it just reads local files —
-so you need to populate `upstream/sing-box/` yourself first (the workflow
-does this automatically):
-
 ```bash
+# populate upstream/ yourself (the workflow does this automatically per source)
 git clone --depth 1 --filter=blob:none --sparse \
-  --branch rule-set https://github.com/SagerNet/sing-geosite.git upstream_repo
-cd upstream_repo && git sparse-checkout set sing-box && cd ..
-mkdir -p upstream && cp -r upstream_repo/sing-box upstream/sing-box
+  --branch master https://github.com/SukkaLab/ruleset.skk.moe.git tmp_clone
+(cd tmp_clone && git sparse-checkout set sing-box)
+mkdir -p "upstream/@SukkaLab/ruleset.skk.moe/master/sing-box"
+cp -r tmp_clone/sing-box/. "upstream/@SukkaLab/ruleset.skk.moe/master/sing-box/"
+rm -rf tmp_clone
 
-python3 scripts/sync_and_clean.py
+python3 sync_and_clean.py
 ```
 
-Outputs:
-- `sing-box/**/*.json` — cleaned rule files
-- `logs/sync_<ts>.log` — full per-file detail (counts + exact removed values)
-- `logs/summary_<ts>.md` — condensed summary suitable for release notes
-- `CHANGELOG.md` — running history, newest entries appended
+`sing-box` must be on `PATH` for `.srs` compilation to succeed — if it's
+missing, the script logs the failure per-file and continues (JSON output and
+links still get produced, just no `.srs`/link for that file).
 
-## Notes / things to double check before first real run
+## Notes
 
-- Fetching now uses `git clone --filter=blob:none --sparse`, so only the
-  `sing-box` directory's blobs are ever downloaded — fast, no GitHub API
-  rate limits, no token required for a public upstream repo. If your
-  upstream is private, add auth to the clone URL or an SSH deploy key.
-- `permissions: contents: write` is required in the workflow for it to
-  push commits/tags and create releases with the default token.
-- Keep `config/sync.json` and the `env:` block in `.github/workflows/sync.yml`
-  pointed at the same upstream — the workflow does the fetching, the
-  script only reads what's already on disk.
-- "Empty after cleanup" only strips `invert` as a non-matching key — if the
-  upstream rule-set format includes other selector keys you want preserved
-  even when domain fields are gone (e.g. `ip_cidr`, `process_name`), that's
-  already handled correctly since those keys simply remain and keep the
-  rule alive.
+- `permissions: contents: write` is required in the workflow for it to push
+  commits/tags and create releases with the default token.
+- The "latest" `.srs` catalog is always linked against `cdn_branch`
+  regardless of `cdn_ref_mode`, since its contents change every run — a
+  tag-pinned link to a file that mutates after the tag exists would be
+  misleading.
+- "Empty after cleanup" only strips `invert` as a non-matching key — other
+  selector keys (`ip_cidr`, `process_name`, etc.) are preserved and keep a
+  rule alive even when its domain fields are gone.
