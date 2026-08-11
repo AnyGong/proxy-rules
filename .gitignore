@@ -11,3 +11,10 @@
 *.swp
 .temp
 .DS_Store
+
+# Generated compiled output artifacts (stored only on release branch)
+json/
+conf/
+srs/
+mrs/
+logs/

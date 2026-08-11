@@ -22,6 +22,6 @@
 
   "cdn_base_url": "https://testingcf.jsdelivr.net/gh",
   "cdn_ref_mode": "tag",
-  "cdn_branch": "master",
+  "cdn_branch": "release",
   "_cdn_note": "cdn_owner/cdn_repo (used only as a fallback if GITHUB_REPOSITORY isn't set) identify the repo HOSTING these files for jsDelivr — i.e. this repo, not any upstream source. cdn_ref_mode 'tag' links dated SRS snapshots and JSON to the exact release tag just created this run; the 'latest' SRS catalog always links against cdn_branch regardless of this setting, since its contents change every run."
 }

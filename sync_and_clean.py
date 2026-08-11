@@ -280,7 +280,7 @@ def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) 
     return f"{base_url.rstrip('/')}/{owner}/{repo}@{ref}/{rel_path}"
 
 
-def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
+def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, conf_output_dir: Path,
                     blacklist_lower: list, required: bool = True):
     """Core sync logic shared by both configured upstream sources and the
     local custom/ directory. Every file under upstream_dir is synced,
@@ -296,7 +296,8 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                   f"Did the workflow's sparse-checkout step run for this source first?", file=sys.stderr)
         return {
             "namespace": namespace_str, "namespace_path": namespace,
-            "output_dir": output_dir, "per_file_reports": [],
+            "json_output_dir": json_output_dir, "conf_output_dir": conf_output_dir,
+            "per_file_reports": [],
             "added": [], "updated": [], "deleted": [], "unchanged": [], "error": required,
         }
 
@@ -312,16 +313,21 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
           f"cleaned/converted, the rest sync through as-is.")
 
     existing_before = {}
-    if output_dir.exists():
-        for p in output_dir.rglob("*"):
+    if json_output_dir.exists():
+        for p in json_output_dir.rglob("*"):
             if p.is_file():
-                existing_before[str(p.relative_to(output_dir))] = p.read_bytes()
+                existing_before[("json", str(p.relative_to(json_output_dir)))] = (p.read_bytes(), p)
+    if conf_output_dir.exists():
+        for p in conf_output_dir.rglob("*"):
+            if p.is_file():
+                existing_before[("conf", str(p.relative_to(conf_output_dir)))] = (p.read_bytes(), p)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    json_output_dir.mkdir(parents=True, exist_ok=True)
+    conf_output_dir.mkdir(parents=True, exist_ok=True)
 
     per_file_reports = []
     added, updated, deleted, unchanged = [], [], [], []
-    seen_relpaths = set()
+    seen_keys = set()
 
     for src_path in upstream_files:
         rel_path_src = str(src_path.relative_to(upstream_dir))
@@ -329,8 +335,9 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
 
         if suffix == ".json":
             rel_path = rel_path_src  # output extension unchanged
-            seen_relpaths.add(rel_path)
-            local_path = output_dir / rel_path
+            key = ("json", rel_path)
+            seen_keys.add(key)
+            local_path = json_output_dir / rel_path
 
             try:
                 doc = json.loads(src_path.read_text(encoding="utf-8"))
@@ -353,7 +360,8 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                 "action": None,
             }
 
-            old_bytes = existing_before.get(rel_path)
+            old_bytes_entry = existing_before.get(key)
+            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
 
             if cleaned_doc is None:
                 report["action"] = "discarded_all_rules_empty_file"
@@ -392,8 +400,9 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
             # Output filename swaps .conf -> .json since the content format
             # itself has changed, not just been copied through.
             rel_path = str(Path(rel_path_src).with_suffix(".json"))
-            seen_relpaths.add(rel_path)
-            local_path = output_dir / rel_path
+            key = ("conf", rel_path)
+            seen_keys.add(key)
+            local_path = conf_output_dir / rel_path
 
             try:
                 conf_text = src_path.read_text(encoding="utf-8")
@@ -420,7 +429,8 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                 "conf_skipped_lines": conv_stats["skipped_lines"],
             }
 
-            old_bytes = existing_before.get(rel_path)
+            old_bytes_entry = existing_before.get(key)
+            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
 
             if cleaned_doc is None:
                 report["action"] = "discarded_all_rules_empty_file"
@@ -455,15 +465,11 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                   + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
 
         else:
-            # Non-JSON, non-conf file (including pre-compiled .srs/.mrs): synced
-            # through verbatim, never parsed or cleaned. .srs/.mrs files still get
-            # picked up for their respective compile-step handling (as a direct
-            # copy, not a fresh compile) and still get an ACCESS_LINKS.md entry;
-            # any other format is synced to rules/ but not touched further.
             rel_path = rel_path_src
-            seen_relpaths.add(rel_path)
-            local_path = output_dir / rel_path
             kind = "srs" if suffix == ".srs" else "mrs" if suffix == ".mrs" else "other"
+            key = (kind, rel_path)
+            seen_keys.add(key)
+            local_path = (json_output_dir if kind != "conf" else conf_output_dir) / rel_path
             try:
                 new_bytes = src_path.read_bytes()
             except OSError as e:
@@ -478,7 +484,8 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                 "fields_cleared": [], "action": None,
             }
 
-            old_bytes = existing_before.get(rel_path)
+            old_bytes_entry = existing_before.get(key)
+            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
             if old_bytes is None:
                 report["action"] = "added"
                 added.append(rel_path)
@@ -493,16 +500,16 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
             local_path.write_bytes(new_bytes)
             per_file_reports.append(report)
 
-    for rel_path in existing_before:
-        if rel_path not in seen_relpaths:
-            local_path = output_dir / rel_path
-            if local_path.exists():
-                local_path.unlink()
-            deleted.append(rel_path)
+    for key, (bytes_val, p_path) in existing_before.items():
+        if key not in seen_keys:
+            if p_path.exists():
+                p_path.unlink()
+            deleted.append(key[1])
 
     return {
         "namespace": namespace_str, "namespace_path": namespace,
-        "output_dir": output_dir, "per_file_reports": per_file_reports,
+        "json_output_dir": json_output_dir, "conf_output_dir": conf_output_dir,
+        "per_file_reports": per_file_reports,
         "added": added, "updated": updated, "deleted": deleted, "unchanged": unchanged,
         "error": False,
     }
@@ -515,8 +522,9 @@ def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
     namespace = source_namespace(source)
     checkout_root = ROOT / sync_cfg.get("upstream_checkout_root", "upstream")
     upstream_dir = checkout_root / namespace
-    output_dir = ROOT / sync_cfg["local_output_root"] / namespace
-    return sync_local_tree(namespace, upstream_dir, output_dir, blacklist_lower, required=True)
+    json_output_dir = ROOT / "json" / namespace
+    conf_output_dir = ROOT / "conf" / namespace
+    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir, blacklist_lower, required=True)
 
 
 def process_custom(sync_cfg: dict, blacklist_lower: list):
@@ -527,8 +535,9 @@ def process_custom(sync_cfg: dict, blacklist_lower: list):
     custom_dir_name = sync_cfg.get("custom_dir_name", "custom")
     namespace = Path(custom_dir_name)
     upstream_dir = ROOT / custom_dir_name
-    output_dir = ROOT / sync_cfg["local_output_root"] / custom_dir_name
-    return sync_local_tree(namespace, upstream_dir, output_dir, blacklist_lower, required=False)
+    json_output_dir = ROOT / "json" / custom_dir_name
+    conf_output_dir = ROOT / "conf" / custom_dir_name
+    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir, blacklist_lower, required=False)
 
 
 def main():
@@ -560,7 +569,7 @@ def main():
     # ---------- CDN identity (needed for both the srs output path and the links) ----------
     cdn_base_url = sync_cfg.get("cdn_base_url", "https://testingcf.jsdelivr.net/gh")
     cdn_ref_mode = sync_cfg.get("cdn_ref_mode", "tag")  # "tag" or "branch"
-    cdn_branch = sync_cfg.get("cdn_branch", "master")
+    cdn_branch = sync_cfg.get("cdn_branch", "release")
     tag_name = f"v{run_ts}"
     cdn_ref = cdn_branch if cdn_ref_mode == "branch" else tag_name
 
@@ -572,22 +581,10 @@ def main():
         cdn_repo = sync_cfg.get("cdn_repo", "YOUR_REPO_NAME")
 
     # ---------- Compile every kept JSON file to .srs AND .mrs, per source ----------
-    # Both trees are stored under the SAME @<owner>/<repo>/<branch>/<directory_name>
-    # namespace as the synced JSON, mirrored per format:
-    #   dated snapshot: <fmt>/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<date>/<file>.<fmt>
-    #   latest catalog: <fmt>/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<file>.<fmt>  (always current)
-    # A pre-compiled upstream .srs is only ever copied into the srs/ tree, and a
-    # pre-compiled upstream .mrs only ever into the mrs/ tree — neither is used to
-    # derive the other format.
     sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
     mihomo_bin = sync_cfg.get("mihomo_bin", "mihomo")
-    output_root_name = sync_cfg["local_output_root"]
 
     def run_compile_stage(format_name: str, binary: str, compiler_fn, precompiled_kind: str):
-        """Compile (or pass through) every kept file eligible for one binary
-        rule-set format ('srs' or 'mrs'). Returns a list of
-        (format_name, namespace, rel_path, ok, message, synced_out_rel,
-        dated_rel, latest_rel) tuples."""
         format_root = ROOT / format_name
         results = []
 
@@ -595,22 +592,27 @@ def main():
             if res["error"]:
                 continue
             namespace_path = res["namespace_path"]
-            output_dir = res["output_dir"]
+            json_output_dir = res["json_output_dir"]
+            conf_output_dir = res["conf_output_dir"]
             kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
             kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
 
             for rel_path in kept_relpaths:
                 kind = kind_lookup.get(rel_path)
                 if kind == "other":
-                    # Synced to rules/ as-is, but not json/conf and not a pre-compiled
-                    # file for this format — nothing to compile/copy, no link entry.
                     continue
                 if kind not in ("json", "conf", precompiled_kind):
-                    # A pre-compiled file for the OTHER format (e.g. a pre-compiled
-                    # .srs while running the mrs stage) — not part of this tree.
                     continue
 
-                synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{rel_path}"
+                if kind == "json":
+                    source_file_path = json_output_dir / rel_path
+                    synced_out_rel = f"json/{namespace_path.as_posix()}/{rel_path}"
+                elif kind == "conf":
+                    source_file_path = conf_output_dir / rel_path
+                    synced_out_rel = f"conf/{namespace_path.as_posix()}/{rel_path}"
+                else:
+                    source_file_path = (json_output_dir if (json_output_dir / rel_path).exists() else conf_output_dir) / rel_path
+                    synced_out_rel = f"{format_name}/{namespace_path.as_posix()}/{rel_path}"
 
                 rel = Path(rel_path)
                 out_filename = rel.with_suffix(f".{format_name}").name
@@ -626,21 +628,19 @@ def main():
                 latest_path = format_root / latest_rel
 
                 if kind in ("json", "conf"):
-                    json_path = output_dir / rel_path
-                    ok, msg = compiler_fn(binary, json_path, dated_path)
+                    ok, msg = compiler_fn(binary, source_file_path, dated_path)
                     if ok:
                         latest_path.parent.mkdir(parents=True, exist_ok=True)
                         shutil.copy2(dated_path, latest_path)
                     else:
                         print(f"  [{res['namespace']}] ! {format_name.upper()} compile failed "
                               f"for {rel_path}: {msg}", file=sys.stderr)
-                else:  # kind == precompiled_kind: already compiled upstream — copy through, don't recompile
-                    precompiled_source_path = output_dir / rel_path
+                else:  # precompiled_kind
                     try:
                         dated_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(precompiled_source_path, dated_path)
+                        shutil.copy2(source_file_path, dated_path)
                         latest_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(precompiled_source_path, latest_path)
+                        shutil.copy2(source_file_path, latest_path)
                         ok, msg = True, f"synced (pre-compiled upstream .{format_name}, not recompiled)"
                     except OSError as e:
                         ok, msg = False, f"failed to copy pre-compiled .{format_name}: {e}"
@@ -662,12 +662,6 @@ def main():
     srs_ok_count = len(srs_compile_results) - len([r for r in srs_compile_results if not r[3]])
     mrs_ok_count = len(mrs_compile_results) - len([r for r in mrs_compile_results if not r[3]])
 
-    # ---------- Build the "latest" link list, grouped by base filename so every
-    # format a file has (srs / mrs / json / conf) sits together. json/conf links
-    # point at the synced rules/ output tree (conf-origin files are still synced
-    # out as .json, but are labeled "conf" here since that's their source format);
-    # all links resolve against the branch, not a dated snapshot, since they're
-    # meant to be permanent. ----------
     latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs": url, "json": url, "conf": url}
 
     for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel in compile_results:
@@ -684,7 +678,8 @@ def main():
         for r in res["per_file_reports"]:
             if r["file"] not in kept or r["kind"] not in ("json", "conf"):
                 continue
-            synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{r['file']}"
+            root_dir = "json" if r["kind"] == "json" else "conf"
+            synced_out_rel = f"{root_dir}/{namespace_path.as_posix()}/{r['file']}"
             url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, synced_out_rel)
             base = Path(r["file"]).stem
             latest_by_base.setdefault(base, {})[r["kind"]] = url

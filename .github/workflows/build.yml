@@ -79,14 +79,42 @@ jobs:
         id: sync
         run: python3 sync_and_clean.py
 
-      - name: Commit changes
+      - name: Commit changes to release branch
         if: steps.sync.outputs.changed == 'true'
         run: |
+          mkdir -p /tmp/build_out
+          [ -d json ] && cp -r json /tmp/build_out/
+          [ -d conf ] && cp -r conf /tmp/build_out/
+          [ -d srs ] && cp -r srs /tmp/build_out/
+          [ -d mrs ] && cp -r mrs /tmp/build_out/
+          [ -d logs ] && cp -r logs /tmp/build_out/
+          [ -f ACCESS_LINKS.md ] && cp ACCESS_LINKS.md /tmp/build_out/
+          [ -f CHANGELOG.md ] && cp CHANGELOG.md /tmp/build_out/
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add rules srs mrs CHANGELOG.md logs ACCESS_LINKS.md
-          git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
-          git push
+
+          git fetch origin release:release || true
+          if git rev-parse --verify release >/dev/null 2>&1; then
+            git checkout release
+          else
+            git checkout --orphan release
+            git rm -rf .
+          fi
+
+          [ -d /tmp/build_out/json ] && rm -rf json && cp -r /tmp/build_out/json .
+          [ -d /tmp/build_out/conf ] && rm -rf conf && cp -r /tmp/build_out/conf .
+          [ -d /tmp/build_out/srs ] && rm -rf srs && cp -r /tmp/build_out/srs .
+          [ -d /tmp/build_out/mrs ] && rm -rf mrs && cp -r /tmp/build_out/mrs .
+          [ -d /tmp/build_out/logs ] && rm -rf logs && cp -r /tmp/build_out/logs .
+          [ -f /tmp/build_out/ACCESS_LINKS.md ] && cp /tmp/build_out/ACCESS_LINKS.md .
+          [ -f /tmp/build_out/CHANGELOG.md ] && cp /tmp/build_out/CHANGELOG.md .
+
+          git add json conf srs mrs ACCESS_LINKS.md CHANGELOG.md logs
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
+            git push origin release
+          fi
 
       - name: Tag release
         if: steps.sync.outputs.changed == 'true'
