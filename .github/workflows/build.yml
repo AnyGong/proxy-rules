@@ -79,6 +79,17 @@ jobs:
         id: sync
         run: python3 sync_and_clean.py
 
+      - name: Commit documentation to main branch
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md CHANGELOG.md
+          if [ -n "$(git status --porcelain README.md CHANGELOG.md)" ]; then
+            git commit -m "docs(sync): update README.md and CHANGELOG.md [${{ steps.sync.outputs.tag }}]"
+            git push origin main
+          fi
+
       - name: Commit changes to release branch
         if: steps.sync.outputs.changed == 'true'
         run: |
@@ -88,8 +99,7 @@ jobs:
           [ -d srs ] && cp -r srs /tmp/build_out/
           [ -d mrs ] && cp -r mrs /tmp/build_out/
           [ -d logs ] && cp -r logs /tmp/build_out/
-          [ -f ACCESS_LINKS.md ] && cp ACCESS_LINKS.md /tmp/build_out/
-          [ -f CHANGELOG.md ] && cp CHANGELOG.md /tmp/build_out/
+          [ -f README.md ] && cp README.md /tmp/build_out/
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -107,10 +117,11 @@ jobs:
           [ -d /tmp/build_out/srs ] && rm -rf srs && cp -r /tmp/build_out/srs .
           [ -d /tmp/build_out/mrs ] && rm -rf mrs && cp -r /tmp/build_out/mrs .
           [ -d /tmp/build_out/logs ] && rm -rf logs && cp -r /tmp/build_out/logs .
-          [ -f /tmp/build_out/ACCESS_LINKS.md ] && cp /tmp/build_out/ACCESS_LINKS.md .
-          [ -f /tmp/build_out/CHANGELOG.md ] && cp /tmp/build_out/CHANGELOG.md .
 
-          git add json conf srs mrs ACCESS_LINKS.md CHANGELOG.md logs
+          git rm -f README.md ACCESS_LINKS.md CHANGELOG.md 2>/dev/null || true
+          rm -f README.md ACCESS_LINKS.md CHANGELOG.md
+
+          git add json conf srs mrs logs
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
             git push origin release
@@ -130,7 +141,7 @@ jobs:
           gh release create "${{ steps.sync.outputs.tag }}" \
             --title "${{ steps.sync.outputs.tag }}" \
             --notes-file "${{ steps.sync.outputs.summary_path }}" \
-            "${{ steps.sync.outputs.links_path }}"
+            "/tmp/build_out/README.md"
 
       - name: No changes
         if: steps.sync.outputs.changed != 'true'

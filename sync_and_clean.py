@@ -34,7 +34,7 @@ For every source, this script:
    compiled tree's top-level naming always matches the synced-file tree's.
    Any other file format is synced but never compiled or linked.
 5. Produces a combined detailed log, a release-ready summary, and a single
-   ACCESS_LINKS.md manifest of jsDelivr CDN links for every compiled file
+   README.md manifest of jsDelivr CDN links for every compiled file
    (compiled or pre-compiled-and-passed-through, .srs and .mrs alike)
    touched this run, across all sources.
 6. Emits GitHub Actions outputs so the workflow can decide whether to
@@ -689,11 +689,11 @@ def main():
     def slugify(text: str) -> str:
         return "".join(c.lower() if c.isalnum() else "-" for c in text).strip("-")
 
-    # ---------- Single manifest: ACCESS_LINKS.md ----------
+    # ---------- Single manifest: README.md ----------
     # Flat, alphabetically-sorted per-file index — one entry per base filename,
     # each carrying whichever of its srs/mrs/json/conf links are available.
     # Overwritten every run so it always reflects the current file set.
-    links_path = ROOT / "ACCESS_LINKS.md"
+    links_path = ROOT / "README.md"
     active_namespaces = sorted(set(r[1] for r in compile_results)) or \
                         [str(source_namespace(s)) for s in sources]
     format_order = ("srs", "mrs", "json", "conf")
@@ -865,7 +865,7 @@ def main():
         f.write("Full per-file cleanup detail is attached in the workflow logs "
                 f"(`logs/sync_{run_ts}.log`).\n\n")
         f.write("CDN access links for every file in this release are in "
-                f"[`ACCESS_LINKS.md`](../ACCESS_LINKS.md) (ref: "
+                f"[`README.md`](../README.md) (ref: "
                 f"`{cdn_ref}`).\n")
 
     changelog_path = ROOT / "CHANGELOG.md"
