@@ -86,6 +86,14 @@ def clean_rule_array(arr, blacklist_lower):
 
 
 def clean_ruleset_document(doc: dict, blacklist_lower):
+    # sing-box's rule-set compiler hard-fails ("missing rule-set version") on any
+    # document lacking a top-level "version". Native upstream .json files usually
+    # carry this already, but hand-written custom/*.json sources easily omit it
+    # (and .conf-converted docs already set it in convert_conf_to_ruleset). Default
+    # to 1 — the only version sing-box currently supports — without clobbering an
+    # explicit value if one is already present.
+    doc.setdefault("version", 1)
+
     stats = {
         "rules_total": 0,
         "rules_discarded": 0,
