@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260811_210339
+Generated 20260812_062406
 
 ## Summary
 
 - Total SRS files: 56
 - Sources: 2
-- Compile failures this run: 3 (see `logs/sync_20260811_210339.log`)
+- Compile failures this run: 3 (see `logs/sync_20260812_062406.log`)
 
 ---
 
@@ -343,5 +343,5 @@ https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@master/srs/@SukkaLab/rules
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260811_210339.log)
-- [Release summary](logs/summary_20260811_210339.md)
+- [Sync log](logs/sync_20260812_062406.log)
+- [Release summary](logs/summary_20260812_062406.md)
