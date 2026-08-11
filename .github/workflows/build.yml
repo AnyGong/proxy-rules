@@ -1,4 +1,4 @@
-name: Sync sing-box rules
+name: Sync sing-box/mihomo rules
 
 on:
   schedule:
@@ -62,7 +62,20 @@ jobs:
           rm -rf sing-box.tar.gz "sing-box-${SING_BOX_VERSION}-linux-amd64"
           sing-box version
 
-      - name: Run cleanup + SRS compile on the checked-out files
+      - name: Install mihomo CLI (for MRS compilation)
+        run: |
+          MIHOMO_VERSION=$(curl -fsSL https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
+            | grep -m1 '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo "Installing mihomo v${MIHOMO_VERSION}"
+          curl -fsSL -o mihomo.gz \
+            "https://github.com/MetaCubeX/mihomo/releases/download/v${MIHOMO_VERSION}/mihomo-linux-amd64-v${MIHOMO_VERSION}.gz"
+          gunzip mihomo.gz
+          chmod +x mihomo
+          sudo mv mihomo /usr/local/bin/mihomo
+          rm -f mihomo.gz
+          mihomo -v
+
+      - name: Run cleanup + SRS/MRS compile on the checked-out files
         id: sync
         run: python3 sync_and_clean.py
 
@@ -71,7 +84,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add rules srs CHANGELOG.md logs ACCESS_LINKS.md
+          git add rules srs mrs CHANGELOG.md logs ACCESS_LINKS.md
           git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
           git push
 

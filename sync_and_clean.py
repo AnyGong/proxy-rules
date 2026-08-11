@@ -18,20 +18,25 @@ For every source, this script:
    arrays in every *.json file, per config/blacklist.json.
 3. Writes every synced file (cleaned json, or as-is for everything else) under:
        <local_output_root>/@<owner>/<repo>/<branch>/<directory_name>/<...>
-4. Compiles each kept *.json file to sing-box's binary .srs format. Any
-   file that was ALREADY a pre-compiled .srs upstream is copied through
-   rather than recompiled. Both cases land under the SAME
-   @<owner>/<repo>/<branch>/<directory_name> namespace, two ways:
+4. Compiles each kept *.json file to BOTH sing-box's binary .srs format and
+   mihomo's binary .mrs format. Any file that was ALREADY a pre-compiled
+   .srs (or .mrs) upstream is copied through rather than recompiled, and
+   only into that same format's tree — a pre-compiled .srs is never turned
+   into an .mrs, and vice versa. All cases land under the SAME
+   @<owner>/<repo>/<branch>/<directory_name> namespace, mirrored across
+   both trees, two ways each:
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.srs  (dated snapshot)
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.srs         (always-current "latest")
+       mrs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.mrs  (dated snapshot)
+       mrs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.mrs         (always-current "latest")
    Owner+repo+branch is already globally unique, so using it as the shared
-   prefix for both trees means multiple sources never collide, and the srs
-   tree's top-level naming always matches the synced-file tree's. Any other
-   file format is synced but never compiled or linked.
+   prefix for every tree means multiple sources never collide, and each
+   compiled tree's top-level naming always matches the synced-file tree's.
+   Any other file format is synced but never compiled or linked.
 5. Produces a combined detailed log, a release-ready summary, and a single
-   ACCESS_LINKS.md manifest of jsDelivr CDN links for every .srs file
-   (compiled or pre-compiled-and-passed-through) touched this run, across
-   all sources.
+   ACCESS_LINKS.md manifest of jsDelivr CDN links for every compiled file
+   (compiled or pre-compiled-and-passed-through, .srs and .mrs alike)
+   touched this run, across all sources.
 6. Emits GitHub Actions outputs so the workflow can decide whether to
    commit, tag, and cut a release.
 
@@ -197,6 +202,71 @@ def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
     return True, "ok"
 
 
+def doc_to_mihomo_payload_lines(doc: dict) -> list:
+    """Flatten a cleaned sing-box rule-set JSON document's domain-type
+    fields (domain / domain_suffix / domain_keyword) into mihomo
+    classical-ruleset payload lines (e.g. 'DOMAIN-SUFFIX,example.com').
+    Non-domain fields (ip_cidr, process_name, etc.) aren't representable
+    in an .mrs 'domain' behavior ruleset and are skipped here."""
+    field_to_prefix = {
+        "domain": "DOMAIN",
+        "domain_suffix": "DOMAIN-SUFFIX",
+        "domain_keyword": "DOMAIN-KEYWORD",
+    }
+    lines = []
+    for rule in doc.get("rules", []):
+        if not isinstance(rule, dict):
+            continue
+        for field, prefix in field_to_prefix.items():
+            for value in rule.get(field, []):
+                lines.append(f"{prefix},{value}")
+    return lines
+
+
+def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
+    """Compile a cleaned sing-box rule-set JSON file into binary .mrs
+    format via mihomo's `convert-ruleset` command. mihomo compiles from
+    its own classical-ruleset payload (YAML with a `payload:` list), not
+    directly from sing-box JSON, so this first re-renders the domain-type
+    rules into that payload format in a temp file, then invokes mihomo.
+    Returns (ok: bool, message: str)."""
+    mrs_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        doc = json.loads(json_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return False, f"could not read/parse {json_path.name} for mrs conversion: {e}"
+
+    payload_lines = doc_to_mihomo_payload_lines(doc)
+    if not payload_lines:
+        return False, "no domain-type rules to convert (ip_cidr/process_name-only rule-sets can't produce an .mrs)"
+
+    tmp_yaml_path = mrs_path.with_suffix(".mihomo_payload.tmp.yaml")
+    try:
+        with open(tmp_yaml_path, "w", encoding="utf-8") as f:
+            f.write("payload:\n")
+            for line in payload_lines:
+                escaped = line.replace("'", "''")
+                f.write(f"  - '{escaped}'\n")
+
+        try:
+            result = subprocess.run(
+                [mihomo_bin, "convert-ruleset", "domain", "yaml", str(tmp_yaml_path), str(mrs_path)],
+                capture_output=True, text=True, timeout=60,
+            )
+        except FileNotFoundError:
+            return False, (f"'{mihomo_bin}' binary not found on PATH — install the mihomo "
+                           f"CLI in the workflow before running this script.")
+        except subprocess.TimeoutExpired:
+            return False, "compile timed out after 60s"
+    finally:
+        tmp_yaml_path.unlink(missing_ok=True)
+
+    if result.returncode != 0:
+        return False, (result.stderr or result.stdout or "unknown compile error").strip()
+    return True, "ok"
+
+
 def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) -> str:
     rel_path = rel_path.replace(os.sep, "/")
     return f"{base_url.rstrip('/')}/{owner}/{repo}@{ref}/{rel_path}"
@@ -223,15 +293,15 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
         }
 
     upstream_files = sorted(p for p in upstream_dir.rglob("*") if p.is_file())
-    kind_counts = {"json": 0, "conf": 0, "srs": 0, "other": 0}
+    kind_counts = {"json": 0, "conf": 0, "srs": 0, "mrs": 0, "other": 0}
     for p in upstream_files:
         suf = p.suffix.lower()
         kind_counts["json" if suf == ".json" else "conf" if suf == ".conf" else
-        "srs" if suf == ".srs" else "other"] += 1
+        "srs" if suf == ".srs" else "mrs" if suf == ".mrs" else "other"] += 1
     print(f"[{namespace_str}] Found {len(upstream_files)} files ({upstream_dir}): "
           f"{kind_counts['json']} json, {kind_counts['conf']} conf, {kind_counts['srs']} srs, "
-          f"{kind_counts['other']} other — only json and conf are cleaned/converted, "
-          f"the rest sync through as-is.")
+          f"{kind_counts['mrs']} mrs, {kind_counts['other']} other — only json and conf are "
+          f"cleaned/converted, the rest sync through as-is.")
 
     existing_before = {}
     if output_dir.exists():
@@ -377,15 +447,15 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, output_dir: Path,
                   + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
 
         else:
-            # Non-JSON, non-conf file (including pre-compiled .srs): synced through
-            # verbatim, never parsed or cleaned. .srs files still get picked up for
-            # SRS compile-step handling (as a direct copy, not a fresh compile) and
-            # still get an ACCESS_LINKS.md entry; any other format is synced to
-            # rules/ but not touched further.
+            # Non-JSON, non-conf file (including pre-compiled .srs/.mrs): synced
+            # through verbatim, never parsed or cleaned. .srs/.mrs files still get
+            # picked up for their respective compile-step handling (as a direct
+            # copy, not a fresh compile) and still get an ACCESS_LINKS.md entry;
+            # any other format is synced to rules/ but not touched further.
             rel_path = rel_path_src
             seen_relpaths.add(rel_path)
             local_path = output_dir / rel_path
-            kind = "srs" if suffix == ".srs" else "other"
+            kind = "srs" if suffix == ".srs" else "mrs" if suffix == ".mrs" else "other"
             try:
                 new_bytes = src_path.read_bytes()
             except OSError as e:
@@ -493,110 +563,146 @@ def main():
         cdn_owner = sync_cfg.get("cdn_owner", "YOUR_GITHUB_USERNAME")
         cdn_repo = sync_cfg.get("cdn_repo", "YOUR_REPO_NAME")
 
-    # ---------- Compile every kept JSON file to .srs, per source ----------
-    # Stored under the SAME @<owner>/<repo>/<branch>/<directory_name> namespace as the synced JSON:
-    #   dated snapshot: srs/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<date>/<file>.srs
-    #   latest catalog: srs/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<file>.srs (always current)
+    # ---------- Compile every kept JSON file to .srs AND .mrs, per source ----------
+    # Both trees are stored under the SAME @<owner>/<repo>/<branch>/<directory_name>
+    # namespace as the synced JSON, mirrored per format:
+    #   dated snapshot: <fmt>/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<date>/<file>.<fmt>
+    #   latest catalog: <fmt>/@<owner>/<repo>/<branch>/<directory_name>/<subdir>/<file>.<fmt>  (always current)
+    # A pre-compiled upstream .srs is only ever copied into the srs/ tree, and a
+    # pre-compiled upstream .mrs only ever into the mrs/ tree — neither is used to
+    # derive the other format.
     sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
-    srs_root = ROOT / "srs"
+    mihomo_bin = sync_cfg.get("mihomo_bin", "mihomo")
     output_root_name = sync_cfg["local_output_root"]
 
-    compile_results = []  # (namespace, rel_path, ok, message, synced_out_rel, dated_srs_rel, latest_srs_rel)
+    def run_compile_stage(format_name: str, binary: str, compiler_fn, precompiled_kind: str):
+        """Compile (or pass through) every kept file eligible for one binary
+        rule-set format ('srs' or 'mrs'). Returns a list of
+        (format_name, namespace, rel_path, ok, message, synced_out_rel,
+        dated_rel, latest_rel) tuples."""
+        format_root = ROOT / format_name
+        results = []
 
-    for res in source_results:
-        if res["error"]:
-            continue
-        namespace_path = res["namespace_path"]
-        output_dir = res["output_dir"]
-        kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
-        kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
-
-        for rel_path in kept_relpaths:
-            kind = kind_lookup.get(rel_path)
-            if kind == "other":
-                # Synced to rules/ as-is, but not json and not a pre-compiled .srs —
-                # nothing to compile or copy into srs/, and no ACCESS_LINKS.md entry.
+        for res in source_results:
+            if res["error"]:
                 continue
+            namespace_path = res["namespace_path"]
+            output_dir = res["output_dir"]
+            kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
+            kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
 
-            synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{rel_path}"
+            for rel_path in kept_relpaths:
+                kind = kind_lookup.get(rel_path)
+                if kind == "other":
+                    # Synced to rules/ as-is, but not json/conf and not a pre-compiled
+                    # file for this format — nothing to compile/copy, no link entry.
+                    continue
+                if kind not in ("json", "conf", precompiled_kind):
+                    # A pre-compiled file for the OTHER format (e.g. a pre-compiled
+                    # .srs while running the mrs stage) — not part of this tree.
+                    continue
 
-            rel = Path(rel_path)
-            srs_filename = rel.with_suffix(".srs").name
-            subdir = rel.parent
-            if str(subdir) in (".", ""):
-                dated_rel = namespace_path / date_str / srs_filename
-                latest_rel = namespace_path / srs_filename
-            else:
-                dated_rel = namespace_path / subdir / date_str / srs_filename
-                latest_rel = namespace_path / subdir / srs_filename
+                synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{rel_path}"
 
-            dated_path = srs_root / dated_rel
-            latest_path = srs_root / latest_rel
-
-            if kind in ("json", "conf"):
-                json_path = output_dir / rel_path
-                ok, msg = compile_to_srs(sing_box_bin, json_path, dated_path)
-                if ok:
-                    latest_path.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(dated_path, latest_path)
+                rel = Path(rel_path)
+                out_filename = rel.with_suffix(f".{format_name}").name
+                subdir = rel.parent
+                if str(subdir) in (".", ""):
+                    dated_rel = namespace_path / date_str / out_filename
+                    latest_rel = namespace_path / out_filename
                 else:
-                    print(f"  [{res['namespace']}] ! SRS compile failed for {rel_path}: {msg}", file=sys.stderr)
-            else:  # kind == "srs": already compiled upstream — copy through, don't recompile
-                srs_source_path = output_dir / rel_path
-                try:
-                    dated_path.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(srs_source_path, dated_path)
-                    latest_path.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(srs_source_path, latest_path)
-                    ok, msg = True, "synced (pre-compiled upstream .srs, not recompiled)"
-                except OSError as e:
-                    ok, msg = False, f"failed to copy pre-compiled .srs: {e}"
-                    print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
+                    dated_rel = namespace_path / subdir / date_str / out_filename
+                    latest_rel = namespace_path / subdir / out_filename
 
-            compile_results.append((
-                res["namespace"], rel_path, ok, msg, synced_out_rel,
-                dated_rel.as_posix() if ok else None, latest_rel.as_posix() if ok else None,
-            ))
+                dated_path = format_root / dated_rel
+                latest_path = format_root / latest_rel
 
-    compile_failures = [r for r in compile_results if not r[2]]
+                if kind in ("json", "conf"):
+                    json_path = output_dir / rel_path
+                    ok, msg = compiler_fn(binary, json_path, dated_path)
+                    if ok:
+                        latest_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(dated_path, latest_path)
+                    else:
+                        print(f"  [{res['namespace']}] ! {format_name.upper()} compile failed "
+                              f"for {rel_path}: {msg}", file=sys.stderr)
+                else:  # kind == precompiled_kind: already compiled upstream — copy through, don't recompile
+                    precompiled_source_path = output_dir / rel_path
+                    try:
+                        dated_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(precompiled_source_path, dated_path)
+                        latest_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(precompiled_source_path, latest_path)
+                        ok, msg = True, f"synced (pre-compiled upstream .{format_name}, not recompiled)"
+                    except OSError as e:
+                        ok, msg = False, f"failed to copy pre-compiled .{format_name}: {e}"
+                        print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
+
+                results.append((
+                    format_name, res["namespace"], rel_path, ok, msg, synced_out_rel,
+                    dated_rel.as_posix() if ok else None, latest_rel.as_posix() if ok else None,
+                ))
+
+        return results
+
+    srs_compile_results = run_compile_stage("srs", sing_box_bin, compile_to_srs, "srs")
+    mrs_compile_results = run_compile_stage("mrs", mihomo_bin, compile_to_mrs, "mrs")
+    compile_results = srs_compile_results + mrs_compile_results
+
+    compile_failures = [r for r in compile_results if not r[3]]
     compile_ok_count = len(compile_results) - len(compile_failures)
+    srs_ok_count = len(srs_compile_results) - len([r for r in srs_compile_results if not r[3]])
+    mrs_ok_count = len(mrs_compile_results) - len([r for r in mrs_compile_results if not r[3]])
 
-    # ---------- Build the "latest" SRS link list (json links and dated snapshots
-    # are intentionally excluded from the public manifest — see ACCESS_LINKS.md below) ----------
-    latest_entries = []  # (filename, url)
-    for namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel in compile_results:
+    # ---------- Build the "latest" link list, grouped by base filename so every
+    # format a file has (srs / mrs / json / conf) sits together. json/conf links
+    # point at the synced rules/ output tree (conf-origin files are still synced
+    # out as .json, but are labeled "conf" here since that's their source format);
+    # all links resolve against the branch, not a dated snapshot, since they're
+    # meant to be permanent. ----------
+    latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs": url, "json": url, "conf": url}
+
+    for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel in compile_results:
         if not ok:
             continue
-        latest_full = f"srs/{latest_rel}"
+        latest_full = f"{format_name}/{latest_rel}"
         url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
-        filename = Path(latest_rel).name
-        latest_entries.append((filename, url))
+        base = Path(latest_rel).stem
+        latest_by_base.setdefault(base, {})[format_name] = url
 
-    latest_entries.sort(key=lambda x: (x[0].lower(), x[0]))
+    for res in source_results:
+        kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
+        namespace_path = res["namespace_path"]
+        for r in res["per_file_reports"]:
+            if r["file"] not in kept or r["kind"] not in ("json", "conf"):
+                continue
+            synced_out_rel = f"{output_root_name}/{namespace_path.as_posix()}/{r['file']}"
+            url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, synced_out_rel)
+            base = Path(r["file"]).stem
+            latest_by_base.setdefault(base, {})[r["kind"]] = url
 
-    groups = {}
-    for filename, url in latest_entries:
-        first_char = filename[0].upper() if filename else "0-9"
-        if not first_char.isalpha():
-            first_char = "0-9"
-        groups.setdefault(first_char, []).append((filename, url))
-    letters_sorted = sorted(groups.keys(), key=lambda k: (k == "0-9", k))
+    latest_entries = sorted(latest_by_base.items(), key=lambda kv: (kv[0].lower(), kv[0]))
+
+    def slugify(text: str) -> str:
+        return "".join(c.lower() if c.isalnum() else "-" for c in text).strip("-")
 
     # ---------- Single manifest: ACCESS_LINKS.md ----------
-    # SRS-only navigation index, grouped alphabetically by filename. No JSON
-    # links and no source-path text are shown — only the compiled .srs CDN
-    # link for each file, always resolved against the branch (these links are
-    # meant to be permanent, not tied to any one dated snapshot).
+    # Flat, alphabetically-sorted per-file index — one entry per base filename,
+    # each carrying whichever of its srs/mrs/json/conf links are available.
     # Overwritten every run so it always reflects the current file set.
     links_path = ROOT / "ACCESS_LINKS.md"
-    active_namespaces = sorted(set(r[0] for r in compile_results)) or \
+    active_namespaces = sorted(set(r[1] for r in compile_results)) or \
                         [str(source_namespace(s)) for s in sources]
+    format_order = ("srs", "mrs", "json", "conf")
+    total_by_format = {fmt: sum(1 for _, urls in latest_entries if fmt in urls) for fmt in format_order}
     with open(links_path, "w", encoding="utf-8") as f:
         f.write("# Access Links\n\n")
         f.write(f"Generated {run_ts}\n\n")
 
         f.write("## Summary\n\n")
-        f.write(f"- Total SRS files: {len(latest_entries)}\n")
+        f.write(f"- Total files: {len(latest_entries)} "
+                f"({total_by_format['srs']} SRS, {total_by_format['mrs']} MRS, "
+                f"{total_by_format['json']} JSON, {total_by_format['conf']} CONF)\n")
         f.write(f"- Sources: {len(active_namespaces)}\n")
         if compile_failures:
             f.write(f"- Compile failures this run: {len(compile_failures)} "
@@ -604,17 +710,20 @@ def main():
         f.write("\n---\n\n")
 
         f.write("## Navigation\n\n")
-        f.write(" · ".join(f"[{letter}](#{letter.lower()})" for letter in letters_sorted) + "\n\n")
-        f.write("---\n\n")
+        for base, urls in latest_entries:
+            anchor = slugify(base)
+            f.write(f"- [{base}](#{anchor})\n")
+            for fmt in format_order:
+                if fmt in urls:
+                    f.write(f"  - [{base}.{fmt}](#{anchor})\n")
+        f.write("\n---\n\n")
 
-        for letter in letters_sorted:
-            f.write(f"## {letter}\n\n")
-            for filename, url in groups[letter]:
-                f.write(f"### {filename}\n")
-                f.write("```\n")
-                f.write(f"{url}\n")
-                f.write("```\n\n")
-            f.write("---\n\n")
+        for base, urls in latest_entries:
+            f.write(f"### {base}\n\n")
+            for fmt in format_order:
+                if fmt in urls:
+                    f.write("```\n" + urls[fmt] + "\n```\n")
+            f.write("\n")
 
         f.write("## Related\n\n")
         f.write("- [Changelog](CHANGELOG.md)\n")
@@ -622,7 +731,7 @@ def main():
         f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
 
     # ---------- Detailed log ----------
-    kind_totals = {"json": 0, "conf": 0, "srs": 0, "other": 0}
+    kind_totals = {"json": 0, "conf": 0, "srs": 0, "mrs": 0, "other": 0}
     other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
@@ -650,16 +759,18 @@ def main():
         f.write(f"File kinds synced this run: {kind_totals['json']} json (cleaned+compiled), "
                 f"{kind_totals['conf']} conf (converted to json, cleaned, compiled), "
                 f"{kind_totals['srs']} srs (pre-compiled, copied through), "
+                f"{kind_totals['mrs']} mrs (pre-compiled, copied through), "
                 f"{kind_totals['other']} other (synced as-is, not converted)\n")
         if other_files:
-            f.write("Synced but not converted (not json, not conf, not srs):\n")
+            f.write("Synced but not converted (not json, not conf, not srs, not mrs):\n")
             for namespace, rel_path in other_files:
                 f.write(f"  - [{namespace}] {rel_path}\n")
-        f.write(f"\nSRS compiled/copied: {compile_ok_count}/{len(compile_results)}\n")
+        f.write(f"\nSRS compiled/copied: {srs_ok_count}/{len(srs_compile_results)}\n")
+        f.write(f"MRS compiled/copied: {mrs_ok_count}/{len(mrs_compile_results)}\n")
         if compile_failures:
-            f.write("SRS compile/copy failures:\n")
-            for namespace, rel_path, ok, msg, *_ in compile_failures:
-                f.write(f"  - [{namespace}] {rel_path}: {msg}\n")
+            f.write("SRS/MRS compile/copy failures:\n")
+            for format_name, namespace, rel_path, ok, msg, *_ in compile_failures:
+                f.write(f"  - [{format_name}] [{namespace}] {rel_path}: {msg}\n")
         f.write("\n")
         f.write("=" * 70 + "\n")
         for res in source_results:
@@ -731,11 +842,12 @@ def main():
         f.write(f"- Blacklisted entries removed: **{total_removed_all}**\n")
         f.write(f"- Empty rules discarded: **{total_discarded_rules}**\n")
         f.write(f"- Files dropped entirely (all rules emptied): **{len(discarded_files)}**\n")
-        f.write(f"- SRS files compiled/copied: **{compile_ok_count}/{len(compile_results)}**\n\n")
+        f.write(f"- SRS files compiled/copied: **{srs_ok_count}/{len(srs_compile_results)}**\n")
+        f.write(f"- MRS files compiled/copied: **{mrs_ok_count}/{len(mrs_compile_results)}**\n\n")
 
         if compile_failures:
-            f.write("### SRS compile failures\n" +
-                    "\n".join(f"- `{r[0]}/{r[1]}`: {r[3]}" for r in compile_failures) + "\n\n")
+            f.write("### Compile failures\n" +
+                    "\n".join(f"- `[{r[0]}] {r[1]}/{r[2]}`: {r[4]}" for r in compile_failures) + "\n\n")
 
         if added_ns:
             f.write("### Added\n" + "\n".join(f"- `{p}`" for p in sorted(added_ns)) + "\n\n")
