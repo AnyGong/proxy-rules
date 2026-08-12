@@ -242,91 +242,71 @@ def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
     return True, "ok"
 
 
-def doc_to_mihomo_behavior_and_payload(doc: dict) -> tuple:
-    """Determine the appropriate mihomo MRS behavior and generate payload lines.
+def doc_to_mihomo_variants(doc: dict) -> dict:
+    """Split a cleaned sing-box rule-set document into the payload variants
+    mihomo's .mrs format can actually represent.
 
-    mihomo's convert-ruleset crashes (SIGSEGV) when 'classical' behavior
-    receives a domain-only payload, and silently ignores non-IP entries in
-    'ipcidr' mode.  Selecting the correct behavior per file avoids these
-    problems and produces the most compact binary format:
+    mihomo's `.mrs` binary format only supports the 'domain' and 'ipcidr'
+    rule-provider behaviors — never 'classical' (see mihomo's own
+    rule-providers docs: "Currently, mrs behavior only supports
+    domain / ipcidr."). Feeding 'classical' into `mihomo convert-ruleset`
+    for an .mrs target doesn't fail cleanly; it hits an unimplemented path
+    in classicalStrategy.payloadToRule and segfaults (nil pointer
+    dereference). So instead of ever asking mihomo for 'classical' .mrs
+    output, a mixed rule-set is split into up to two independent payloads
+    here, each compiled to its own .mrs file:
 
-      'domain'    — only domain / domain_suffix entries present.
-                    Payload: '+.example.com' (suffix) or 'example.com' (exact).
-      'ipcidr'    — only ip_cidr entries present.
-                    Payload: plain CIDR notation '1.2.3.0/24'.
-      'classical' — mixed rules, or any rule-set containing domain_keyword /
-                    process_name which the other behaviors can't represent.
-                    Payload: 'TYPE,value' notation (same as .conf format).
+      'domain' — domain / domain_suffix entries.
+                 Payload: '+.example.com' (suffix) or 'example.com' (exact).
+      'ipcidr' — ip_cidr entries.
+                 Payload: plain CIDR notation '1.2.3.0/24'.
 
-    Returns (behavior: str, payload_lines: list[str]).
+    domain_keyword / process_name entries have no equivalent in either
+    format and can't be split into a third .mrs — they're reported back
+    as dropped counts so the caller can log them (they're still preserved
+    in the .srs output, since sing-box's classical behavior handles them
+    fine).
+
+    Returns {"domain": [...], "ipcidr": [...],
+             "dropped_keyword": int, "dropped_process": int}.
     """
-    has_domain = False     # domain or domain_suffix
-    has_keyword = False    # domain_keyword or process_name
-    has_ip = False         # ip_cidr
+    domain_lines, ipcidr_lines = [], []
+    dropped_keyword = dropped_process = 0
 
     for rule in doc.get("rules", []):
         if not isinstance(rule, dict):
             continue
-        if rule.get("domain") or rule.get("domain_suffix"):
-            has_domain = True
-        if rule.get("domain_keyword") or rule.get("process_name"):
-            has_keyword = True
-        if rule.get("ip_cidr"):
-            has_ip = True
+        for value in rule.get("domain", []):
+            domain_lines.append(value)
+        for value in rule.get("domain_suffix", []):
+            domain_lines.append(f"+.{value}")
+        for value in rule.get("ip_cidr", []):
+            ipcidr_lines.append(value)
+        dropped_keyword += len(rule.get("domain_keyword") or [])
+        dropped_process += len(rule.get("process_name") or [])
 
-    payload_lines = []
-
-    if has_domain and not has_keyword and not has_ip:
-        # Pure domain/suffix → compact 'domain' trie format
-        behavior = "domain"
-        for rule in doc.get("rules", []):
-            if not isinstance(rule, dict):
-                continue
-            for value in rule.get("domain", []):
-                payload_lines.append(value)
-            for value in rule.get("domain_suffix", []):
-                payload_lines.append(f"+.{value}")
-
-    elif has_ip and not has_domain and not has_keyword:
-        # Pure IP-CIDR → 'ipcidr' format
-        behavior = "ipcidr"
-        for rule in doc.get("rules", []):
-            if not isinstance(rule, dict):
-                continue
-            for value in rule.get("ip_cidr", []):
-                payload_lines.append(value)
-
-    else:
-        # Mixed / keyword / process_name → 'classical' TYPE,value format
-        behavior = "classical"
-        for rule in doc.get("rules", []):
-            if not isinstance(rule, dict):
-                continue
-            for field, prefix in CONF_FIELD_TO_PREFIX.items():
-                for value in rule.get(field, []):
-                    payload_lines.append(f"{prefix},{value}")
-
-    return behavior, payload_lines
+    return {
+        "domain": domain_lines,
+        "ipcidr": ipcidr_lines,
+        "dropped_keyword": dropped_keyword,
+        "dropped_process": dropped_process,
+    }
 
 
-def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
-    """Compile a cleaned sing-box rule-set JSON file into binary .mrs format
-    via mihomo's `convert-ruleset` command.  The behavior (domain / ipcidr /
-    classical) is chosen automatically based on which field types are present
-    in the document — see doc_to_mihomo_behavior_and_payload() for details.
-    Returns (ok: bool, message: str)."""
-    mrs_path.parent.mkdir(parents=True, exist_ok=True)
+def _variant_path(path: Path, variant: str) -> Path:
+    """Insert '_domain' / '_ipcidr' before a path's suffix for split mrs
+    output. No-op (returns path unchanged) when variant is falsy."""
+    if not variant:
+        return path
+    return path.with_name(f"{path.stem}_{variant}{path.suffix}")
 
-    try:
-        doc = json.loads(json_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as e:
-        return False, f"could not read/parse {json_path.name} for mrs conversion: {e}"
 
-    behavior, payload_lines = doc_to_mihomo_behavior_and_payload(doc)
-    if not payload_lines:
-        return False, "rule-set is empty after cleanup — nothing to compile into .mrs"
-
-    tmp_yaml_path = mrs_path.with_suffix(".mihomo_payload.tmp.yaml")
+def _run_mihomo_convert(mihomo_bin: str, behavior: str, payload_lines: list, out_path: Path):
+    """Invoke `mihomo convert-ruleset <behavior> yaml <tmp.yaml> <out_path>`
+    for a single already-selected 'domain' or 'ipcidr' payload (never
+    'classical' — see doc_to_mihomo_variants). Returns (ok: bool, message: str)."""
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_yaml_path = out_path.with_suffix(".mihomo_payload.tmp.yaml")
     try:
         with open(tmp_yaml_path, "w", encoding="utf-8") as f:
             f.write("payload:\n")
@@ -336,7 +316,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
 
         try:
             result = subprocess.run(
-                [mihomo_bin, "convert-ruleset", behavior, "yaml", str(tmp_yaml_path), str(mrs_path)],
+                [mihomo_bin, "convert-ruleset", behavior, "yaml", str(tmp_yaml_path), str(out_path)],
                 capture_output=True, text=True, timeout=60,
             )
         except FileNotFoundError:
@@ -350,6 +330,69 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
     if result.returncode != 0:
         return False, (result.stderr or result.stdout or "unknown compile error").strip()
     return True, f"ok (behavior={behavior})"
+
+
+def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path) -> list:
+    """Compile a cleaned sing-box rule-set JSON file into one or two binary
+    .mrs files via mihomo's `convert-ruleset` command.
+
+    A rule-set containing only domain/domain_suffix entries (or only
+    ip_cidr entries) compiles straight to mrs_path. A rule-set that mixes
+    domain and ip_cidr entries is split into two sibling files —
+    '<stem>_domain.mrs' and '<stem>_ipcidr.mrs' — since mihomo's .mrs
+    format can't represent 'classical'/mixed rules in one file (see
+    doc_to_mihomo_variants). domain_keyword / process_name entries can't
+    be represented in .mrs at all and are dropped, noted in the message.
+
+    Returns a list of variant result dicts:
+        [{"variant": "" | "domain" | "ipcidr", "ok": bool,
+          "msg": str, "dated_path": Path}, ...]
+    "variant" is "" (and dated_path == mrs_path) for the unsplit case.
+    """
+    try:
+        doc = json.loads(json_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return [{"variant": "", "ok": False, "dated_path": mrs_path,
+                 "msg": f"could not read/parse {json_path.name} for mrs conversion: {e}"}]
+
+    variants = doc_to_mihomo_variants(doc)
+    domain_lines, ipcidr_lines = variants["domain"], variants["ipcidr"]
+    dropped_note = ""
+    dropped_total = variants["dropped_keyword"] + variants["dropped_process"]
+    if dropped_total:
+        dropped_note = (f" (dropped {dropped_total} domain_keyword/process_name "
+                        f"entr{'y' if dropped_total == 1 else 'ies'} — unsupported by "
+                        f".mrs domain/ipcidr formats; still present in .srs)")
+
+    if domain_lines and not ipcidr_lines:
+        ok, msg = _run_mihomo_convert(mihomo_bin, "domain", domain_lines, mrs_path)
+        return [{"variant": "", "ok": ok, "msg": msg + dropped_note, "dated_path": mrs_path}]
+
+    if ipcidr_lines and not domain_lines:
+        ok, msg = _run_mihomo_convert(mihomo_bin, "ipcidr", ipcidr_lines, mrs_path)
+        return [{"variant": "", "ok": ok, "msg": msg + dropped_note, "dated_path": mrs_path}]
+
+    if domain_lines and ipcidr_lines:
+        # Mixed rule-set — split into two independent .mrs files rather than
+        # ever passing 'classical' behavior to mihomo's mrs converter.
+        results = []
+        domain_path = _variant_path(mrs_path, "domain")
+        ok_d, msg_d = _run_mihomo_convert(mihomo_bin, "domain", domain_lines, domain_path)
+        results.append({"variant": "domain", "ok": ok_d, "msg": msg_d + dropped_note, "dated_path": domain_path})
+
+        ipcidr_path = _variant_path(mrs_path, "ipcidr")
+        ok_i, msg_i = _run_mihomo_convert(mihomo_bin, "ipcidr", ipcidr_lines, ipcidr_path)
+        results.append({"variant": "ipcidr", "ok": ok_i, "msg": msg_i, "dated_path": ipcidr_path})
+        return results
+
+    # Neither domain nor ip_cidr entries survived — nothing left to compile
+    # into .mrs (only keyword/process_name entries, or a fully empty rule-set).
+    msg = "rule-set is empty after cleanup — nothing to compile into .mrs"
+    if dropped_total:
+        msg = (f"rule-set contains only domain_keyword/process_name entries "
+               f"({dropped_total}) — unsupported by mihomo's mrs domain/ipcidr "
+               f"behaviors; skipping .mrs (still covered by .srs)")
+    return [{"variant": "", "ok": False, "msg": msg, "dated_path": mrs_path}]
 
 
 def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) -> str:
@@ -792,13 +835,12 @@ def main():
                 latest_path = format_root / latest_rel
 
                 if kind in ("json", "conf"):
-                    ok, msg = compiler_fn(binary, source_file_path, dated_path)
-                    if ok:
-                        latest_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(dated_path, latest_path)
+                    raw = compiler_fn(binary, source_file_path, dated_path)
+                    if format_name == "mrs":
+                        variant_results = raw  # already [{"variant","ok","msg","dated_path"}, ...]
                     else:
-                        print(f"  [{res['namespace']}] ! {format_name.upper()} compile failed "
-                              f"for {rel_path}: {msg}", file=sys.stderr)
+                        ok, msg = raw
+                        variant_results = [{"variant": "", "ok": ok, "msg": msg, "dated_path": dated_path}]
                 else:  # precompiled_kind
                     try:
                         dated_path.parent.mkdir(parents=True, exist_ok=True)
@@ -809,11 +851,28 @@ def main():
                     except OSError as e:
                         ok, msg = False, f"failed to copy pre-compiled .{format_name}: {e}"
                         print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
+                    variant_results = [{"variant": "", "ok": ok, "msg": msg, "dated_path": dated_path}]
 
-                results.append((
-                    format_name, res["namespace"], rel_path, ok, msg, synced_out_rel,
-                    dated_rel.as_posix() if ok else None, latest_rel.as_posix() if ok else None,
-                ))
+                for vr in variant_results:
+                    variant, ok, msg = vr["variant"], vr["ok"], vr["msg"]
+                    actual_dated_path = vr["dated_path"]
+                    actual_dated_rel = _variant_path(dated_rel, variant)
+                    actual_latest_rel = _variant_path(latest_rel, variant)
+                    actual_latest_path = format_root / actual_latest_rel
+
+                    if ok:
+                        actual_latest_path.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(actual_dated_path, actual_latest_path)
+                    else:
+                        tag = f" ({variant})" if variant else ""
+                        print(f"  [{res['namespace']}] ! {format_name.upper()}{tag} compile failed "
+                              f"for {rel_path}: {msg}", file=sys.stderr)
+
+                    results.append((
+                        format_name, res["namespace"], rel_path, ok, msg, synced_out_rel,
+                        actual_dated_rel.as_posix() if ok else None,
+                        actual_latest_rel.as_posix() if ok else None, variant,
+                    ))
 
         return results
 
@@ -826,15 +885,20 @@ def main():
     srs_ok_count = len(srs_compile_results) - len([r for r in srs_compile_results if not r[3]])
     mrs_ok_count = len(mrs_compile_results) - len([r for r in mrs_compile_results if not r[3]])
 
-    latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs": url, "json": url, "conf": url}
+    latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs"/"mrs_domain"/"mrs_ipcidr": url, "json": url, "conf": url}
 
-    for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel in compile_results:
+    for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel, variant in compile_results:
         if not ok:
             continue
         latest_full = f"{format_name}/{latest_rel}"
         url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
-        base = Path(latest_rel).stem
-        latest_by_base.setdefault(base, {})[format_name] = url
+        # Group by the *source* file's base name (not latest_rel's), since a
+        # split mrs variant's filename carries a _domain/_ipcidr suffix that
+        # would otherwise put it in its own row instead of alongside its
+        # srs/json/conf siblings.
+        base = Path(rel_path).stem
+        link_key = f"{format_name}_{variant}" if variant else format_name
+        latest_by_base.setdefault(base, {})[link_key] = url
 
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
@@ -888,15 +952,22 @@ def main():
     links_path = ROOT / "README.md"
     active_namespaces = sorted(set(r[1] for r in compile_results)) or \
                         [str(source_namespace(s)) for s in sources]
-    format_order = ("srs", "mrs", "json", "conf")
+    format_order = ("srs", "mrs", "mrs_domain", "mrs_ipcidr", "json", "conf")
+    format_labels = {"srs": "SRS", "mrs": "MRS", "mrs_domain": "MRS (domain)",
+                     "mrs_ipcidr": "MRS (ipcidr)", "json": "JSON", "conf": "CONF"}
     total_by_format = {fmt: sum(1 for _, urls in latest_entries if fmt in urls) for fmt in format_order}
+    mrs_total = total_by_format["mrs"] + total_by_format["mrs_domain"] + total_by_format["mrs_ipcidr"]
+    mrs_split_note = ""
+    if total_by_format["mrs_domain"] or total_by_format["mrs_ipcidr"]:
+        mrs_split_note = (f" [{total_by_format['mrs_domain']} split domain + "
+                          f"{total_by_format['mrs_ipcidr']} split ipcidr]")
     with open(links_path, "w", encoding="utf-8") as f:
         f.write("# Access Links\n\n")
         f.write(f"Generated {run_ts}\n\n")
 
         f.write("## Summary\n\n")
         f.write(f"- Total files: {len(latest_entries)} "
-                f"({total_by_format['srs']} SRS, {total_by_format['mrs']} MRS, "
+                f"({total_by_format['srs']} SRS, {mrs_total} MRS{mrs_split_note}, "
                 f"{total_by_format['json']} JSON, {total_by_format['conf']} CONF)\n")
         f.write(f"- Sources: {len(active_namespaces)}\n")
         if compile_failures:
@@ -926,7 +997,7 @@ def main():
             fmt_links = []
             for fmt in format_order:
                 if fmt in urls:
-                    fmt_links.append(f"[{fmt.upper()}]({urls[fmt]})")
+                    fmt_links.append(f"[{format_labels[fmt]}]({urls[fmt]})")
             if fmt_links:
                 f.write(" \u00b7 ".join(fmt_links) + "\n\n")
             else:
@@ -980,8 +1051,9 @@ def main():
         f.write(f"MRS compiled/copied: {mrs_ok_count}/{len(mrs_compile_results)}\n")
         if compile_failures:
             f.write("SRS/MRS compile/copy failures:\n")
-            for format_name, namespace, rel_path, ok, msg, *_ in compile_failures:
-                f.write(f"  - [{format_name}] [{namespace}] {rel_path}: {msg}\n")
+            for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel, variant in compile_failures:
+                tag = f" ({variant})" if variant else ""
+                f.write(f"  - [{format_name}{tag}] [{namespace}] {rel_path}: {msg}\n")
         f.write("\n")
         f.write("=" * 70 + "\n")
         for res in source_results:
