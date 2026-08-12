@@ -1,12 +1,11 @@
 # Access Links
 
-Generated 20260812_092355
+Generated 20260812_095453
 
 ## Summary
 
-- Total files: 45 (45 SRS, 34 MRS, 45 JSON, 45 CONF)
+- Total files: 45 (45 SRS, 51 MRS [4 split domain + 4 split ipcidr], 45 JSON, 45 CONF)
 - Sources: 2
-- Compile failures this run: 18 (see `logs/sync_20260812_092355.log`)
 
 ---
 
@@ -62,7 +61,7 @@ Generated 20260812_092355
 
 ### [ai](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/ai.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/ai.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/ai.conf)
 
 ### [apple_cdn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/apple_cdn.json)
 
@@ -78,11 +77,11 @@ Generated 20260812_092355
 
 ### [apple_services](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/apple_services.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/apple_services.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/apple_services.mrs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/apple_services.conf)
 
 ### [cdn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/cdn.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/cdn.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/cdn.conf)
 
 ### [china_ip](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/china_ip.json)
 
@@ -94,15 +93,15 @@ Generated 20260812_092355
 
 ### [direct](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.conf)
 
 ### [domain-china-ai_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-ai_custom.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-ai_custom.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-ai_custom.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-ai_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-ai_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-ai_custom.conf)
 
 ### [domain-proxy_ai_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_ai_custom.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-proxy_ai_custom.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-proxy_ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-proxy_ai_custom.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-proxy_ai_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-proxy_ai_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-proxy_ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-proxy_ai_custom.conf)
 
 ### [domain-proxy_developer-code_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_developer-code_custom.json)
 
@@ -126,7 +125,7 @@ Generated 20260812_092355
 
 ### [global](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.conf)
 
 ### [icloud_private_relay](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.json)
 
@@ -138,7 +137,7 @@ Generated 20260812_092355
 
 ### [microsoft](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.conf)
 
 ### [microsoft_cdn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft_cdn.json)
 
@@ -162,7 +161,7 @@ Generated 20260812_092355
 
 ### [my_reject](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_reject.conf)
 
 ### [my_tw](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_tw.json)
 
@@ -178,7 +177,7 @@ Generated 20260812_092355
 
 ### [reject](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/reject.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/reject.mrs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.conf)
 
 ### [reject-drop](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-drop.json)
 
@@ -186,15 +185,15 @@ Generated 20260812_092355
 
 ### [reject-no-drop](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.conf)
 
 ### [reject_extra](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.srs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_extra.conf)
 
 ### [reject_phishing](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.srs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject_phishing.conf)
 
 ### [sogouinput](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/sogouinput.json)
 
@@ -206,19 +205,19 @@ Generated 20260812_092355
 
 ### [stream](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/stream.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/stream.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream.conf)
 
 ### [stream_biliintl](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/stream_biliintl.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/stream_biliintl.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_biliintl.conf)
 
 ### [stream_eu](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_eu.conf)
 
 ### [stream_hk](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.srs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_hk.conf)
 
 ### [stream_jp](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/stream_jp.json)
 
@@ -243,5 +242,5 @@ Generated 20260812_092355
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_092355.log)
-- [Release summary](logs/summary_20260812_092355.md)
+- [Sync log](logs/sync_20260812_095453.log)
+- [Release summary](logs/summary_20260812_095453.md)
