@@ -243,21 +243,17 @@ def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
 
 
 def doc_to_mihomo_payload_lines(doc: dict) -> list:
-    """Flatten a cleaned sing-box rule-set JSON document's domain-type
-    fields (domain / domain_suffix / domain_keyword) into mihomo
-    classical-ruleset payload lines (e.g. 'DOMAIN-SUFFIX,example.com').
-    Non-domain fields (ip_cidr, process_name, etc.) aren't representable
-    in an .mrs 'domain' behavior ruleset and are skipped here."""
-    field_to_prefix = {
-        "domain": "DOMAIN",
-        "domain_suffix": "DOMAIN-SUFFIX",
-        "domain_keyword": "DOMAIN-KEYWORD",
-    }
+    """Flatten all supported fields of a cleaned sing-box rule-set JSON
+    document into mihomo classical-ruleset payload lines
+    (e.g. 'DOMAIN-SUFFIX,example.com', 'IP-CIDR,1.2.3.0/24').
+    Uses CONF_FIELD_TO_PREFIX so every field type is covered, including
+    ip_cidr and process_name — enabling classical-behavior .mrs for any
+    sing-box rule-set regardless of which field types it contains."""
     lines = []
     for rule in doc.get("rules", []):
         if not isinstance(rule, dict):
             continue
-        for field, prefix in field_to_prefix.items():
+        for field, prefix in CONF_FIELD_TO_PREFIX.items():
             for value in rule.get(field, []):
                 lines.append(f"{prefix},{value}")
     return lines
@@ -265,10 +261,12 @@ def doc_to_mihomo_payload_lines(doc: dict) -> list:
 
 def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
     """Compile a cleaned sing-box rule-set JSON file into binary .mrs
-    format via mihomo's `convert-ruleset` command. mihomo compiles from
-    its own classical-ruleset payload (YAML with a `payload:` list), not
-    directly from sing-box JSON, so this first re-renders the domain-type
-    rules into that payload format in a temp file, then invokes mihomo.
+    format via mihomo's `convert-ruleset` command using 'classical'
+    behavior, which supports all rule-set field types: domain,
+    domain_suffix, domain_keyword, ip_cidr, and process_name.
+    mihomo compiles from its own classical-ruleset payload (YAML with a
+    `payload:` list of 'TYPE,value' lines), so this first re-renders all
+    rules into that format in a temp file, then invokes mihomo.
     Returns (ok: bool, message: str)."""
     mrs_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -279,7 +277,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
 
     payload_lines = doc_to_mihomo_payload_lines(doc)
     if not payload_lines:
-        return False, "no domain-type rules to convert (ip_cidr/process_name-only rule-sets can't produce an .mrs)"
+        return False, "rule-set is empty after cleanup — nothing to compile into .mrs"
 
     tmp_yaml_path = mrs_path.with_suffix(".mihomo_payload.tmp.yaml")
     try:
@@ -291,7 +289,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
 
         try:
             result = subprocess.run(
-                [mihomo_bin, "convert-ruleset", "domain", "yaml", str(tmp_yaml_path), str(mrs_path)],
+                [mihomo_bin, "convert-ruleset", "classical", "yaml", str(tmp_yaml_path), str(mrs_path)],
                 capture_output=True, text=True, timeout=60,
             )
         except FileNotFoundError:
