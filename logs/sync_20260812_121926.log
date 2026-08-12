@@ -1,16 +1,19 @@
-Sync run: 20260812_121430
+Sync run: 20260812_121926
 Sources (1 + custom):
   - @SukkaLab/ruleset.skk.moe/master/sing-box  <-  SukkaLab/ruleset.skk.moe@master:sing-box
   - custom  <-  local (not fetched)
 Blacklist entries: 1
   ['7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe']
 
-Files added:   65
+Files added:   67
 Files updated: 0
 Files deleted: 0
 Files unchanged: 0
 
-File kinds synced this run: 65 json (cleaned → json+conf+srs+mrs), 0 conf (converted → json+srs+mrs), 0 list (converted → json+conf+srs+mrs), 0 txt (converted → json+conf+srs+mrs), 0 srs (pre-compiled, copied through), 0 mrs (pre-compiled, copied through), 0 other (synced as-is, not converted)
+File kinds synced this run: 65 json (cleaned → json+conf+srs+mrs), 0 conf (converted → json+srs+mrs), 0 list (converted → json+conf+srs+mrs), 0 txt (converted → json+conf+srs+mrs), 0 srs (pre-compiled, copied through), 0 mrs (pre-compiled, copied through), 2 other (synced as-is, not converted)
+Synced but not converted (not json/conf/list/txt/srs/mrs):
+  - [custom] china_app_custom.yaml
+  - [custom] proxy_ai_app_custom.yaml
 
 SRS compiled/copied: 65/65
 MRS compiled/copied: 70/70
@@ -497,6 +500,8 @@ MRS compiled/copied: 70/70
   Removed domain entries: ['7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe']
   Removed domain_suffix entries: ['7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe']
 
+[custom] File: china_app_custom.yaml  [other] [added]
+
 [custom] File: domain-china-ai_custom.json  [json] [added]
   Total rules: 1, discarded rules: 0
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
@@ -533,33 +538,4 @@ MRS compiled/copied: 70/70
   Total rules: 1, discarded rules: 0
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
 
-[custom] File: proxy_ai_app_custom.conf -> proxy_ai_app_custom.json  [conf] [discarded_all_rules_empty_file]
-  Converted from .conf -> domain: 0, domain_suffix: 0, domain_keyword: 0, ip_cidr: 0, process_name: 0
-  Skipped 25 unsupported .conf line(s):
-    - payload:
-    - - PROCESS-NAME,Codex
-    - - PROCESS-NAME,Codex Helper
-    - - PROCESS-NAME,ChatGPT
-    - - PROCESS-NAME,ChatGPT Helper
-    - - PROCESS-NAME,Codex (Service)
-    - - PROCESS-NAME,Codex Computer Use
-    - - PROCESS-NAME,Gemini
-    - - PROCESS-NAME,Gemini Helper
-    - - PROCESS-NAME,Claude
-    - - PROCESS-NAME,Claude Helper
-    - - PROCESS-NAME,Copilot
-    - - PROCESS-NAME,Copilot Helper
-    - - PROCESS-NAME,Cursor
-    - - PROCESS-NAME,Cursor Helper
-    - - PROCESS-NAME,Antigravity IDE
-    - - PROCESS-NAME,Antigravity IDE Helper
-    - - PROCESS-NAME,Antigravity IDE Helper (Plugin)
-    - - PROCESS-NAME,Antigravity
-    - - PROCESS-NAME,Antigravity Helper
-    - - PROCESS-NAME,Antigravity Helper (Plugin)
-    - - PROCESS-NAME,language_server_macos_arm
-    - - PROCESS-PATH,/Applications/ChatGPT.app/Contents/Resources/codex
-    - - PROCESS-PATH,/Applications/Antigravity IDE.app/Contents/MacOS/Electron
-    - - PROCESS-PATH,/Applications/Antigravity.app/Contents/MacOS/Electron
-  Total rules: 0, discarded rules: 0
-  Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
+[custom] File: proxy_ai_app_custom.yaml  [other] [added]
