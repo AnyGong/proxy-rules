@@ -12,7 +12,7 @@
   "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own @owner/repo/branch/directory_name namespace in both local_output_root and srs/, so nothing overwrites another source's files even if filenames match. 'directory_name' defaults to the last path segment of upstream_path if omitted.",
 
   "local_output_root": "rules",
-  "upstream_checkout_root": "upstream",
+  "upstream_checkout_root": "@rules",
 
   "enable_custom": true,
   "custom_dir_name": "custom",

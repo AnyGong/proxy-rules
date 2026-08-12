@@ -520,7 +520,7 @@ def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
     under @<owner>/<repo>/<branch>/<directory_name>/... (each of which may
     itself be a multi-level path, e.g. directory_name="sing-box/Clash")."""
     namespace = source_namespace(source)
-    checkout_root = ROOT / sync_cfg.get("upstream_checkout_root", "upstream")
+    checkout_root = ROOT / sync_cfg.get("upstream_checkout_root", "@rules")
     upstream_dir = checkout_root / namespace
     json_output_dir = ROOT / "json" / namespace
     conf_output_dir = ROOT / "conf" / namespace

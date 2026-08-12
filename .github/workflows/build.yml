@@ -23,7 +23,7 @@ jobs:
 
       - name: Sparse-checkout every configured source
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/upstream"
+          mkdir -p "$GITHUB_WORKSPACE/@rules"
           jq -c '.sources[]' sync.json | while read -r src; do
             owner=$(echo "$src" | jq -r '.owner')
             repo=$(echo "$src" | jq -r '.repo')
@@ -39,7 +39,7 @@ jobs:
               "https://github.com/$owner/$repo.git" tmp_clone
             (cd tmp_clone && git sparse-checkout set "$upstream_path")
 
-            dest="$GITHUB_WORKSPACE/upstream/${namespace}"
+            dest="$GITHUB_WORKSPACE/@rules/${namespace}"
             mkdir -p "$dest"
             cp -r "tmp_clone/$upstream_path/." "$dest/"
             rm -rf tmp_clone
@@ -79,14 +79,14 @@ jobs:
         id: sync
         run: python3 sync_and_clean.py
 
-      - name: Commit documentation to main branch
+      - name: Commit documentation and synchronized rules to main branch
         if: steps.sync.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md CHANGELOG.md
-          if [ -n "$(git status --porcelain README.md CHANGELOG.md)" ]; then
-            git commit -m "docs(sync): update README.md and CHANGELOG.md [${{ steps.sync.outputs.tag }}]"
+          git add README.md CHANGELOG.md @rules/
+          if [ -n "$(git status --porcelain README.md CHANGELOG.md @rules)" ]; then
+            git commit -m "docs(sync): update README.md, CHANGELOG.md, and @rules [${{ steps.sync.outputs.tag }}]"
             git push origin main
           fi
 
@@ -118,8 +118,8 @@ jobs:
           [ -d /tmp/build_out/mrs ] && rm -rf mrs && cp -r /tmp/build_out/mrs .
           [ -d /tmp/build_out/logs ] && rm -rf logs && cp -r /tmp/build_out/logs .
 
-          git rm -f README.md ACCESS_LINKS.md CHANGELOG.md 2>/dev/null || true
-          rm -f README.md ACCESS_LINKS.md CHANGELOG.md
+          git rm -rf README.md ACCESS_LINKS.md CHANGELOG.md @rules 2>/dev/null || true
+          rm -rf README.md ACCESS_LINKS.md CHANGELOG.md @rules
 
           git add json conf srs mrs logs
           if [ -n "$(git status --porcelain)" ]; then

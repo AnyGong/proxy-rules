@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260812_072424
+Generated 20260812_073336
 
 ## Summary
 
 - Total files: 3 (0 SRS, 0 MRS, 3 JSON, 0 CONF)
 - Sources: 1
-- Compile failures this run: 6 (see `logs/sync_20260812_072424.log`)
+- Compile failures this run: 6 (see `logs/sync_20260812_073336.log`)
 
 ---
 
@@ -24,23 +24,23 @@ Generated 20260812_072424
 ### domain-china-ai_custom
 
 ```
-https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/json/custom/domain-china-ai_custom.json
+https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/rules/custom/domain-china-ai_custom.json
 ```
 
 ### domain-proxy_ai_custom
 
 ```
-https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/json/custom/domain-proxy_ai_custom.json
+https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/rules/custom/domain-proxy_ai_custom.json
 ```
 
 ### domain-proxy_developer-code_custom
 
 ```
-https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/json/custom/domain-proxy_developer-code_custom.json
+https://testingcf.jsdelivr.net/gh/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME@release/rules/custom/domain-proxy_developer-code_custom.json
 ```
 
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_072424.log)
-- [Release summary](logs/summary_20260812_072424.md)
+- [Sync log](logs/sync_20260812_073336.log)
+- [Release summary](logs/summary_20260812_073336.md)

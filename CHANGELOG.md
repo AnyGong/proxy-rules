@@ -371,3 +371,39 @@ CDN access links for every file in this release are in [`README.md`](../README.m
 
 ---
 
+
+## Sync summary — 20260812_073336
+
+Sources:
+- `@SukkaLab/ruleset.skk.moe/master/sing-box` ← `SukkaLab/ruleset.skk.moe` @ `master` (`sing-box`)
+- `custom` ← local files (not fetched)
+
+- Files added: **3**
+- Files updated: **0**
+- Files deleted: **0**
+- Files unchanged: 0
+- Blacklisted entries removed: **0**
+- Empty rules discarded: **0**
+- Files dropped entirely (all rules emptied): **0**
+- SRS files compiled/copied: **0/3**
+- MRS files compiled/copied: **0/3**
+
+### Compile failures
+- `[srs] custom/domain-china-ai_custom.json`: 'sing-box' binary not found on PATH — install the sing-box CLI in the workflow before running this script.
+- `[srs] custom/domain-proxy_ai_custom.json`: 'sing-box' binary not found on PATH — install the sing-box CLI in the workflow before running this script.
+- `[srs] custom/domain-proxy_developer-code_custom.json`: 'sing-box' binary not found on PATH — install the sing-box CLI in the workflow before running this script.
+- `[mrs] custom/domain-china-ai_custom.json`: 'mihomo' binary not found on PATH — install the mihomo CLI in the workflow before running this script.
+- `[mrs] custom/domain-proxy_ai_custom.json`: 'mihomo' binary not found on PATH — install the mihomo CLI in the workflow before running this script.
+- `[mrs] custom/domain-proxy_developer-code_custom.json`: 'mihomo' binary not found on PATH — install the mihomo CLI in the workflow before running this script.
+
+### Added
+- `custom/domain-china-ai_custom.json`
+- `custom/domain-proxy_ai_custom.json`
+- `custom/domain-proxy_developer-code_custom.json`
+
+Full per-file cleanup detail is attached in the workflow logs (`logs/sync_20260812_073336.log`).
+
+CDN access links for every file in this release are in [`README.md`](../README.md) (ref: `v20260812_073336`).
+
+---
+
