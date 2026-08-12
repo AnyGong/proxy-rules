@@ -79,6 +79,19 @@ jobs:
         id: sync
         run: python3 sync_and_clean.py
 
+      - name: Save build outputs to /tmp/build_out
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          mkdir -p /tmp/build_out
+          [ -d json ] && cp -r json /tmp/build_out/
+          [ -d conf ] && cp -r conf /tmp/build_out/
+          [ -d srs ] && cp -r srs /tmp/build_out/
+          [ -d mrs ] && cp -r mrs /tmp/build_out/
+          [ -d logs ] && cp -r logs /tmp/build_out/
+          [ -f README.md ] && cp README.md /tmp/build_out/
+          summary_src="${{ steps.sync.outputs.summary_path }}"
+          [ -f "$summary_src" ] && cp "$summary_src" /tmp/build_out/summary.md || true
+
       - name: Commit documentation to main branch
         if: steps.sync.outputs.changed == 'true'
         run: |
@@ -90,20 +103,39 @@ jobs:
             git push origin main
           fi
 
+      - name: Commit raw source rules to @sync-rules branch
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          mkdir -p /tmp/sync_rules_out
+          if [ -d "@rules" ]; then
+            cp -r "@rules/." /tmp/sync_rules_out/
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "@sync-rules:@sync-rules" || true
+          if git rev-parse --verify "@sync-rules" >/dev/null 2>&1; then
+            git checkout "@sync-rules"
+            git rm -rf . 2>/dev/null || true
+          else
+            git checkout --orphan "@sync-rules"
+            git rm -rf . 2>/dev/null || true
+          fi
+
+          if [ -d /tmp/sync_rules_out ]; then
+            cp -r /tmp/sync_rules_out/. .
+          fi
+
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore(sync-rules): update raw source rules [${{ steps.sync.outputs.tag }}]"
+            git push origin "@sync-rules"
+          fi
+
       - name: Commit changes to dist branch
         if: steps.sync.outputs.changed == 'true'
         run: |
-          mkdir -p /tmp/build_out
-          [ -d json ] && cp -r json /tmp/build_out/
-          [ -d conf ] && cp -r conf /tmp/build_out/
-          [ -d srs ] && cp -r srs /tmp/build_out/
-          [ -d mrs ] && cp -r mrs /tmp/build_out/
-          [ -d logs ] && cp -r logs /tmp/build_out/
-          [ -f README.md ] && cp README.md /tmp/build_out/
-          # Copy the summary file (relative path from sync outputs) to /tmp for use after branch switch
-          summary_src="${{ steps.sync.outputs.summary_path }}"
-          [ -f "$summary_src" ] && cp "$summary_src" /tmp/build_out/summary.md || true
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
