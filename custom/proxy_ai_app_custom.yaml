@@ -1,4 +1,4 @@
-# Ai MacOs Process Application Proxy Rules
+# Proxy Ai macOS Process Application Proxy Rules
 payload: 
   - PROCESS-NAME,Codex
   - PROCESS-NAME,Codex Helper
