@@ -794,14 +794,42 @@ def main():
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
         namespace_path = res["namespace_path"]
+        gh_base = f"https://github.com/{cdn_owner}/{cdn_repo}/blob/{cdn_branch}"
         for r in res["per_file_reports"]:
-            if r["file"] not in kept or r["kind"] not in ("json", "conf"):
+            if r["file"] not in kept:
                 continue
-            root_dir = "json" if r["kind"] == "json" else "conf"
-            synced_out_rel = f"{root_dir}/{namespace_path.as_posix()}/{r['file']}"
-            url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, synced_out_rel)
+            kind = r["kind"]
             base = Path(r["file"]).stem
-            latest_by_base.setdefault(base, {})[r["kind"]] = url
+
+            if kind == "json":
+                # json/ output (cleaned .json)
+                json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
+                latest_by_base.setdefault(base, {})["json"] = jsdelivr_url(
+                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, json_rel)
+                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{json_rel}")
+                # conf/ output (.conf re-serialised from cleaned json)
+                conf_file = str(Path(r["file"]).with_suffix(".conf"))
+                conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
+                latest_by_base[base]["conf"] = jsdelivr_url(
+                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
+
+            elif kind == "conf":
+                # conf/ output (converted from .conf source → .json)
+                conf_rel = f"conf/{namespace_path.as_posix()}/{r['file']}"
+                latest_by_base.setdefault(base, {})["conf"] = jsdelivr_url(
+                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
+                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{conf_rel}")
+
+            elif kind in ("list", "text"):
+                # json/ output (.json) + conf/ output (.conf)
+                json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
+                latest_by_base.setdefault(base, {})["json"] = jsdelivr_url(
+                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, json_rel)
+                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{json_rel}")
+                conf_file = str(Path(r["file"]).with_suffix(".conf"))
+                conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
+                latest_by_base[base]["conf"] = jsdelivr_url(
+                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
 
     latest_entries = sorted(latest_by_base.items(), key=lambda kv: (kv[0].lower(), kv[0]))
 
@@ -834,18 +862,30 @@ def main():
         f.write("## Navigation\n\n")
         for base, urls in latest_entries:
             anchor = slugify(base)
-            f.write(f"- [{base}](#{anchor})\n")
-            for fmt in format_order:
-                if fmt in urls:
-                    f.write(f"  - [{base}.{fmt}](#{anchor})\n")
+            source_url = urls.get("_source_github_url", "")
+            if source_url:
+                f.write(f"- [{base}](#{anchor}) — [source]({source_url})\n")
+            else:
+                f.write(f"- [{base}](#{anchor})\n")
         f.write("\n---\n\n")
 
         for base, urls in latest_entries:
-            f.write(f"### {base}\n\n")
+            anchor = slugify(base)
+            source_url = urls.get("_source_github_url", "")
+            # Heading is a clickable link to the source file on GitHub (2nd-click target)
+            if source_url:
+                f.write(f"### [{base}]({source_url})\n\n")
+            else:
+                f.write(f"### {base}\n\n")
+            # Inline format links — one click to reach the CDN file directly
+            fmt_links = []
             for fmt in format_order:
                 if fmt in urls:
-                    f.write("```\n" + urls[fmt] + "\n```\n")
-            f.write("\n")
+                    fmt_links.append(f"[{fmt.upper()}]({urls[fmt]})")
+            if fmt_links:
+                f.write(" \u00b7 ".join(fmt_links) + "\n\n")
+            else:
+                f.write("\n")
 
         f.write("## Related\n\n")
         f.write("- [Changelog](CHANGELOG.md)\n")
