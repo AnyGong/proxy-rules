@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "wise.com",
+        "transferwise.com",
+        "mastercard.com",
+        "adyen.com",
+        "braintreepayments.com",
+        "braintreegateway.com",
+        "klarna.com",
+        "revolut.com",
+        "n26.com",
+        "payoneer.com",
+        "skrill.com",
+        "neteller.com",
+        "westernunion.com",
+        "moneygram.com",
+        "gate.io",
+        "htx.com",
+        "crypto.com"
+      ]
+    }
+  ]
+}
