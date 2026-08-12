@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "statsigapi.net",
+        "anthropic.com",
+        "claude.ai",
+        "claude.com",
+        "clau.de",
+        "claudemcpclient.com",
+        "claudeusercontent.com",
+        "openai.com",
+        "chatgpt.com",
+        "chatgpt.com.cdn.cloudflare.net",
+        "openaiapi-site.azureedge.net",
+        "oaistatic.com",
+        "oaiusercontent.com",
+        "bard.google.com",
+        "ai.google.dev",
+        "aistudio.google.com",
+        "generativelanguage.googleapis.com",
+        "alkalimakersuite-pa.clients6.google.com",
+        "makersuite.google.com",
+        "deepmind.com",
+        "deepmind.google",
+        "generativeai.google",
+        "usercontent.goog",
+        "githubcopilot.com",
+        "cursor.com",
+        "cursor.sh",
+        "cursor.com.cdn.cloudflare.net",
+        "antigravity.google",
+        "antigravity.codes",
+        "antigravitylab.net",
+        "cloudflareinsights.com"
+      ]
+    },
+    {
+      "domain": [
+        "browser-intake-us5-datadoghq.com",
+        "cdn.usefathom.com",
+        "servd-anthropic-website.b-cdn.net",
+        "anthropic.com.cdn.cloudflare.net",
+        "anthropic.auth0.com",
+        "anthropic-com.ghost.io",
+        "gemini.google.com",
+        "proactivebackend-pa.googleapis.com",
+        "algebra.googleapis.com",
+        "lh3.googleusercontent.com",
+        "lh4.googleusercontent.com",
+        "lh5.googleusercontent.com",
+        "lh6.googleusercontent.com",
+        "api.githubcopilot.com",
+        "copilot-proxy.githubusercontent.com",
+        "copilot-telemetry.githubusercontent.com",
+        "origin-tracker.githubusercontent.com",
+        "cursor-static.s3.amazonaws.com",
+        "cursor.replicate.delivery",
+        "challenges.cloudflare.com"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "anthropic",
+        "claude",
+        "openai",
+        "chatgpt",
+        "gemini",
+        "generativelanguage",
+        "antigravity"
+      ]
+    }
+  ]
+}
