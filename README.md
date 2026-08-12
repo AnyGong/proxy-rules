@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260812_102023
+Generated 20260812_103922
 
 ## Summary
 
 - Total files: 52 (52 SRS, 57 MRS [4 split domain + 4 split ipcidr], 51 JSON, 52 CONF)
 - Sources: 2
-- Compile failures this run: 1 (see `logs/sync_20260812_102023.log`)
+- Compile failures this run: 1 (see `logs/sync_20260812_103922.log`)
 
 ---
 
@@ -23,7 +23,6 @@ Generated 20260812_102023
 - [direct](#direct) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.json)
 - [domain-china-ai_custom](#domain-china-ai-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-ai_custom.json)
 - [domain-china-paypal_custom](#domain-china-paypal-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-paypal_custom.json)
-- [domain-direct-ip_custom](#domain-direct-ip-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-direct-ip_custom.json)
 - [domain-proxy-devtools_custom](#domain-proxy-devtools-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy-devtools_custom.json)
 - [domain-proxy_ai_custom](#domain-proxy-ai-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_ai_custom.json)
 - [domain-proxy_apac-finance_custom](#domain-proxy-apac-finance-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_apac-finance_custom.json)
@@ -36,6 +35,7 @@ Generated 20260812_102023
 - [gitlab](#gitlab) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/gitlab.json)
 - [global](#global) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/global.json)
 - [icloud_private_relay](#icloud-private-relay) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.json)
+- [ip-direct_custom](#ip-direct-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/ip-direct_custom.json)
 - [lan](#lan) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/lan.json)
 - [microsoft](#microsoft) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft.json)
 - [microsoft_cdn](#microsoft-cdn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/microsoft_cdn.json)
@@ -111,10 +111,6 @@ Generated 20260812_102023
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-paypal_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-paypal_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-paypal_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-paypal_custom.conf)
 
-### [domain-direct-ip_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-direct-ip_custom.json)
-
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-direct-ip_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-direct-ip_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-direct-ip_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-direct-ip_custom.conf)
-
 ### [domain-proxy-devtools_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy-devtools_custom.json)
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-proxy-devtools_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-proxy-devtools_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-proxy-devtools_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-proxy-devtools_custom.conf)
@@ -162,6 +158,10 @@ Generated 20260812_102023
 ### [icloud_private_relay](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.json)
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/icloud_private_relay.conf)
+
+### [ip-direct_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/ip-direct_custom.json)
+
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/ip-direct_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/ip-direct_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/ip-direct_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/ip-direct_custom.conf)
 
 ### [lan](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/lan.json)
 
@@ -278,5 +278,5 @@ Generated 20260812_102023
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_102023.log)
-- [Release summary](logs/summary_20260812_102023.md)
+- [Sync log](logs/sync_20260812_103922.log)
+- [Release summary](logs/summary_20260812_103922.md)
