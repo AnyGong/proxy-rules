@@ -1,4 +1,4 @@
-Sync run: 20260812_102023
+Sync run: 20260812_103922
 Sources (1 + custom):
   - @SukkaLab/ruleset.skk.moe/master/sing-box  <-  SukkaLab/ruleset.skk.moe@master:sing-box
   - custom  <-  local (not fetched)
@@ -507,10 +507,6 @@ SRS/MRS compile/copy failures:
   Total rules: 1, discarded rules: 0
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
 
-[custom] File: domain-direct-ip_custom.json  [json] [added]
-  Total rules: 1, discarded rules: 0
-  Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
-
 [custom] File: domain-proxy-devtools_custom.json  [json] [added]
   Total rules: 1, discarded rules: 0
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
@@ -532,6 +528,10 @@ SRS/MRS compile/copy failures:
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
 
 [custom] File: domain-proxy_offshore-finance.json  [json] [added]
+  Total rules: 1, discarded rules: 0
+  Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
+
+[custom] File: ip-direct_custom.json  [json] [added]
   Total rules: 1, discarded rules: 0
   Removed -> domain: 0, domain_suffix: 0, domain_keyword: 0
 
