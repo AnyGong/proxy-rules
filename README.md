@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260812_072558
+Generated 20260812_081358
 
 ## Summary
 
 - Total files: 45 (45 SRS, 43 MRS, 45 JSON, 0 CONF)
 - Sources: 2
-- Compile failures this run: 12 (see `logs/sync_20260812_072558.log`)
+- Compile failures this run: 12 (see `logs/sync_20260812_081358.log`)
 
 ---
 
@@ -730,5 +730,5 @@ https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@release/json/@SukkaLab/rul
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_072558.log)
-- [Release summary](logs/summary_20260812_072558.md)
+- [Sync log](logs/sync_20260812_081358.log)
+- [Release summary](logs/summary_20260812_081358.md)
