@@ -1,12 +1,11 @@
 # Access Links
 
-Generated 20260812_103922
+Generated 20260812_121430
 
 ## Summary
 
-- Total files: 52 (52 SRS, 57 MRS [4 split domain + 4 split ipcidr], 51 JSON, 52 CONF)
+- Total files: 51 (51 SRS, 57 MRS [4 split domain + 4 split ipcidr], 51 JSON, 51 CONF)
 - Sources: 2
-- Compile failures this run: 1 (see `logs/sync_20260812_103922.log`)
 
 ---
 
@@ -47,7 +46,6 @@ Generated 20260812_103922
 - [my_tw](#my-tw) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_tw.json)
 - [my_us](#my-us) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/my_us.json)
 - [neteasemusic](#neteasemusic) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/neteasemusic.json)
-- [process_name-proxy_ai_custom](#process-name-proxy-ai-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/custom/process_name-proxy_ai_custom.json)
 - [reject](#reject) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject.json)
 - [reject-drop](#reject-drop) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-drop.json)
 - [reject-no-drop](#reject-no-drop) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject-no-drop.json)
@@ -207,10 +205,6 @@ Generated 20260812_103922
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/neteasemusic.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/neteasemusic.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/neteasemusic.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/neteasemusic.conf)
 
-### [process_name-proxy_ai_custom](https://github.com/AnyGong/proxy-rules/blob/dist/conf/custom/process_name-proxy_ai_custom.json)
-
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/process_name-proxy_ai_custom.srs) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/process_name-proxy_ai_custom.json)
-
 ### [reject](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/domainset/reject.json)
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/reject.mrs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/reject.conf)
@@ -278,5 +272,5 @@ Generated 20260812_103922
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_103922.log)
-- [Release summary](logs/summary_20260812_103922.md)
+- [Sync log](logs/sync_20260812_121430.log)
+- [Release summary](logs/summary_20260812_121430.md)
