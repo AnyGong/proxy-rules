@@ -90,7 +90,7 @@ jobs:
             git push origin main
           fi
 
-      - name: Commit changes to release branch
+      - name: Commit changes to dist branch
         if: steps.sync.outputs.changed == 'true'
         run: |
           mkdir -p /tmp/build_out
@@ -107,11 +107,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin release:release || true
-          if git rev-parse --verify release >/dev/null 2>&1; then
-            git checkout release
+          git fetch origin dist:dist || true
+          if git rev-parse --verify dist >/dev/null 2>&1; then
+            git checkout dist
           else
-            git checkout --orphan release
+            git checkout --orphan dist
             git rm -rf . 2>/dev/null || true
           fi
 
@@ -126,8 +126,8 @@ jobs:
 
           git add json conf srs mrs logs
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "chore(sync): ${{ steps.sync.outputs.tag }}"
-            git push origin release
+            git commit -m "chore(dist): ${{ steps.sync.outputs.tag }}"
+            git push origin dist
           fi
 
       - name: Tag release

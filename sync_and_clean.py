@@ -682,7 +682,7 @@ def main():
     # ---------- CDN identity (needed for both the srs output path and the links) ----------
     cdn_base_url = sync_cfg.get("cdn_base_url", "https://testingcf.jsdelivr.net/gh")
     cdn_ref_mode = sync_cfg.get("cdn_ref_mode", "tag")  # "tag" or "branch"
-    cdn_branch = sync_cfg.get("cdn_branch", "release")
+    cdn_branch = sync_cfg.get("cdn_branch", "dist")
     tag_name = f"v{run_ts}"
     cdn_ref = cdn_branch if cdn_ref_mode == "branch" else tag_name
 
