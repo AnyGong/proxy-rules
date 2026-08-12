@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "discover.com",
+        "discoverglobalnetwork.com",
+        "binance.com",
+        "bncbl.com",
+        "binance.cloud",
+        "binance.charity",
+        "okx.com",
+        "coinbase.com",
+        "bybit.com",
+        "kucoin.com",
+        "bitget.com",
+        "mexc.com",
+        "lbank.com"
+      ]
+    }
+  ]
+}
