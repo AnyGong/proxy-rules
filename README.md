@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260812_101752
+Generated 20260812_102023
 
 ## Summary
 
-- Total files: 51 (51 SRS, 57 MRS [5 split domain + 5 split ipcidr], 50 JSON, 51 CONF)
+- Total files: 52 (52 SRS, 57 MRS [4 split domain + 4 split ipcidr], 51 JSON, 52 CONF)
 - Sources: 2
-- Compile failures this run: 1 (see `logs/sync_20260812_101752.log`)
+- Compile failures this run: 1 (see `logs/sync_20260812_102023.log`)
 
 ---
 
@@ -23,6 +23,7 @@ Generated 20260812_101752
 - [direct](#direct) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/direct.json)
 - [domain-china-ai_custom](#domain-china-ai-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-ai_custom.json)
 - [domain-china-paypal_custom](#domain-china-paypal-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-paypal_custom.json)
+- [domain-direct-ip_custom](#domain-direct-ip-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-direct-ip_custom.json)
 - [domain-proxy-devtools_custom](#domain-proxy-devtools-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy-devtools_custom.json)
 - [domain-proxy_ai_custom](#domain-proxy-ai-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_ai_custom.json)
 - [domain-proxy_apac-finance_custom](#domain-proxy-apac-finance-custom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy_apac-finance_custom.json)
@@ -104,11 +105,15 @@ Generated 20260812_101752
 
 ### [domain-china-ai_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-ai_custom.json)
 
-[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-ai_custom.srs) · [MRS (domain)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-ai_custom_domain.mrs) · [MRS (ipcidr)](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-ai_custom_ipcidr.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-ai_custom.conf)
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-ai_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-ai_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-ai_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-ai_custom.conf)
 
 ### [domain-china-paypal_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-china-paypal_custom.json)
 
 [SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-china-paypal_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-china-paypal_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-china-paypal_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-china-paypal_custom.conf)
+
+### [domain-direct-ip_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-direct-ip_custom.json)
+
+[SRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/custom/domain-direct-ip_custom.srs) · [MRS](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/custom/domain-direct-ip_custom.mrs) · [JSON](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/custom/domain-direct-ip_custom.json) · [CONF](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/custom/domain-direct-ip_custom.conf)
 
 ### [domain-proxy-devtools_custom](https://github.com/AnyGong/proxy-rules/blob/dist/json/custom/domain-proxy-devtools_custom.json)
 
@@ -273,5 +278,5 @@ Generated 20260812_101752
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_101752.log)
-- [Release summary](logs/summary_20260812_101752.md)
+- [Sync log](logs/sync_20260812_102023.log)
+- [Release summary](logs/summary_20260812_102023.md)
