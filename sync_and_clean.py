@@ -242,31 +242,78 @@ def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
     return True, "ok"
 
 
-def doc_to_mihomo_payload_lines(doc: dict) -> list:
-    """Flatten all supported fields of a cleaned sing-box rule-set JSON
-    document into mihomo classical-ruleset payload lines
-    (e.g. 'DOMAIN-SUFFIX,example.com', 'IP-CIDR,1.2.3.0/24').
-    Uses CONF_FIELD_TO_PREFIX so every field type is covered, including
-    ip_cidr and process_name — enabling classical-behavior .mrs for any
-    sing-box rule-set regardless of which field types it contains."""
-    lines = []
+def doc_to_mihomo_behavior_and_payload(doc: dict) -> tuple:
+    """Determine the appropriate mihomo MRS behavior and generate payload lines.
+
+    mihomo's convert-ruleset crashes (SIGSEGV) when 'classical' behavior
+    receives a domain-only payload, and silently ignores non-IP entries in
+    'ipcidr' mode.  Selecting the correct behavior per file avoids these
+    problems and produces the most compact binary format:
+
+      'domain'    — only domain / domain_suffix entries present.
+                    Payload: '+.example.com' (suffix) or 'example.com' (exact).
+      'ipcidr'    — only ip_cidr entries present.
+                    Payload: plain CIDR notation '1.2.3.0/24'.
+      'classical' — mixed rules, or any rule-set containing domain_keyword /
+                    process_name which the other behaviors can't represent.
+                    Payload: 'TYPE,value' notation (same as .conf format).
+
+    Returns (behavior: str, payload_lines: list[str]).
+    """
+    has_domain = False     # domain or domain_suffix
+    has_keyword = False    # domain_keyword or process_name
+    has_ip = False         # ip_cidr
+
     for rule in doc.get("rules", []):
         if not isinstance(rule, dict):
             continue
-        for field, prefix in CONF_FIELD_TO_PREFIX.items():
-            for value in rule.get(field, []):
-                lines.append(f"{prefix},{value}")
-    return lines
+        if rule.get("domain") or rule.get("domain_suffix"):
+            has_domain = True
+        if rule.get("domain_keyword") or rule.get("process_name"):
+            has_keyword = True
+        if rule.get("ip_cidr"):
+            has_ip = True
+
+    payload_lines = []
+
+    if has_domain and not has_keyword and not has_ip:
+        # Pure domain/suffix → compact 'domain' trie format
+        behavior = "domain"
+        for rule in doc.get("rules", []):
+            if not isinstance(rule, dict):
+                continue
+            for value in rule.get("domain", []):
+                payload_lines.append(value)
+            for value in rule.get("domain_suffix", []):
+                payload_lines.append(f"+.{value}")
+
+    elif has_ip and not has_domain and not has_keyword:
+        # Pure IP-CIDR → 'ipcidr' format
+        behavior = "ipcidr"
+        for rule in doc.get("rules", []):
+            if not isinstance(rule, dict):
+                continue
+            for value in rule.get("ip_cidr", []):
+                payload_lines.append(value)
+
+    else:
+        # Mixed / keyword / process_name → 'classical' TYPE,value format
+        behavior = "classical"
+        for rule in doc.get("rules", []):
+            if not isinstance(rule, dict):
+                continue
+            for field, prefix in CONF_FIELD_TO_PREFIX.items():
+                for value in rule.get(field, []):
+                    payload_lines.append(f"{prefix},{value}")
+
+    return behavior, payload_lines
 
 
 def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
-    """Compile a cleaned sing-box rule-set JSON file into binary .mrs
-    format via mihomo's `convert-ruleset` command using 'classical'
-    behavior, which supports all rule-set field types: domain,
-    domain_suffix, domain_keyword, ip_cidr, and process_name.
-    mihomo compiles from its own classical-ruleset payload (YAML with a
-    `payload:` list of 'TYPE,value' lines), so this first re-renders all
-    rules into that format in a temp file, then invokes mihomo.
+    """Compile a cleaned sing-box rule-set JSON file into binary .mrs format
+    via mihomo's `convert-ruleset` command.  The behavior (domain / ipcidr /
+    classical) is chosen automatically based on which field types are present
+    in the document — see doc_to_mihomo_behavior_and_payload() for details.
     Returns (ok: bool, message: str)."""
     mrs_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -275,7 +322,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
     except (OSError, json.JSONDecodeError) as e:
         return False, f"could not read/parse {json_path.name} for mrs conversion: {e}"
 
-    payload_lines = doc_to_mihomo_payload_lines(doc)
+    behavior, payload_lines = doc_to_mihomo_behavior_and_payload(doc)
     if not payload_lines:
         return False, "rule-set is empty after cleanup — nothing to compile into .mrs"
 
@@ -289,7 +336,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
 
         try:
             result = subprocess.run(
-                [mihomo_bin, "convert-ruleset", "classical", "yaml", str(tmp_yaml_path), str(mrs_path)],
+                [mihomo_bin, "convert-ruleset", behavior, "yaml", str(tmp_yaml_path), str(mrs_path)],
                 capture_output=True, text=True, timeout=60,
             )
         except FileNotFoundError:
@@ -302,7 +349,7 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path):
 
     if result.returncode != 0:
         return False, (result.stderr or result.stdout or "unknown compile error").strip()
-    return True, "ok"
+    return True, f"ok (behavior={behavior})"
 
 
 def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) -> str:
