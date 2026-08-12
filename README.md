@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260812_091136
+Generated 20260812_092014
 
 ## Summary
 
 - Total files: 45 (45 SRS, 34 MRS, 45 JSON, 45 CONF)
 - Sources: 2
-- Compile failures this run: 18 (see `logs/sync_20260812_091136.log`)
+- Compile failures this run: 18 (see `logs/sync_20260812_092014.log`)
 
 ---
 
@@ -243,5 +243,5 @@ Generated 20260812_091136
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260812_091136.log)
-- [Release summary](logs/summary_20260812_091136.md)
+- [Sync log](logs/sync_20260812_092014.log)
+- [Release summary](logs/summary_20260812_092014.md)
