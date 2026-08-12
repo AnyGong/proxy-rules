@@ -1,6 +1,11 @@
 name: Sync sing-box/mihomo rules
 
+
 on:
+  push:
+    paths:
+      - 'custom/**'
+      - '.github/workflows/build.yml'
   schedule:
     - cron: "0 */12 * * *"   # every 12 hours
   workflow_dispatch: {}       # manual trigger
