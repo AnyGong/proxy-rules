@@ -1,0 +1,8 @@
+payload:
+  - 'DOMAIN,this_ruleset_is_made_by_sukkaw.ruleset.skk.moe'
+  - 'DOMAIN,apm-misaka.biliapi.net'
+  - 'DOMAIN,upos-bstar-mirrorakam.akamaized.net'
+  - 'DOMAIN,upos-bstar1-mirrorakam.akamaized.net'
+  - 'DOMAIN-SUFFIX,bilibili.tv'
+  - 'DOMAIN-SUFFIX,biliintl.com'
+  - 'PROCESS-NAME,com.bstar.intl'

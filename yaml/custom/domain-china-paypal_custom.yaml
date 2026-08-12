@@ -1,0 +1,5 @@
+payload:
+  - 'DOMAIN-SUFFIX,paypal.com'
+  - 'DOMAIN-SUFFIX,paypalobjects.com'
+  - 'DOMAIN-SUFFIX,paypal.cn'
+  - 'DOMAIN-SUFFIX,paypal-mktg.com'

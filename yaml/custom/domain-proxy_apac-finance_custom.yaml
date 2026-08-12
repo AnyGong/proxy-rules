@@ -1,0 +1,12 @@
+payload:
+  - 'DOMAIN-SUFFIX,stripe.com'
+  - 'DOMAIN-SUFFIX,stripe.network'
+  - 'DOMAIN-SUFFIX,visa.com'
+  - 'DOMAIN-SUFFIX,americanexpress.com'
+  - 'DOMAIN-SUFFIX,squareup.com'
+  - 'DOMAIN-SUFFIX,square.com'
+  - 'DOMAIN-SUFFIX,cash.app'
+  - 'DOMAIN-SUFFIX,globaljcb.com'
+  - 'DOMAIN-SUFFIX,jcb.co.jp'
+  - 'DOMAIN-SUFFIX,dinersclub.com'
+  - 'DOMAIN-SUFFIX,kraken.com'
