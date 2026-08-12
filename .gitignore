@@ -18,3 +18,8 @@ conf/
 srs/
 mrs/
 logs/
+
+# Local raw fetched sources (stored only on @sync-rules branch)
+@rules/
+upstream/
+rules/

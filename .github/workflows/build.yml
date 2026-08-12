@@ -79,15 +79,45 @@ jobs:
         id: sync
         run: python3 sync_and_clean.py
 
-      - name: Commit documentation and synchronized rules to main branch
+      - name: Commit documentation to main branch
         if: steps.sync.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md CHANGELOG.md @rules/
-          if [ -n "$(git status --porcelain README.md CHANGELOG.md @rules)" ]; then
-            git commit -m "docs(sync): update README.md, CHANGELOG.md, and @rules [${{ steps.sync.outputs.tag }}]"
+          git add README.md CHANGELOG.md
+          if [ -n "$(git status --porcelain README.md CHANGELOG.md)" ]; then
+            git commit -m "docs(sync): update README.md and CHANGELOG.md [${{ steps.sync.outputs.tag }}]"
             git push origin main
+          fi
+
+      - name: Commit raw source rules to @sync-rules branch
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          mkdir -p /tmp/sync_rules_out
+          if [ -d "@rules" ]; then
+            cp -r "@rules/." /tmp/sync_rules_out/
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "@sync-rules:@sync-rules" || true
+          if git rev-parse --verify "@sync-rules" >/dev/null 2>&1; then
+            git checkout "@sync-rules"
+            git rm -rf . 2>/dev/null || true
+          else
+            git checkout --orphan "@sync-rules"
+            git rm -rf . 2>/dev/null || true
+          fi
+
+          if [ -d /tmp/sync_rules_out ]; then
+            cp -r /tmp/sync_rules_out/. .
+          fi
+
+          git add .
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore(sync-rules): update raw source rules [${{ steps.sync.outputs.tag }}]"
+            git push origin "@sync-rules"
           fi
 
       - name: Commit changes to release branch
@@ -109,7 +139,7 @@ jobs:
             git checkout release
           else
             git checkout --orphan release
-            git rm -rf .
+            git rm -rf . 2>/dev/null || true
           fi
 
           [ -d /tmp/build_out/json ] && rm -rf json && cp -r /tmp/build_out/json .
