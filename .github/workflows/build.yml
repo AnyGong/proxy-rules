@@ -117,17 +117,18 @@ jobs:
           git fetch origin "@sync-rules:@sync-rules" || true
           if git rev-parse --verify "@sync-rules" >/dev/null 2>&1; then
             git checkout "@sync-rules"
-            git rm -rf . 2>/dev/null || true
           else
             git checkout --orphan "@sync-rules"
-            git rm -rf . 2>/dev/null || true
           fi
+
+          git rm -rf . 2>/dev/null || true
+          git clean -fdx
 
           if [ -d /tmp/sync_rules_out ]; then
             cp -r /tmp/sync_rules_out/. .
           fi
 
-          git add .
+          git add -A
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "chore(sync-rules): update raw source rules [${{ steps.sync.outputs.tag }}]"
             git push origin "@sync-rules"
@@ -144,19 +145,18 @@ jobs:
             git checkout dist
           else
             git checkout --orphan dist
-            git rm -rf . 2>/dev/null || true
           fi
 
-          [ -d /tmp/build_out/json ] && rm -rf json && cp -r /tmp/build_out/json .
-          [ -d /tmp/build_out/conf ] && rm -rf conf && cp -r /tmp/build_out/conf .
-          [ -d /tmp/build_out/srs ] && rm -rf srs && cp -r /tmp/build_out/srs .
-          [ -d /tmp/build_out/mrs ] && rm -rf mrs && cp -r /tmp/build_out/mrs .
-          [ -d /tmp/build_out/logs ] && rm -rf logs && cp -r /tmp/build_out/logs .
+          git rm -rf . 2>/dev/null || true
+          git clean -fdx
 
-          git rm -rf README.md ACCESS_LINKS.md CHANGELOG.md @rules 2>/dev/null || true
-          rm -rf README.md ACCESS_LINKS.md CHANGELOG.md @rules
+          [ -d /tmp/build_out/json ] && cp -r /tmp/build_out/json .
+          [ -d /tmp/build_out/conf ] && cp -r /tmp/build_out/conf .
+          [ -d /tmp/build_out/srs ] && cp -r /tmp/build_out/srs .
+          [ -d /tmp/build_out/mrs ] && cp -r /tmp/build_out/mrs .
+          [ -d /tmp/build_out/logs ] && cp -r /tmp/build_out/logs .
 
-          git add json conf srs mrs logs
+          git add -A
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "chore(dist): ${{ steps.sync.outputs.tag }}"
             git push origin dist
