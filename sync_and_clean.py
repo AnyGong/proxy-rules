@@ -12,32 +12,39 @@ before this script runs (no GitHub API calls needed for the fetch step).
 
 For every source, this script applies the following per-file conversion matrix:
 
-  Source format | json/  | conf/  | srs/  | mrs/
-  --------------|--------|--------|-------|------
-  .json         |  kept  |   ✓    |   ✓   |   ✓
-  .conf         |   ✓    |  kept  |   ✓   |   ✓
-  .list         |   ✓    |   ✓    |   ✓   |   ✓
-  .txt (text)   |   ✓    |   ✓    |   ✓   |   ✓
-  .srs (pre-compiled) | — | —     | copy  |   —
-  .mrs (pre-compiled) | — | —     |   —   | copy
+  Source format | json/  | conf/  | yaml/  | srs/  | mrs/
+  --------------|--------|--------|--------|-------|------
+  .json         |  kept  |   ✓    |   ✓    |   ✓   |   ✓
+  .conf         |   ✓    |  kept  |   ✓    |   ✓   |   ✓
+  .list         |   ✓    |   ✓    |   ✓    |   ✓   |   ✓
+  .txt (text)   |   ✓    |   ✓    |   ✓    |   ✓   |   ✓
+  .yaml/.yml    |   ✓    |   ✓    |  kept  |   ✓   |   ✓
+  .srs (pre-compiled) | — | —    |   —    | copy  |   —
+  .mrs (pre-compiled) | — | —    |   —    |   —   | copy
   anything else | pass-through to json/, no compilation
 
 1. Cleans blacklisted strings out of domain / domain_suffix / domain_keyword
    arrays in every parseable file, per blacklist.json.
-2. .json  → cleaned in place → json/<ns>/… ; re-serialised → conf/<ns>/… ;
-            compiled → srs/<ns>/… and mrs/<ns>/…
-3. .conf  → parsed to sing-box JSON → cleaned → conf/<ns>/… (as .json) ;
-            compiled → srs/<ns>/… and mrs/<ns>/…
-4. .list  → same parse pipeline as .conf → json/<ns>/… (as .json) and
-            conf/<ns>/… (as .conf) ; compiled → srs/<ns>/… and mrs/<ns>/…
-5. .txt   → same as .list
-6. pre-compiled .srs / .mrs → copied through byte-for-byte into their own
+2. Every parseable format (.json/.conf/.list/.txt/.yaml/.yml) is parsed into
+   a single canonical sing-box rule-set document, cleaned once, then
+   re-serialised into ALL THREE text trees — json/<ns>/…, conf/<ns>/… (as
+   .conf), and yaml/<ns>/… (as .yaml, mihomo rule-provider payload style)
+   — from that one cleaned document, so every representation of a file is
+   always in sync. It's also compiled → srs/<ns>/… and mrs/<ns>/….
+   Whichever tree matches the file's own source format holds its "native"
+   re-serialisation (e.g. a .conf source's conf/ output is that same
+   content, cleaned); the other two text trees hold format conversions of
+   the identical cleaned rules. Values written into .conf/.yaml are
+   escaped appropriately for that format (YAML: single-quoted with
+   embedded quotes doubled) so no special character can break parsing on
+   either the way in or the way out.
+3. pre-compiled .srs / .mrs → copied through byte-for-byte into their own
    format tree only (dated snapshot + always-current "latest"), two ways:
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.srs
        srs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.srs
        mrs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<date>/<file>.mrs
        mrs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.mrs
-7. Any other file format is synced byte-for-byte into json/ but never
+4. Any other file format is synced byte-for-byte into json/ but never
    compiled or linked.
 5. Produces a combined detailed log, a release-ready summary, and a single
    README.md manifest of jsDelivr CDN links for every compiled file
@@ -222,6 +229,135 @@ def convert_ruleset_to_conf(doc: dict) -> str:
     return "\n".join(lines) + ("\n" if lines else "")
 
 
+def escape_yaml_scalar(value: str) -> str:
+    """Single-quote a scalar for safe YAML output, doubling any embedded
+    single quotes. This is the same escaping style mihomo's own
+    rule-provider payload files use, and is what compile_to_mrs already
+    does when it writes mihomo's temp payload YAML — used here too so
+    every value with a comma, colon, '#', quote, or leading special
+    character round-trips through .yaml without corrupting the list."""
+    return "'" + str(value).replace("'", "''") + "'"
+
+
+def _unescape_yaml_scalar(raw: str) -> str:
+    """Inverse of escape_yaml_scalar, plus support for double-quoted and
+    bare (unquoted) scalars, and stripping a trailing unquoted '# comment'.
+    Scoped to single-line flow scalars only — no block scalars, no nested
+    structures — matching the narrow payload-list shape this pipeline
+    reads and writes."""
+    raw = raw.strip()
+    if raw and raw[0] not in "'\"":
+        hash_idx = raw.find(" #")
+        if hash_idx != -1:
+            raw = raw[:hash_idx].strip()
+    if len(raw) >= 2 and raw[0] == raw[-1] == "'":
+        return raw[1:-1].replace("''", "'")
+    if len(raw) >= 2 and raw[0] == raw[-1] == '"':
+        return raw[1:-1].replace('\\"', '"').replace("\\\\", "\\")
+    return raw
+
+
+def parse_yaml_payload(text: str) -> list:
+    """Minimal parser for mihomo-style rule-provider YAML: a single
+    top-level 'payload:' key whose value is a flat list of quoted or
+    unquoted scalar strings (list items starting with '-'). This
+    intentionally does NOT attempt to parse arbitrary YAML — only the
+    narrow payload-list shape mihomo rule-providers (and this pipeline's
+    own .yaml output) use. No external yaml library required."""
+    items = []
+    in_payload = False
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if not in_payload:
+            if stripped in ("payload:", "payload:[]", "payload: []"):
+                in_payload = stripped == "payload:"
+            continue
+        if stripped.startswith("-"):
+            items.append(_unescape_yaml_scalar(stripped[1:].strip()))
+        else:
+            # Dedented to a new top-level key — payload list has ended.
+            in_payload = False
+    return items
+
+
+# yaml payload lines may be either classical directive syntax identical to
+# .conf ('DOMAIN-SUFFIX,example.com', reusing CONF_TYPE_MAP) or mihomo's own
+# domain-behavior shorthand ('+.example.com' for a suffix, a bare domain for
+# an exact match) or a bare CIDR for ip-cidr behavior — this pipeline accepts
+# all three on read so it's compatible with whatever a given upstream .yaml
+# actually contains, but only ever WRITES classical directive lines (see
+# convert_ruleset_to_yaml) since that's the only shorthand that can carry
+# every field, including domain_keyword/process_name, so writing it can
+# always round-trip losslessly back through this same parser.
+def yaml_payload_line_to_rule(line: str):
+    """Classify one payload line into (field, value), or (None, line) if
+    it doesn't match any recognized shorthand."""
+    if "," in line:
+        rule_type, _, value = line.partition(",")
+        field = CONF_TYPE_MAP.get(rule_type.strip().upper())
+        value = value.strip()
+        if field and value:
+            return field, value
+        return None, line
+    if line.startswith("+.") and len(line) > 2:
+        return "domain_suffix", line[2:]
+    if any(c in line for c in ("/", ":")) and not line.startswith("http"):
+        return "ip_cidr", line
+    if line:
+        return "domain", line
+    return None, line
+
+
+def convert_yaml_to_ruleset(text: str):
+    """Convert a mihomo-style rule-provider YAML payload into a sing-box
+    rule-set JSON document. Returns (doc, stats) with the same shape as
+    convert_conf_to_ruleset — same skipped-line tracking, so nothing is
+    silently dropped without a trace."""
+    fields = {"domain": [], "domain_suffix": [], "domain_keyword": [], "ip_cidr": [], "process_name": []}
+    skipped_lines = []
+
+    for line in parse_yaml_payload(text):
+        field, value = yaml_payload_line_to_rule(line)
+        if field is None:
+            skipped_lines.append(line)
+            continue
+        fields[field].append(value)
+
+    rule_obj = {k: v for k, v in fields.items() if v}
+    doc = {"version": 1, "rules": [rule_obj] if rule_obj else []}
+    stats = {
+        "converted_counts": {k: len(v) for k, v in fields.items()},
+        "skipped_count": len(skipped_lines),
+        "skipped_lines": skipped_lines,
+    }
+    return doc, stats
+
+
+def convert_ruleset_to_yaml(doc: dict) -> str:
+    """Serialise a cleaned sing-box rule-set JSON document into mihomo-style
+    rule-provider YAML: a 'payload:' list of classical directive lines
+    (same DOMAIN,/DOMAIN-SUFFIX,/etc. syntax .conf uses), each single-quoted
+    via escape_yaml_scalar. Using classical directives (rather than mihomo's
+    bare-domain/+.suffix shorthand) means every field — including
+    domain_keyword and process_name, which have no shorthand form — survives
+    the round trip back through yaml_payload_line_to_rule."""
+    lines = []
+    for rule in doc.get("rules", []):
+        if not isinstance(rule, dict):
+            continue
+        for field, prefix in CONF_FIELD_TO_PREFIX.items():
+            for value in rule.get(field, []):
+                lines.append(f"{prefix},{value}")
+    if not lines:
+        return "payload: []\n"
+    out = ["payload:"]
+    for line in lines:
+        out.append(f"  - {escape_yaml_scalar(line)}")
+    return "\n".join(out) + "\n"
+
+
 def compile_to_srs(sing_box_bin: str, json_path: Path, srs_path: Path):
     """Compile a sing-box rule-set JSON file into binary .srs format.
     Returns (ok: bool, message: str)."""
@@ -400,12 +536,19 @@ def jsdelivr_url(base_url: str, owner: str, repo: str, ref: str, rel_path: str) 
     return f"{base_url.rstrip('/')}/{owner}/{repo}@{ref}/{rel_path}"
 
 
-def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, conf_output_dir: Path,
+def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
+                    conf_output_dir: Path, yaml_output_dir: Path,
                     blacklist_lower: list, required: bool = True):
     """Core sync logic shared by both configured upstream sources and the
     local custom/ directory. Every file under upstream_dir is synced,
-    regardless of format — but only *.json files are parsed and cleaned;
-    everything else (including pre-compiled .srs) is copied through as-is.
+    regardless of format. Every PARSEABLE format (.json/.conf/.list/.txt/
+    .yaml/.yml) is parsed into one canonical cleaned rule-set document and
+    then re-serialised into ALL THREE text trees (json/conf/yaml) from that
+    single cleaned document — so a file's json/conf/yaml renditions can
+    never drift out of sync with each other, regardless of which format it
+    originated from. Pre-compiled .srs/.mrs and any other unrecognized
+    format are copied through byte-for-byte into json_output_dir (used as
+    a holding area for the compile stage's passthrough copy into srs/mrs).
     Mirrors the (possibly multi-level) subdirectory structure. Returns a
     result dict."""
     namespace_str = str(namespace)
@@ -417,56 +560,81 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
         return {
             "namespace": namespace_str, "namespace_path": namespace,
             "json_output_dir": json_output_dir, "conf_output_dir": conf_output_dir,
-            "per_file_reports": [],
+            "yaml_output_dir": yaml_output_dir, "per_file_reports": [],
             "added": [], "updated": [], "deleted": [], "unchanged": [], "error": required,
         }
 
     upstream_files = sorted(p for p in upstream_dir.rglob("*") if p.is_file())
-    kind_counts = {"json": 0, "conf": 0, "list": 0, "text": 0, "srs": 0, "mrs": 0, "other": 0}
+    kind_counts = {"json": 0, "conf": 0, "list": 0, "text": 0, "yaml": 0, "srs": 0, "mrs": 0, "other": 0}
     for p in upstream_files:
         suf = p.suffix.lower()
         kind_counts["json" if suf == ".json" else "conf" if suf == ".conf" else
         "list" if suf == ".list" else "text" if suf == ".txt" else
+        "yaml" if suf in (".yaml", ".yml") else
         "srs" if suf == ".srs" else "mrs" if suf == ".mrs" else "other"] += 1
     print(f"[{namespace_str}] Found {len(upstream_files)} files ({upstream_dir}): "
           f"{kind_counts['json']} json, {kind_counts['conf']} conf, "
           f"{kind_counts['list']} list, {kind_counts['text']} txt, "
+          f"{kind_counts['yaml']} yaml, "
           f"{kind_counts['srs']} srs, {kind_counts['mrs']} mrs, "
-          f"{kind_counts['other']} other — json/conf/list/txt are converted, "
+          f"{kind_counts['other']} other — json/conf/list/txt/yaml are converted, "
           f"srs/mrs are copied through, other synced as-is.")
 
+    # Canonical diff key for every parseable file is its .json rendition's
+    # content, scanned from json_output_dir alone — conf/yaml renditions are
+    # always regenerated in lockstep from the same cleaned document, so they
+    # never need their own independent diff. Pre-compiled srs/mrs/other
+    # passthrough files also live in json_output_dir (by their own
+    # extension, so no collision with a same-named .json).
     existing_before = {}
     if json_output_dir.exists():
         for p in json_output_dir.rglob("*"):
             if p.is_file():
-                existing_before[("json", str(p.relative_to(json_output_dir)))] = (p.read_bytes(), p)
-    if conf_output_dir.exists():
-        for p in conf_output_dir.rglob("*"):
-            if p.is_file():
-                existing_before[("conf", str(p.relative_to(conf_output_dir)))] = (p.read_bytes(), p)
+                existing_before[str(p.relative_to(json_output_dir))] = (p.read_bytes(), p)
 
     json_output_dir.mkdir(parents=True, exist_ok=True)
     conf_output_dir.mkdir(parents=True, exist_ok=True)
+    yaml_output_dir.mkdir(parents=True, exist_ok=True)
 
     per_file_reports = []
     added, updated, deleted, unchanged = [], [], [], []
-    seen_keys = set()
+    seen_relpaths = set()          # every json_output_dir rel_path written this run
+    seen_parseable_json_rels = set()  # subset of the above that came from a parseable file
+
+    PARSE_KIND_BY_SUFFIX = {
+        ".json": "json", ".conf": "conf", ".list": "list", ".txt": "text",
+        ".yaml": "yaml", ".yml": "yaml",
+    }
 
     for src_path in upstream_files:
         rel_path_src = str(src_path.relative_to(upstream_dir))
         suffix = src_path.suffix.lower()
+        kind = PARSE_KIND_BY_SUFFIX.get(suffix)
 
-        if suffix == ".json":
-            rel_path = rel_path_src  # output extension unchanged
-            key = ("json", rel_path)
-            seen_keys.add(key)
-            local_path = json_output_dir / rel_path
+        if kind is not None:
+            json_rel = str(Path(rel_path_src).with_suffix(".json"))
+            conf_rel = str(Path(rel_path_src).with_suffix(".conf"))
+            yaml_rel = str(Path(rel_path_src).with_suffix(".yaml"))
+            seen_relpaths.add(json_rel)
+            seen_parseable_json_rels.add(json_rel)
 
-            try:
-                doc = json.loads(src_path.read_text(encoding="utf-8"))
-            except json.JSONDecodeError as e:
-                print(f"  [{namespace_str}] ! Skipping {rel_path}: invalid JSON ({e})", file=sys.stderr)
-                continue
+            if kind == "json":
+                try:
+                    doc = json.loads(src_path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError as e:
+                    print(f"  [{namespace_str}] ! Skipping {rel_path_src}: invalid JSON ({e})", file=sys.stderr)
+                    continue
+                conv_stats = None
+            else:
+                try:
+                    src_text = src_path.read_text(encoding="utf-8")
+                except (OSError, UnicodeDecodeError) as e:
+                    print(f"  [{namespace_str}] ! Skipping {rel_path_src}: unreadable ({e})", file=sys.stderr)
+                    continue
+                if kind == "yaml":
+                    doc, conv_stats = convert_yaml_to_ruleset(src_text)
+                else:  # conf, list, text — identical directive-line syntax
+                    doc, conv_stats = convert_conf_to_ruleset(src_text)
 
             cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
 
@@ -474,7 +642,7 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
             total_removed = sum(removed_counts.values())
 
             report = {
-                "file": rel_path, "kind": "json",
+                "file": json_rel, "kind": kind,
                 "rules_total": stats["rules_total"],
                 "rules_discarded": stats["rules_discarded"],
                 "removed_counts": removed_counts,
@@ -482,15 +650,22 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
                 "fields_cleared": stats["fields_cleared"],
                 "action": None,
             }
+            if kind != "json":
+                report["source_file"] = rel_path_src
+                report["conf_converted_counts"] = conv_stats["converted_counts"]
+                report["conf_skipped_count"] = conv_stats["skipped_count"]
+                report["conf_skipped_lines"] = conv_stats["skipped_lines"]
 
-            old_bytes_entry = existing_before.get(key)
+            old_bytes_entry = existing_before.get(json_rel)
             old_bytes = old_bytes_entry[0] if old_bytes_entry else None
 
             if cleaned_doc is None:
                 report["action"] = "discarded_all_rules_empty_file"
                 if old_bytes is not None:
-                    deleted.append(rel_path)
-                    local_path.unlink(missing_ok=True)
+                    deleted.append(json_rel)
+                    (json_output_dir / json_rel).unlink(missing_ok=True)
+                    (conf_output_dir / conf_rel).unlink(missing_ok=True)
+                    (yaml_output_dir / yaml_rel).unlink(missing_ok=True)
                 per_file_reports.append(report)
                 continue
 
@@ -498,180 +673,51 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
 
             if old_bytes is None:
                 report["action"] = "added"
-                added.append(rel_path)
+                added.append(json_rel)
             elif old_bytes != new_bytes:
                 report["action"] = "updated"
-                updated.append(rel_path)
+                updated.append(json_rel)
             else:
                 report["action"] = "unchanged"
-                unchanged.append(rel_path)
+                unchanged.append(json_rel)
 
-            local_path.parent.mkdir(parents=True, exist_ok=True)
-            local_path.write_bytes(new_bytes)
-            per_file_reports.append(report)
-
-            if total_removed or stats["rules_discarded"]:
-                print(f"  [{namespace_str}] {rel_path}: -{total_removed} entries "
-                      f"(domain={removed_counts['domain']}, "
-                      f"suffix={removed_counts['domain_suffix']}, "
-                      f"keyword={removed_counts['domain_keyword']}), "
-                      f"{stats['rules_discarded']} rule(s) discarded")
-
-            # Also write a .conf rendition of the cleaned JSON document.
-            conf_rel_path = str(Path(rel_path).with_suffix(".conf"))
-            conf_local_path = conf_output_dir / conf_rel_path
-            conf_local_path.parent.mkdir(parents=True, exist_ok=True)
-            conf_local_path.write_text(convert_ruleset_to_conf(cleaned_doc), encoding="utf-8")
-
-        elif suffix == ".conf":
-            # Surge/Clash-style plain-text ruleset -> converted to a sing-box
-            # rule-set JSON document, then cleaned exactly like a native .json.
-            # Output filename swaps .conf -> .json since the content format
-            # itself has changed, not just been copied through.
-            rel_path = str(Path(rel_path_src).with_suffix(".json"))
-            key = ("conf", rel_path)
-            seen_keys.add(key)
-            local_path = conf_output_dir / rel_path
-
-            try:
-                conf_text = src_path.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError) as e:
-                print(f"  [{namespace_str}] ! Skipping {rel_path_src}: unreadable .conf ({e})", file=sys.stderr)
-                continue
-
-            doc, conv_stats = convert_conf_to_ruleset(conf_text)
-            cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
-
-            removed_counts = {k: len(v) for k, v in stats["removed"].items()}
-            total_removed = sum(removed_counts.values())
-
-            report = {
-                "file": rel_path, "kind": "conf", "source_file": rel_path_src,
-                "rules_total": stats["rules_total"],
-                "rules_discarded": stats["rules_discarded"],
-                "removed_counts": removed_counts,
-                "removed_values": stats["removed"],
-                "fields_cleared": stats["fields_cleared"],
-                "action": None,
-                "conf_converted_counts": conv_stats["converted_counts"],
-                "conf_skipped_count": conv_stats["skipped_count"],
-                "conf_skipped_lines": conv_stats["skipped_lines"],
-            }
-
-            old_bytes_entry = existing_before.get(key)
-            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
-
-            if cleaned_doc is None:
-                report["action"] = "discarded_all_rules_empty_file"
-                if old_bytes is not None:
-                    deleted.append(rel_path)
-                    local_path.unlink(missing_ok=True)
-                per_file_reports.append(report)
-                continue
-
-            new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
-
-            if old_bytes is None:
-                report["action"] = "added"
-                added.append(rel_path)
-            elif old_bytes != new_bytes:
-                report["action"] = "updated"
-                updated.append(rel_path)
-            else:
-                report["action"] = "unchanged"
-                unchanged.append(rel_path)
-
-            local_path.parent.mkdir(parents=True, exist_ok=True)
-            local_path.write_bytes(new_bytes)
-            per_file_reports.append(report)
-
-            convc = conv_stats["converted_counts"]
-            print(f"  [{namespace_str}] {rel_path_src} -> {rel_path}: converted "
-                  f"(domain={convc['domain']}, suffix={convc['domain_suffix']}, "
-                  f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
-                  f"process_name={convc['process_name']}), "
-                  f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
-                  + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
-
-        elif suffix in (".list", ".txt"):
-            # Surge/Clash-style plain-text rule list (same parse pipeline as .conf).
-            # Produces JSON in json_output_dir and .conf in conf_output_dir.
-            kind = "list" if suffix == ".list" else "text"
-            json_rel_path = str(Path(rel_path_src).with_suffix(".json"))
-            conf_rel_path = str(Path(rel_path_src).with_suffix(".conf"))
-            key = (kind, json_rel_path)
-            seen_keys.add(key)
-            json_local_path = json_output_dir / json_rel_path
-            conf_local_path = conf_output_dir / conf_rel_path
-
-            try:
-                text_content = src_path.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError) as e:
-                print(f"  [{namespace_str}] ! Skipping {rel_path_src}: unreadable ({e})", file=sys.stderr)
-                continue
-
-            doc, conv_stats = convert_conf_to_ruleset(text_content)
-            cleaned_doc, stats = clean_ruleset_document(doc, blacklist_lower)
-
-            removed_counts = {k: len(v) for k, v in stats["removed"].items()}
-            total_removed = sum(removed_counts.values())
-
-            report = {
-                "file": json_rel_path, "kind": kind, "source_file": rel_path_src,
-                "rules_total": stats["rules_total"],
-                "rules_discarded": stats["rules_discarded"],
-                "removed_counts": removed_counts,
-                "removed_values": stats["removed"],
-                "fields_cleared": stats["fields_cleared"],
-                "action": None,
-                "conf_converted_counts": conv_stats["converted_counts"],
-                "conf_skipped_count": conv_stats["skipped_count"],
-                "conf_skipped_lines": conv_stats["skipped_lines"],
-            }
-
-            old_bytes_entry = existing_before.get(key)
-            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
-
-            if cleaned_doc is None:
-                report["action"] = "discarded_all_rules_empty_file"
-                if old_bytes is not None:
-                    deleted.append(json_rel_path)
-                    json_local_path.unlink(missing_ok=True)
-                    conf_local_path.unlink(missing_ok=True)
-                per_file_reports.append(report)
-                continue
-
-            new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
-
-            if old_bytes is None:
-                report["action"] = "added"
-                added.append(json_rel_path)
-            elif old_bytes != new_bytes:
-                report["action"] = "updated"
-                updated.append(json_rel_path)
-            else:
-                report["action"] = "unchanged"
-                unchanged.append(json_rel_path)
-
+            json_local_path = json_output_dir / json_rel
             json_local_path.parent.mkdir(parents=True, exist_ok=True)
             json_local_path.write_bytes(new_bytes)
+
+            conf_local_path = conf_output_dir / conf_rel
             conf_local_path.parent.mkdir(parents=True, exist_ok=True)
             conf_local_path.write_text(convert_ruleset_to_conf(cleaned_doc), encoding="utf-8")
+
+            yaml_local_path = yaml_output_dir / yaml_rel
+            yaml_local_path.parent.mkdir(parents=True, exist_ok=True)
+            yaml_local_path.write_text(convert_ruleset_to_yaml(cleaned_doc), encoding="utf-8")
+
             per_file_reports.append(report)
 
-            convc = conv_stats["converted_counts"]
-            print(f"  [{namespace_str}] {rel_path_src} -> {json_rel_path} + {conf_rel_path}: "
-                  f"converted (domain={convc['domain']}, suffix={convc['domain_suffix']}, "
-                  f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
-                  f"process_name={convc['process_name']}), "
-                  f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
-                  + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
+            if kind == "json":
+                if total_removed or stats["rules_discarded"]:
+                    print(f"  [{namespace_str}] {json_rel}: -{total_removed} entries "
+                          f"(domain={removed_counts['domain']}, "
+                          f"suffix={removed_counts['domain_suffix']}, "
+                          f"keyword={removed_counts['domain_keyword']}), "
+                          f"{stats['rules_discarded']} rule(s) discarded")
+            else:
+                convc = conv_stats["converted_counts"]
+                print(f"  [{namespace_str}] {rel_path_src} -> {json_rel} + {conf_rel} + {yaml_rel}: "
+                      f"converted (domain={convc['domain']}, suffix={convc['domain_suffix']}, "
+                      f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
+                      f"process_name={convc['process_name']}), "
+                      f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
+                      + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
 
         else:
+            # Pre-compiled .srs/.mrs (passthrough into json_output_dir as a
+            # holding area for the compile stage's copy into srs/mrs) or any
+            # other unrecognized format (synced as-is, never compiled/linked).
             rel_path = rel_path_src
-            kind = "srs" if suffix == ".srs" else "mrs" if suffix == ".mrs" else "other"
-            key = (kind, rel_path)
-            seen_keys.add(key)
+            file_kind = "srs" if suffix == ".srs" else "mrs" if suffix == ".mrs" else "other"
+            seen_relpaths.add(rel_path)
             local_path = json_output_dir / rel_path
             try:
                 new_bytes = src_path.read_bytes()
@@ -680,14 +726,14 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
                 continue
 
             report = {
-                "file": rel_path, "kind": kind,
+                "file": rel_path, "kind": file_kind,
                 "rules_total": 0, "rules_discarded": 0,
                 "removed_counts": {"domain": 0, "domain_suffix": 0, "domain_keyword": 0},
                 "removed_values": {"domain": [], "domain_suffix": [], "domain_keyword": []},
                 "fields_cleared": [], "action": None,
             }
 
-            old_bytes_entry = existing_before.get(key)
+            old_bytes_entry = existing_before.get(rel_path)
             old_bytes = old_bytes_entry[0] if old_bytes_entry else None
             if old_bytes is None:
                 report["action"] = "added"
@@ -703,16 +749,29 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path, 
             local_path.write_bytes(new_bytes)
             per_file_reports.append(report)
 
-    for key, (bytes_val, p_path) in existing_before.items():
-        if key not in seen_keys:
+    # Delete anything left in json_output_dir that wasn't touched this run.
+    for rel_path, (bytes_val, p_path) in existing_before.items():
+        if rel_path not in seen_relpaths:
             if p_path.exists():
                 p_path.unlink()
-            deleted.append(key[1])
+            deleted.append(rel_path)
+
+    # conf/ and yaml/ renditions are derived 1:1 from json_output_dir's
+    # parseable entries — sweep out any stale ones left over from a file
+    # that's since been renamed/removed/emptied upstream.
+    if conf_output_dir.exists():
+        for p in conf_output_dir.rglob("*"):
+            if p.is_file() and str(p.relative_to(conf_output_dir).with_suffix(".json")) not in seen_parseable_json_rels:
+                p.unlink()
+    if yaml_output_dir.exists():
+        for p in yaml_output_dir.rglob("*"):
+            if p.is_file() and str(p.relative_to(yaml_output_dir).with_suffix(".json")) not in seen_parseable_json_rels:
+                p.unlink()
 
     return {
         "namespace": namespace_str, "namespace_path": namespace,
         "json_output_dir": json_output_dir, "conf_output_dir": conf_output_dir,
-        "per_file_reports": per_file_reports,
+        "yaml_output_dir": yaml_output_dir, "per_file_reports": per_file_reports,
         "added": added, "updated": updated, "deleted": deleted, "unchanged": unchanged,
         "error": False,
     }
@@ -727,7 +786,9 @@ def process_source(source: dict, sync_cfg: dict, blacklist_lower: list):
     upstream_dir = checkout_root / namespace
     json_output_dir = ROOT / "json" / namespace
     conf_output_dir = ROOT / "conf" / namespace
-    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir, blacklist_lower, required=True)
+    yaml_output_dir = ROOT / "yaml" / namespace
+    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir,
+                           yaml_output_dir, blacklist_lower, required=True)
 
 
 def process_custom(sync_cfg: dict, blacklist_lower: list):
@@ -740,7 +801,9 @@ def process_custom(sync_cfg: dict, blacklist_lower: list):
     upstream_dir = ROOT / custom_dir_name
     json_output_dir = ROOT / "json" / custom_dir_name
     conf_output_dir = ROOT / "conf" / custom_dir_name
-    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir, blacklist_lower, required=False)
+    yaml_output_dir = ROOT / "yaml" / custom_dir_name
+    return sync_local_tree(namespace, upstream_dir, json_output_dir, conf_output_dir,
+                           yaml_output_dir, blacklist_lower, required=False)
 
 
 def main():
@@ -796,7 +859,6 @@ def main():
                 continue
             namespace_path = res["namespace_path"]
             json_output_dir = res["json_output_dir"]
-            conf_output_dir = res["conf_output_dir"]
             kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
             kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
 
@@ -804,22 +866,14 @@ def main():
                 kind = kind_lookup.get(rel_path)
                 if kind == "other":
                     continue
-                if kind not in ("json", "conf", "list", "text", precompiled_kind):
+                if kind not in ("json", "conf", "list", "text", "yaml", precompiled_kind):
                     continue
 
-                if kind == "json":
-                    source_file_path = json_output_dir / rel_path
-                    synced_out_rel = f"json/{namespace_path.as_posix()}/{rel_path}"
-                elif kind == "conf":
-                    source_file_path = conf_output_dir / rel_path
-                    synced_out_rel = f"conf/{namespace_path.as_posix()}/{rel_path}"
-                elif kind in ("list", "text"):
-                    # Stored as .json in json_output_dir after conversion
-                    source_file_path = json_output_dir / rel_path
-                    synced_out_rel = f"json/{namespace_path.as_posix()}/{rel_path}"
-                else:
-                    source_file_path = (json_output_dir if (json_output_dir / rel_path).exists() else conf_output_dir) / rel_path
-                    synced_out_rel = f"{format_name}/{namespace_path.as_posix()}/{rel_path}"
+                # Every parseable kind's canonical cleaned document lives in
+                # json_output_dir at rel_path (always the .json rendition —
+                # see sync_local_tree). Compilation always reads from there
+                # regardless of the file's original source format.
+                source_file_path = json_output_dir / rel_path
 
                 rel = Path(rel_path)
                 out_filename = rel.with_suffix(f".{format_name}").name
@@ -834,7 +888,7 @@ def main():
                 dated_path = format_root / dated_rel
                 latest_path = format_root / latest_rel
 
-                if kind in ("json", "conf"):
+                if kind in ("json", "conf", "list", "text", "yaml"):
                     raw = compiler_fn(binary, source_file_path, dated_path)
                     if format_name == "mrs":
                         variant_results = raw  # already [{"variant","ok","msg","dated_path"}, ...]
@@ -869,7 +923,8 @@ def main():
                               f"for {rel_path}: {msg}", file=sys.stderr)
 
                     results.append((
-                        format_name, res["namespace"], rel_path, ok, msg, synced_out_rel,
+                        format_name, res["namespace"], rel_path, ok, msg,
+                        f"json/{namespace_path.as_posix()}/{rel_path}",
                         actual_dated_rel.as_posix() if ok else None,
                         actual_latest_rel.as_posix() if ok else None, variant,
                     ))
@@ -887,58 +942,49 @@ def main():
 
     latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs"/"mrs_domain"/"mrs_ipcidr": url, "json": url, "conf": url}
 
+    gh_base = f"https://github.com/{cdn_owner}/{cdn_repo}/blob/{cdn_branch}"
+
     for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel, variant in compile_results:
         if not ok:
             continue
         latest_full = f"{format_name}/{latest_rel}"
-        url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
+        cdn_url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
+        github_url = f"{gh_base}/{latest_full}"
         # Group by the *source* file's base name (not latest_rel's), since a
         # split mrs variant's filename carries a _domain/_ipcidr suffix that
         # would otherwise put it in its own row instead of alongside its
         # srs/json/conf siblings.
         base = Path(rel_path).stem
         link_key = f"{format_name}_{variant}" if variant else format_name
-        latest_by_base.setdefault(base, {})[link_key] = url
+        latest_by_base.setdefault(base, {})[link_key] = {"cdn": cdn_url, "github": github_url}
 
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
         namespace_path = res["namespace_path"]
-        gh_base = f"https://github.com/{cdn_owner}/{cdn_repo}/blob/{cdn_branch}"
         for r in res["per_file_reports"]:
-            if r["file"] not in kept:
+            if r["file"] not in kept or r["kind"] not in ("json", "conf", "list", "text", "yaml"):
                 continue
-            kind = r["kind"]
             base = Path(r["file"]).stem
 
-            if kind == "json":
-                # json/ output (cleaned .json)
-                json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
-                latest_by_base.setdefault(base, {})["json"] = jsdelivr_url(
-                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, json_rel)
-                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{json_rel}")
-                # conf/ output (.conf re-serialised from cleaned json)
-                conf_file = str(Path(r["file"]).with_suffix(".conf"))
-                conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
-                latest_by_base[base]["conf"] = jsdelivr_url(
-                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
+            # Every parseable kind now produces all three text renditions in
+            # lockstep (see sync_local_tree) — r["file"] is always the .json
+            # rel_path, so json/conf/yaml rel paths are just suffix swaps.
+            json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
+            conf_file = str(Path(r["file"]).with_suffix(".conf"))
+            conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
+            yaml_file = str(Path(r["file"]).with_suffix(".yaml"))
+            yaml_rel = f"yaml/{namespace_path.as_posix()}/{yaml_file}"
 
-            elif kind == "conf":
-                # conf/ output (converted from .conf source → .json)
-                conf_rel = f"conf/{namespace_path.as_posix()}/{r['file']}"
-                latest_by_base.setdefault(base, {})["conf"] = jsdelivr_url(
-                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
-                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{conf_rel}")
-
-            elif kind in ("list", "text"):
-                # json/ output (.json) + conf/ output (.conf)
-                json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
-                latest_by_base.setdefault(base, {})["json"] = jsdelivr_url(
-                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, json_rel)
-                latest_by_base[base].setdefault("_source_github_url", f"{gh_base}/{json_rel}")
-                conf_file = str(Path(r["file"]).with_suffix(".conf"))
-                conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
-                latest_by_base[base]["conf"] = jsdelivr_url(
-                    cdn_base_url, cdn_owner, cdn_repo, cdn_branch, conf_rel)
+            entry = latest_by_base.setdefault(base, {})
+            for fmt, rel in (("json", json_rel), ("conf", conf_rel), ("yaml", yaml_rel)):
+                entry[fmt] = {
+                    "cdn": jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, rel),
+                    "github": f"{gh_base}/{rel}",
+                }
+            # Link the source heading to wherever this file's "native" format
+            # rendition lives on GitHub (kind's own tree), falling back to json/.
+            native_rel = {"json": json_rel, "conf": conf_rel, "yaml": yaml_rel}.get(r["kind"], json_rel)
+            entry.setdefault("_source_github_url", f"{gh_base}/{native_rel}")
 
     latest_entries = sorted(latest_by_base.items(), key=lambda kv: (kv[0].lower(), kv[0]))
 
@@ -947,20 +993,50 @@ def main():
 
     # ---------- Single manifest: README.md ----------
     # Flat, alphabetically-sorted per-file index — one entry per base filename,
-    # each carrying whichever of its srs/mrs/json/conf links are available.
-    # Overwritten every run so it always reflects the current file set.
+    # each rendered as a Client/Format/GitHub/CDN table. Overwritten every run
+    # so it always reflects the current file set.
     links_path = ROOT / "README.md"
     active_namespaces = sorted(set(r[1] for r in compile_results)) or \
                         [str(source_namespace(s)) for s in sources]
-    format_order = ("srs", "mrs", "mrs_domain", "mrs_ipcidr", "json", "conf")
-    format_labels = {"srs": "SRS", "mrs": "MRS", "mrs_domain": "MRS (domain)",
-                     "mrs_ipcidr": "MRS (ipcidr)", "json": "JSON", "conf": "CONF"}
+    format_order = ("srs", "mrs", "mrs_domain", "mrs_ipcidr", "json", "conf", "yaml")
     total_by_format = {fmt: sum(1 for _, urls in latest_entries if fmt in urls) for fmt in format_order}
     mrs_total = total_by_format["mrs"] + total_by_format["mrs_domain"] + total_by_format["mrs_ipcidr"]
     mrs_split_note = ""
     if total_by_format["mrs_domain"] or total_by_format["mrs_ipcidr"]:
         mrs_split_note = (f" [{total_by_format['mrs_domain']} split domain + "
                           f"{total_by_format['mrs_ipcidr']} split ipcidr]")
+
+    # (client/engine label, format label, urls key(s) to look up). "mrs" is
+    # handled specially below since a mixed domain+ip_cidr rule-set splits
+    # into mrs_domain/mrs_ipcidr instead of a single "mrs" entry.
+    TABLE_ROWS = (
+        ("Sing-box", "srs", ("srs",)),
+        ("Sing-box", "json", ("json",)),
+        ("Surge", "conf", ("conf",)),
+        ("Clash Meta", "mrs", ("mrs", "mrs_domain", "mrs_ipcidr")),
+        ("Clash Meta", "yaml", ("yaml",)),
+    )
+
+    def table_cells(urls: dict, keys: tuple):
+        """Build the (GitHub, CDN) cell text for one table row. A plain key
+        ('srs') yields a single link; the mrs row's three candidate keys
+        yield either its one plain link or its two split-variant links
+        stacked with <br> — 'X' if none of the keys are present at all."""
+        gh_links, cdn_links = [], []
+        variant_labels = {"mrs_domain": "domain", "mrs_ipcidr": "ipcidr"}
+        for key in keys:
+            if key not in urls:
+                continue
+            label = variant_labels.get(key)
+            entry = urls[key]
+            gh_links.append(f"[{label}]({entry['github']})" if label else f"[link]({entry['github']})")
+            cdn_links.append(f"[{label}]({entry['cdn']})" if label else f"[link]({entry['cdn']})")
+            if key == "mrs":
+                break  # unsplit mrs takes priority over any stray split entries
+        if not gh_links:
+            return "X", "X"
+        return "<br>".join(gh_links), "<br>".join(cdn_links)
+
     with open(links_path, "w", encoding="utf-8") as f:
         f.write("# Access Links\n\n")
         f.write(f"Generated {run_ts}\n\n")
@@ -968,7 +1044,8 @@ def main():
         f.write("## Summary\n\n")
         f.write(f"- Total files: {len(latest_entries)} "
                 f"({total_by_format['srs']} SRS, {mrs_total} MRS{mrs_split_note}, "
-                f"{total_by_format['json']} JSON, {total_by_format['conf']} CONF)\n")
+                f"{total_by_format['json']} JSON, {total_by_format['conf']} CONF, "
+                f"{total_by_format['yaml']} YAML)\n")
         f.write(f"- Sources: {len(active_namespaces)}\n")
         if compile_failures:
             f.write(f"- Compile failures this run: {len(compile_failures)} "
@@ -988,20 +1065,19 @@ def main():
         for base, urls in latest_entries:
             anchor = slugify(base)
             source_url = urls.get("_source_github_url", "")
-            # Heading is a clickable link to the source file on GitHub (2nd-click target)
+            # Heading is a clickable link to the source (sync/custom) file on
+            # GitHub. The table below it covers every converted format.
             if source_url:
                 f.write(f"### [{base}]({source_url})\n\n")
             else:
                 f.write(f"### {base}\n\n")
-            # Inline format links — one click to reach the CDN file directly
-            fmt_links = []
-            for fmt in format_order:
-                if fmt in urls:
-                    fmt_links.append(f"[{format_labels[fmt]}]({urls[fmt]})")
-            if fmt_links:
-                f.write(" \u00b7 ".join(fmt_links) + "\n\n")
-            else:
-                f.write("\n")
+
+            f.write("| Client/Engine | Format | GitHub | CDN |\n")
+            f.write("|---|---|---|---|\n")
+            for client_label, fmt_label, keys in TABLE_ROWS:
+                gh_cell, cdn_cell = table_cells(urls, keys)
+                f.write(f"| {client_label} | {fmt_label} | {gh_cell} | {cdn_cell} |\n")
+            f.write("\n")
 
         f.write("## Related\n\n")
         f.write("- [Changelog](CHANGELOG.md)\n")
@@ -1009,7 +1085,7 @@ def main():
         f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
 
     # ---------- Detailed log ----------
-    kind_totals = {"json": 0, "conf": 0, "list": 0, "text": 0, "srs": 0, "mrs": 0, "other": 0}
+    kind_totals = {"json": 0, "conf": 0, "list": 0, "text": 0, "yaml": 0, "srs": 0, "mrs": 0, "other": 0}
     other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
     for res in source_results:
         kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
@@ -1036,15 +1112,16 @@ def main():
         f.write(f"Files deleted: {len(all_deleted)}\n")
         f.write(f"Files unchanged: {len(all_unchanged)}\n\n")
         f.write(f"File kinds synced this run: "
-                f"{kind_totals['json']} json (cleaned → json+conf+srs+mrs), "
-                f"{kind_totals['conf']} conf (converted → json+srs+mrs), "
-                f"{kind_totals['list']} list (converted → json+conf+srs+mrs), "
-                f"{kind_totals['text']} txt (converted → json+conf+srs+mrs), "
+                f"{kind_totals['json']} json (cleaned → json+conf+yaml+srs+mrs), "
+                f"{kind_totals['conf']} conf (converted → json+conf+yaml+srs+mrs), "
+                f"{kind_totals['list']} list (converted → json+conf+yaml+srs+mrs), "
+                f"{kind_totals['text']} txt (converted → json+conf+yaml+srs+mrs), "
+                f"{kind_totals['yaml']} yaml (converted → json+conf+yaml+srs+mrs), "
                 f"{kind_totals['srs']} srs (pre-compiled, copied through), "
                 f"{kind_totals['mrs']} mrs (pre-compiled, copied through), "
                 f"{kind_totals['other']} other (synced as-is, not converted)\n")
         if other_files:
-            f.write("Synced but not converted (not json/conf/list/txt/srs/mrs):\n")
+            f.write("Synced but not converted (not json/conf/list/txt/yaml/srs/mrs):\n")
             for namespace, rel_path in other_files:
                 f.write(f"  - [{namespace}] {rel_path}\n")
         f.write(f"\nSRS compiled/copied: {srs_ok_count}/{len(srs_compile_results)}\n")
@@ -1056,19 +1133,20 @@ def main():
                 f.write(f"  - [{format_name}{tag}] [{namespace}] {rel_path}: {msg}\n")
         f.write("\n")
         f.write("=" * 70 + "\n")
+        src_ext_by_kind = {"conf": ".conf", "list": ".list", "text": ".txt", "yaml": ".yaml"}
         for res in source_results:
             for r in res["per_file_reports"]:
-                if r["kind"] == "conf":
+                if "source_file" in r:
                     f.write(f"\n[{res['namespace']}] File: {r['source_file']} -> {r['file']}  "
                             f"[{r['kind']}] [{r['action']}]\n")
                 else:
                     f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['kind']}] [{r['action']}]\n")
 
-                if r["kind"] not in ("json", "conf", "list", "text"):
+                if r["kind"] not in ("json", "conf", "list", "text", "yaml"):
                     continue
 
-                if r["kind"] in ("conf", "list", "text"):
-                    src_ext = "." + r["kind"] if r["kind"] != "text" else ".txt"
+                if r["kind"] in src_ext_by_kind:
+                    src_ext = src_ext_by_kind[r["kind"]]
                     cc = r["conf_converted_counts"]
                     f.write(f"  Converted from {src_ext} -> domain: {cc['domain']}, "
                             f"domain_suffix: {cc['domain_suffix']}, "
