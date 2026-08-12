@@ -1,4 +1,0 @@
-# China macOS Process Application Proxy Rules
-payload:
-  - PROCESS-NAME,Doubao
-  - PROCESS-NAME,Doubao Browser Helper
