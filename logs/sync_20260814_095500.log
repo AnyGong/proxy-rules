@@ -1,4 +1,4 @@
-Sync run: 20260813_210917
+Sync run: 20260814_095500
 Sources (1 + custom):
   - @SukkaLab/ruleset.skk.moe/master/sing-box  <-  SukkaLab/ruleset.skk.moe@master:sing-box
   - custom  <-  local (not fetched)
