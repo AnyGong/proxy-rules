@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260815_091209
+Generated 20260815_203606
 
 ## Summary
 
 - Total files: 53 (53 SRS, 57 MRS [4 split domain + 4 split ipcidr], 53 JSON, 53 CONF, 53 YAML)
 - Sources: 2
-- Compile failures this run: 2 (see `logs/sync_20260815_091209.log`)
+- Compile failures this run: 2 (see `logs/sync_20260815_203606.log`)
 
 ---
 
@@ -601,5 +601,5 @@ Generated 20260815_091209
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260815_091209.log)
-- [Release summary](logs/summary_20260815_091209.md)
+- [Sync log](logs/sync_20260815_203606.log)
+- [Release summary](logs/summary_20260815_203606.md)
