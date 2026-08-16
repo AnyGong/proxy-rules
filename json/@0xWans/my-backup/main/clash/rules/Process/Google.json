@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "process_name": [
+        "com.google.android.gms",
+        "com.google.android.gsf",
+        "com.google.android.googlequicksearchbox",
+        "com.android.vending"
+      ]
+    }
+  ]
+}

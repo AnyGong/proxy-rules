@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "process_name": [
+        "WeChat",
+        "WeChatAppEx Helper",
+        "QQ",
+        "QQ Helper",
+        "DingTalk",
+        "DingTalk.exe",
+        "com.autonavi.minimap",
+        "com.eg.android.AlipayGphone",
+        "com.taobao.taobao",
+        "com.ss.android.ugc.aweme",
+        "Feishu",
+        "Lark Helper",
+        "com.phoenix.read",
+        "com.dragon.read",
+        "com.ss.android.auto",
+        "抖音 Helper",
+        "小米互联服务",
+        "com.sohu.inputmethod.sogou.xiaomi",
+        "com.mipay.wallet",
+        "AweSun",
+        "ToDesk",
+        "tv.danmaku.bili",
+        "com.xunmeng.pinduoduo",
+        "com.dianping.v1",
+        "com.sankuai.meituan",
+        "com.jingdong.app.mall",
+        "com.gf.client",
+        "com.coolapk.market",
+        "cn.wps.moffice_eng",
+        "com.kmxs.reader",
+        "com.sina.weibo"
+      ]
+    }
+  ]
+}

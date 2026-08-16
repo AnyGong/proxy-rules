@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "stats.avito.ru"
+      ]
+    }
+  ]
+}
