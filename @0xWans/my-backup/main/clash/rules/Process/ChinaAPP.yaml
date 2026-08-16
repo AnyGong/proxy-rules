@@ -1,0 +1,67 @@
+# NAME: ChinaAPP
+# AUTHOR: Wans
+# REPO: https://github.com/0xWans/my-backup
+
+payload:
+  # 腾讯系
+  - PROCESS-NAME-REGEX,(?i)^com\.tencent(\..+)?$
+  - PROCESS-NAME,WeChat
+  - PROCESS-NAME,WeChatAppEx Helper
+  - PROCESS-NAME,QQ
+  - PROCESS-NAME,QQ Helper
+
+  # 阿里巴巴
+  - PROCESS-NAME-REGEX,(?i)^com\.alibaba(\..+)?$
+  - PROCESS-NAME,DingTalk
+  - PROCESS-NAME,DingTalk.exe
+  - PROCESS-NAME,com.autonavi.minimap
+  - PROCESS-NAME,com.eg.android.AlipayGphone
+  - PROCESS-NAME,com.taobao.taobao
+
+  # 字节跳动
+  - PROCESS-NAME,com.ss.android.ugc.aweme
+  - PROCESS-NAME,Feishu
+  - PROCESS-NAME,Lark Helper
+  - PROCESS-NAME,com.phoenix.read
+  - PROCESS-NAME,com.dragon.read
+  - PROCESS-NAME,com.ss.android.auto
+  - PROCESS-NAME,抖音 Helper
+
+  # 小米
+  - PROCESS-NAME-REGEX,(?i)^com\.xiaomi(\..+)?$
+  - PROCESS-NAME-REGEX,(?i)^com\.miui(\..+)?$
+  - PROCESS-NAME,小米互联服务
+  - PROCESS-NAME,com.sohu.inputmethod.sogou.xiaomi
+  - PROCESS-NAME,com.mipay.wallet
+
+  # 远程办公
+  - PROCESS-NAME,AweSun
+  - PROCESS-NAME,ToDesk
+
+  # B站
+  - PROCESS-NAME,tv.danmaku.bili
+
+  # 拼多多
+  - PROCESS-NAME,com.xunmeng.pinduoduo
+
+  # 美团
+  - PROCESS-NAME,com.dianping.v1
+  - PROCESS-NAME,com.sankuai.meituan
+
+  # 京东
+  - PROCESS-NAME,com.jingdong.app.mall
+
+  # 银行
+  - PROCESS-NAME,com.gf.client
+
+  # 酷安
+  - PROCESS-NAME,com.coolapk.market
+
+  # WPS Office
+  - PROCESS-NAME,cn.wps.moffice_eng
+
+  # 七猫小说
+  - PROCESS-NAME,com.kmxs.reader
+
+  # 微博
+  - PROCESS-NAME,com.sina.weibo
