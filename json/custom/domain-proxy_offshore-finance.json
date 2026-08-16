@@ -3,19 +3,19 @@
   "rules": [
     {
       "domain_suffix": [
-        "discover.com",
-        "discoverglobalnetwork.com",
-        "binance.com",
-        "bncbl.com",
-        "binance.cloud",
-        "binance.charity",
-        "okx.com",
-        "coinbase.com",
-        "bybit.com",
-        "kucoin.com",
-        "bitget.com",
-        "mexc.com",
-        "lbank.com"
+        "adyen.com",
+        "braintreegateway.com",
+        "braintreepayments.com",
+        "klarna.com",
+        "moneygram.com",
+        "n26.com",
+        "neteller.com",
+        "payoneer.com",
+        "revolut.com",
+        "skrill.com",
+        "transferwise.com",
+        "westernunion.com",
+        "wise.com"
       ]
     }
   ]
