@@ -12,8 +12,22 @@
       "owner": "MetaCubeX",
       "repo": "meta-rules-dat",
       "branch": "meta",
-      "upstream_path": "geo",
-      "directory_name": "geoip"
+      "upstream_path": "geo/geoip",
+      "directory_name": "geo/geoip"
+    },
+    {
+      "owner": "MetaCubeX",
+      "repo": "meta-rules-dat",
+      "branch": "meta",
+      "upstream_path": "geo/geosite",
+      "directory_name": "geo/geosite"
+    },
+    {
+      "owner": "0xWans",
+      "repo": "my-backup",
+      "branch": "main",
+      "upstream_path": "clash/rules",
+      "directory_name": "clash/rules"
     }
   ],
   "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own @owner/repo/branch/directory_name namespace in both local_output_root and srs/, so nothing overwrites another source's files even if filenames match. 'directory_name' defaults to the last path segment of upstream_path if omitted.",
