@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'custom/**'
+      - 'sync.json'
       - '.github/workflows/build.yml'
   schedule:
     - cron: "0 */12 * * *"   # every 12 hours
