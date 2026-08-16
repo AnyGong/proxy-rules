@@ -3,17 +3,19 @@
   "rules": [
     {
       "domain_suffix": [
-        "stripe.com",
-        "stripe.network",
-        "visa.com",
         "americanexpress.com",
-        "squareup.com",
-        "square.com",
         "cash.app",
+        "dinersclub.com",
+        "discover.com",
+        "discoverglobalnetwork.com",
         "globaljcb.com",
         "jcb.co.jp",
-        "dinersclub.com",
-        "kraken.com"
+        "mastercard.com",
+        "square.com",
+        "squareup.com",
+        "stripe.com",
+        "stripe.network",
+        "visa.com"
       ]
     }
   ]

@@ -3,23 +3,21 @@
   "rules": [
     {
       "domain_suffix": [
-        "wise.com",
-        "transferwise.com",
-        "mastercard.com",
-        "adyen.com",
-        "braintreepayments.com",
-        "braintreegateway.com",
-        "klarna.com",
-        "revolut.com",
-        "n26.com",
-        "payoneer.com",
-        "skrill.com",
-        "neteller.com",
-        "westernunion.com",
-        "moneygram.com",
+        "binance.charity",
+        "binance.cloud",
+        "binance.com",
+        "bitget.com",
+        "bncbl.com",
+        "bybit.com",
+        "coinbase.com",
+        "crypto.com",
         "gate.io",
         "htx.com",
-        "crypto.com"
+        "kraken.com",
+        "kucoin.com",
+        "lbank.com",
+        "mexc.com",
+        "okx.com"
       ]
     }
   ]
