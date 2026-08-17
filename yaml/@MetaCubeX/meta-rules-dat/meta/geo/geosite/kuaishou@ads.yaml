@@ -1,6 +1,7 @@
 payload:
   - 'DOMAIN,log-sdk.gifshow.com'
   - 'DOMAIN,wlog.kuaishou.com'
+  - 'DOMAIN,apilog-web.acfun.cn'
   - 'DOMAIN-SUFFIX,adbkwai.com'
   - 'DOMAIN-SUFFIX,adkwai.com'
   - 'DOMAIN-SUFFIX,adukwai.com'
