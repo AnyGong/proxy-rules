@@ -10,6 +10,7 @@ payload:
     - DOMAIN-SUFFIX,microad.co.jp
     - DOMAIN-SUFFIX,microad.jp
     - DOMAIN-SUFFIX,socdm.com
+    - DOMAIN,stats.avito.ru
     - DOMAIN,ad.ozone.ru
     - DOMAIN,adv.ozon.ru
     - DOMAIN,agency-adv.ozon.ru
@@ -43,4 +44,3 @@ payload:
     - DOMAIN,marketplace-sentry.wb.ru
     - DOMAIN,sentry.wb.ru
     - DOMAIN,web-analytics.wildberries.ru
-    - DOMAIN,stats.avito.ru

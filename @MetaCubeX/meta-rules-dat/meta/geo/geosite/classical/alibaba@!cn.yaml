@@ -10,8 +10,6 @@ payload:
     - DOMAIN-SUFFIX,tmall.hk
     - DOMAIN-SUFFIX,tmall.ru
     - DOMAIN-SUFFIX,fliggy.hk
-    - DOMAIN-SUFFIX,youku.tv
-    - DOMAIN-SUFFIX,youkuplay.com
     - DOMAIN-SUFFIX,alibabacloud.co.in
     - DOMAIN-SUFFIX,alibabacloud.com
     - DOMAIN-SUFFIX,alibabacloud.com.au
@@ -20,6 +18,8 @@ payload:
     - DOMAIN-SUFFIX,alibabacloud.com.sg
     - DOMAIN-SUFFIX,alibabacloud.com.tw
     - DOMAIN-SUFFIX,alicloud.com
+    - DOMAIN-SUFFIX,youku.tv
+    - DOMAIN-SUFFIX,youkuplay.com
     - DOMAIN-SUFFIX,ap-southeast-1.aliyuncs.com
     - DOMAIN-SUFFIX,cn-hongkong.aliyuncs.com
     - DOMAIN-SUFFIX,oss-ap-northeast-1.aliyuncs.com

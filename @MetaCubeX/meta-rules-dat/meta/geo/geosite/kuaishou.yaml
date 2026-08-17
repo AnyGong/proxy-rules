@@ -1,4 +1,5 @@
 payload:
+    - +.eckwai.com
     - +.ecukwai.com
     - +.gifshow.com
     - +.inkuai.com
@@ -12,12 +13,24 @@ payload:
     - +.kuaishoupay.com
     - +.kuaishouzt.com
     - +.kwaicdn.com
+    - +.kwaishop.com
+    - +.kwaixiaodian.com
+    - +.kwaiying.com
     - +.kwaizt.com
     - +.kwimgs.com
+    - +.mojidoc.com
     - +.qingque.cn
     - +.viviv.com
+    - +.wskwai.com
     - +.wsukwai.com
     - +.yximgs.com
+    - +.ac.fun
+    - +.acfun.cn
+    - +.acfun.net
+    - +.acfunchina.cn
+    - +.acfunchina.com
+    - +.acfunchina.net
+    - +.aixifan.com
     - +.adbkwai.com
     - +.adkwai.com
     - +.adukwai.com
@@ -25,3 +38,4 @@ payload:
     - +.e.kuaishou.com
     - log-sdk.gifshow.com
     - wlog.kuaishou.com
+    - apilog-web.acfun.cn
