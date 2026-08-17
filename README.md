@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260816_203756
+Generated 20260817_091412
 
 ## Summary
 
-- Total files: 2208 (2199 SRS, 2201 MRS [4 split domain + 4 split ipcidr], 2199 JSON, 2199 CONF, 2199 YAML)
+- Total files: 2207 (2198 SRS, 2200 MRS [4 split domain + 4 split ipcidr], 2198 JSON, 2198 CONF, 2198 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260816_203756.log`)
+- Compile failures this run: 13 (see `logs/sync_20260817_091412.log`)
 
 ---
 
@@ -1986,7 +1986,6 @@ Generated 20260816_203756
 - [typenetwork](#typenetwork) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/typenetwork.json)
 - [typography](#typography) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/typography.json)
 - [tz](#tz) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/tz.json)
-- [u17](#u17) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/u17.json)
 - [ua](#ua) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/ua.json)
 - [uber](#uber) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/uber.json)
 - [ubiquiti](#ubiquiti) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubiquiti.json)
@@ -21963,16 +21962,6 @@ Generated 20260816_203756
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/tz.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/tz.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/tz.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/tz.yaml) |
 
-### [u17](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/u17.json)
-
-| Client/Engine | Format | GitHub | CDN |
-|---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/u17.yaml) |
-
 ### [ua](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/ua.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24306,5 +24295,5 @@ Generated 20260816_203756
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260816_203756.log)
-- [Release summary](logs/summary_20260816_203756.md)
+- [Sync log](logs/sync_20260817_091412.log)
+- [Release summary](logs/summary_20260817_091412.md)
