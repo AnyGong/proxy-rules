@@ -1,7 +1,4 @@
 payload:
-    - +.tailscale.com
-    - +.tailscale.io
-    - +.ts.net
     - +.equinox.io
     - +.ngrok-agent.com
     - +.ngrok-free.app
@@ -15,3 +12,6 @@ payload:
     - +.ngrok.pro
     - +.pinggy.io
     - +.pinggy.link
+    - +.tailscale.com
+    - +.tailscale.io
+    - +.ts.net

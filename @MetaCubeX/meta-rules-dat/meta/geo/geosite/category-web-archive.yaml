@@ -5,6 +5,9 @@ payload:
     - +.mementoweb.org
     - +.perma.cc
     - +.webcitation.org
+    - +.archive-it.org
+    - +.archive.org
+    - +.openlibrary.org
     - +.4pcdn.org
     - +.4plebs.org
     - +.archive.today
@@ -14,6 +17,3 @@ payload:
     - +.archive.md
     - +.archive.ph
     - +.archive.vn
-    - +.archive-it.org
-    - +.archive.org
-    - +.openlibrary.org
