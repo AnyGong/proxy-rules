@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260818_204433
+Generated 20260819_091332
 
 ## Summary
 
-- Total files: 2207 (2198 SRS, 2200 MRS [4 split domain + 4 split ipcidr], 2198 JSON, 2198 CONF, 2198 YAML)
+- Total files: 2208 (2199 SRS, 2201 MRS [4 split domain + 4 split ipcidr], 2199 JSON, 2199 CONF, 2199 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260818_204433.log`)
+- Compile failures this run: 13 (see `logs/sync_20260819_091332.log`)
 
 ---
 
@@ -1454,6 +1454,7 @@ Generated 20260818_204433
 - [nodeseek](#nodeseek) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nodeseek.json)
 - [noip](#noip) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/noip.json)
 - [nordstrom](#nordstrom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nordstrom.json)
+- [nordvpn](#nordvpn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nordvpn.json)
 - [notion](#notion) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/notion.json)
 - [now](#now) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/now.json)
 - [nowcoder](#nowcoder) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nowcoder.json)
@@ -16642,6 +16643,16 @@ Generated 20260818_204433
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordstrom.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordstrom.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordstrom.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordstrom.yaml) |
 
+### [nordvpn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nordvpn.json)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/nordvpn.yaml) |
+
 ### [notion](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/notion.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24295,5 +24306,5 @@ Generated 20260818_204433
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260818_204433.log)
-- [Release summary](logs/summary_20260818_204433.md)
+- [Sync log](logs/sync_20260819_091332.log)
+- [Release summary](logs/summary_20260819_091332.md)
