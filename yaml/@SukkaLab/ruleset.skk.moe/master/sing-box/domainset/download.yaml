@@ -36,6 +36,7 @@ payload:
   - 'DOMAIN,mr.heru.id'
   - 'DOMAIN,npm.jsr.io'
   - 'DOMAIN,osl.ugr.es'
+  - 'DOMAIN,cdn.dyn.com'
   - 'DOMAIN,cdn.kde.org'
   - 'DOMAIN,cdn.zoom.us'
   - 'DOMAIN,cpan.lnx.sk'
