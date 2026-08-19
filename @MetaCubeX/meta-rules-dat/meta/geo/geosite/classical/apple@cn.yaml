@@ -213,21 +213,6 @@ payload:
     - DOMAIN-SUFFIX,researchkit.com.cn
     - DOMAIN-SUFFIX,swiftui.cn
     - DOMAIN-SUFFIX,swiftui.com.cn
-    - DOMAIN,amp-api-edge.music.apple.com
-    - DOMAIN,amp-api.music.apple.com
-    - DOMAIN,js-cdn.music.apple.com
-    - DOMAIN,music.apple.com
-    - DOMAIN,musicstatus.music.apple.com
-    - DOMAIN,play.music.apple.com
-    - DOMAIN,speedysub.music.apple.com
-    - DOMAIN-SUFFIX,apple-icloud.cn
-    - DOMAIN-SUFFIX,appleicloud.cn
-    - DOMAIN-SUFFIX,icloud-apple.cn
-    - DOMAIN-SUFFIX,icloud-content.com.cn
-    - DOMAIN-SUFFIX,icloud.cn
-    - DOMAIN-SUFFIX,icloud.com.cn
-    - DOMAIN-SUFFIX,icloud.net.cn
-    - DOMAIN-SUFFIX,icloudapple.cn
     - DOMAIN,certs-lb.apple.com.akadns.net
     - DOMAIN,certs.apple.com
     - DOMAIN,crl-lb.apple.com.akadns.net
@@ -295,3 +280,18 @@ payload:
     - DOMAIN,itunes.apple.com
     - DOMAIN,itunesconnect.apple.com
     - DOMAIN,osxapps.itunes.g.aaplimg.com
+    - DOMAIN,amp-api-edge.music.apple.com
+    - DOMAIN,amp-api.music.apple.com
+    - DOMAIN,js-cdn.music.apple.com
+    - DOMAIN,music.apple.com
+    - DOMAIN,musicstatus.music.apple.com
+    - DOMAIN,play.music.apple.com
+    - DOMAIN,speedysub.music.apple.com
+    - DOMAIN-SUFFIX,apple-icloud.cn
+    - DOMAIN-SUFFIX,appleicloud.cn
+    - DOMAIN-SUFFIX,icloud-apple.cn
+    - DOMAIN-SUFFIX,icloud-content.com.cn
+    - DOMAIN-SUFFIX,icloud.cn
+    - DOMAIN-SUFFIX,icloud.com.cn
+    - DOMAIN-SUFFIX,icloud.net.cn
+    - DOMAIN-SUFFIX,icloudapple.cn
