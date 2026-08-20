@@ -3,21 +3,6 @@ payload:
     - +.ark.letv.com
     - +.dc.letv.com
     - +.g3.letv.com
-    - +.log-upload.mihoyo.com
-    - +.adbkwai.com
-    - +.adkwai.com
-    - +.adukwai.com
-    - +.e.kuaishou.cn
-    - +.e.kuaishou.com
-    - log-sdk.gifshow.com
-    - wlog.kuaishou.com
-    - apilog-web.acfun.cn
-    - +.click.hunantv.com
-    - +.da.hunantv.com
-    - +.da.mgtv.com
-    - +.log.hunantv.com
-    - +.log.v2.hunantv.com
-    - +.res.hunantv.com
     - ads3-normal-hl.zijieapi.com
     - ads3-normal.zijieapi.com
     - ads5-normal-hl.zijieapi.com
@@ -38,6 +23,13 @@ payload:
     - +.ja1.gamersky.com
     - +.ja2.gamersky.com
     - +.wmbd.gamersky.com
+    - +.click.hunantv.com
+    - +.da.hunantv.com
+    - +.da.mgtv.com
+    - +.log.hunantv.com
+    - +.log.v2.hunantv.com
+    - +.res.hunantv.com
+    - +.log-upload.mihoyo.com
     - +.ad.tencentmusic.com
     - +.adstats.tencentmusic.com
     - +.monitor.music.qq.com
@@ -45,9 +37,17 @@ payload:
     - +.stat.y.qq.com
     - +.tmead.y.qq.com
     - +.tmeadcomm.y.qq.com
-    - +.ads.service.kugou.com
-    - +.adserviceretry.kglink.cn
-    - +.adserviceretry.kugou.com
     - +.adbehavior.ximalaya.com
     - +.adse.wsa.ximalaya.com
     - +.adse.ximalaya.com
+    - +.ads.service.kugou.com
+    - +.adserviceretry.kglink.cn
+    - +.adserviceretry.kugou.com
+    - +.adbkwai.com
+    - +.adkwai.com
+    - +.adukwai.com
+    - +.e.kuaishou.cn
+    - +.e.kuaishou.com
+    - log-sdk.gifshow.com
+    - wlog.kuaishou.com
+    - apilog-web.acfun.cn

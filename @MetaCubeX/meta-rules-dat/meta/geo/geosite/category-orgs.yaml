@@ -1,5 +1,4 @@
 payload:
-    - csis-prod.s3.amazonaws.com
     - a.ppy.sh
     - assets.ppy.sh
     - c.ppy.sh
@@ -9,6 +8,7 @@ payload:
     - notify.ppy.sh
     - sentry.ppy.sh
     - spectator.ppy.sh
+    - csis-prod.s3.amazonaws.com
     - +.aomedia.org
     - +.atypi.org
     - +.change.org
@@ -24,10 +24,6 @@ payload:
     - +.who.int
     - +.wi-fi.org
     - +.wto.org
-    - +.ccstatic.org
-    - +.creativecommons.org
-    - +.creativecommons.engineering
-    - +.licensebuttons.net
     - +.emojipedia.org
     - +.worldemojiawards.com
     - +.worldemojiday.com
@@ -36,22 +32,6 @@ payload:
     - +.f-droid.com
     - +.f-droid.org
     - +.fdroid.org
-    - +.attestation.app
-    - +.grapheneos.app
-    - +.grapheneos.ca
-    - +.grapheneos.com
-    - +.grapheneos.dev
-    - +.grapheneos.foundation
-    - +.grapheneos.info
-    - +.grapheneos.net
-    - +.grapheneos.network
-    - +.grapheneos.online
-    - +.grapheneos.org
-    - +.grapheneos.ovh
-    - +.grapheneos.page
-    - +.grapheneos.social
-    - +.seamlessupdate.app
-    - +.vanadium.app
     - +.ieee.org
     - +.ieee.tv
     - +.tryengineering.org
@@ -106,8 +86,14 @@ payload:
     - +.signalprocessingsociety.org
     - +.technologyandsociety.org
     - +.vtsociety.org
-    - +.nist.gov
-    - +.time.gov
+    - +.acousticbrainz.org
+    - +.bookbrainz.org
+    - +.coverartarchive.org
+    - +.critiquebrainz.org
+    - +.listenbrainz.org
+    - +.messybrainz.org
+    - +.metabrainz.org
+    - +.musicbrainz.org
     - +.openmaps.org
     - +.openstreetmap.com
     - +.openstreetmap.net
@@ -117,16 +103,30 @@ payload:
     - +.osmfoundation.org
     - +.stateofthemap.com
     - +.stateofthemap.org
-    - +.paskoocheh.com
-    - +.csis.org
-    - +.acousticbrainz.org
-    - +.bookbrainz.org
-    - +.coverartarchive.org
-    - +.critiquebrainz.org
-    - +.listenbrainz.org
-    - +.messybrainz.org
-    - +.metabrainz.org
-    - +.musicbrainz.org
     - +.ppy.sh
     - +.rolfoundation.org
     - +.rolsociety.org
+    - +.ccstatic.org
+    - +.creativecommons.org
+    - +.creativecommons.engineering
+    - +.licensebuttons.net
+    - +.attestation.app
+    - +.grapheneos.app
+    - +.grapheneos.ca
+    - +.grapheneos.com
+    - +.grapheneos.dev
+    - +.grapheneos.foundation
+    - +.grapheneos.info
+    - +.grapheneos.net
+    - +.grapheneos.network
+    - +.grapheneos.online
+    - +.grapheneos.org
+    - +.grapheneos.ovh
+    - +.grapheneos.page
+    - +.grapheneos.social
+    - +.seamlessupdate.app
+    - +.vanadium.app
+    - +.nist.gov
+    - +.time.gov
+    - +.paskoocheh.com
+    - +.csis.org

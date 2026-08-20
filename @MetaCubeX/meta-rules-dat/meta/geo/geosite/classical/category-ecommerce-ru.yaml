@@ -1,7 +1,12 @@
 payload:
-    - DOMAIN-SUFFIX,wbautomation.tech
-    - DOMAIN-SUFFIX,o3team.ru
     - DOMAIN-SUFFIX,drom.ru
+    - DOMAIN-SUFFIX,rdrom.ru
+    - DOMAIN-SUFFIX,apiauto.ru
+    - DOMAIN-SUFFIX,auto.ru
+    - DOMAIN-SUFFIX,autoru.me
+    - DOMAIN-SUFFIX,avto.ru
+    - DOMAIN-SUFFIX,cm.expert
+    - DOMAIN-SUFFIX,avito.ru
     - DOMAIN-SUFFIX,avito.st
     - DOMAIN-SUFFIX,cian.ru
     - DOMAIN-SUFFIX,cian.site
@@ -18,7 +23,7 @@ payload:
     - DOMAIN-SUFFIX,ozon.tm
     - DOMAIN-SUFFIX,ozon.tech
     - DOMAIN-SUFFIX,o3t.ru
-    - DOMAIN-SUFFIX,wbbasket.ru
+    - DOMAIN-SUFFIX,o3team.ru
     - DOMAIN-SUFFIX,o-courier.ru
     - DOMAIN-SUFFIX,ocourier.ru
     - DOMAIN-SUFFIX,ozon-dostavka.ru
@@ -81,9 +86,9 @@ payload:
     - DOMAIN-SUFFIX,wb.kz
     - DOMAIN-SUFFIX,wb.ru
     - DOMAIN-SUFFIX,wbautomation.ru
-    - DOMAIN-SUFFIX,avito.ru
-    - DOMAIN-SUFFIX,rdrom.ru
-    - DOMAIN-SUFFIX,wildbirris.ru
+    - DOMAIN-SUFFIX,wbautomation.tech
+    - DOMAIN-SUFFIX,wbbasket.ru
+    - DOMAIN-SUFFIX,wbcontent.net
     - DOMAIN-SUFFIX,wbdubna.ru
     - DOMAIN-SUFFIX,wbkids.ru
     - DOMAIN-SUFFIX,wbmail.ru
@@ -141,7 +146,7 @@ payload:
     - DOMAIN-SUFFIX,wildberriess.ru
     - DOMAIN-SUFFIX,wildberrise.ru
     - DOMAIN-SUFFIX,wildbiries.ru
-    - DOMAIN-SUFFIX,wbcontent.net
+    - DOMAIN-SUFFIX,wildbirris.ru
     - DOMAIN-SUFFIX,wildbress.ru
     - DOMAIN-SUFFIX,wildbries.ru
     - DOMAIN-SUFFIX,wildbrris.ru
@@ -154,15 +159,10 @@ payload:
     - DOMAIN-SUFFIX,wolfberries.ru
     - DOMAIN-SUFFIX,xn--80acbjgmges7ca.xn--p1ai
     - DOMAIN-SUFFIX,xn--80acbjgsdq2cl.xn--p1ai
-    - DOMAIN-SUFFIX,apiauto.ru
-    - DOMAIN-SUFFIX,cm.expert
-    - DOMAIN-SUFFIX,avto.ru
-    - DOMAIN-SUFFIX,autoru.me
-    - DOMAIN-SUFFIX,auto.ru
-    - DOMAIN-SUFFIX,ewisdom.us.kg
-    - DOMAIN-SUFFIX,ozon.com.kz
-    - DOMAIN-SUFFIX,ozonru.co.il
     - DOMAIN-SUFFIX,ozon.com.by
+    - DOMAIN-SUFFIX,ozonru.co.il
+    - DOMAIN-SUFFIX,ozon.com.kz
+    - DOMAIN-SUFFIX,ewisdom.us.kg
     - DOMAIN-SUFFIX,wildberries.co.il
     - DOMAIN,stats.avito.ru
     - DOMAIN,ad.ozone.ru

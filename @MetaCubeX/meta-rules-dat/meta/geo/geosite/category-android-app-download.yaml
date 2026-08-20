@@ -2,7 +2,6 @@ payload:
     - apkmirror.disqus.com
     - +.uptodown.com
     - +.utdstc.com
-    - +.apkcombo.com
     - +.apkmirror.com
     - +.apkpure.com
     - +.apkpure.net
@@ -10,3 +9,4 @@ payload:
     - +.cdnpure.com
     - +.pureapk.com
     - +.winudf.com
+    - +.apkcombo.com

@@ -1,6 +1,6 @@
 payload:
-    - +.cdnvideo.ru
-    - +.cdnvideohub.com
+    - +.viju.ru
+    - +.restream-media.net
     - +.kinescopecdn.net
     - +.trbcdn.net
     - +.kinorium.com
@@ -13,15 +13,11 @@ payload:
     - +.smotreshka.tv
     - +.start.ru
     - +.tvigle.ru
-    - +.viju.ru
-    - +.promodj.com
-    - +.okkoapi.tv
-    - +.playfamily.ru
-    - +.okko.sport
-    - +.okko.tv
-    - +.restream-media.net
-    - +.restream.ru
+    - +.cdnvideohub.com
+    - +.cdnvideo.ru
     - +.more.tv
+    - +.restream.ru
+    - +.promodj.com
     - +.wink.am
     - +.wink.ru
     - +.rutube.ru
@@ -29,4 +25,8 @@ payload:
     - +.rtbcdn.ru
     - +.rutube.sport
     - +.kinopoisk.ru
+    - +.okko.tv
+    - +.okkoapi.tv
+    - +.playfamily.ru
+    - +.okko.sport
     - +.kinopoisk-ru.clstorage.net
