@@ -1,7 +1,6 @@
 payload:
   - 'DOMAIN,location.microsoft.com'
   - 'DOMAIN,bj1.api.bing.com'
-  - 'DOMAIN,emoi-cncdn.bing.com'
   - 'DOMAIN-SUFFIX,bing'
   - 'DOMAIN-SUFFIX,masalladeloslimites.com'
   - 'DOMAIN-SUFFIX,microsoftpartnersolutions.com'

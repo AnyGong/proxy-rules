@@ -5,7 +5,7 @@ payload:
   - 'DOMAIN-SUFFIX,microsoftads.com'
   - 'DOMAIN-SUFFIX,msads.net'
   - 'DOMAIN-SUFFIX,nelreports.net'
-  - 'DOMAIN-SUFFIX,collector.github.com'
   - 'DOMAIN-SUFFIX,browser.events.data.msn.cn'
   - 'DOMAIN-SUFFIX,browser.events.data.msn.com'
   - 'DOMAIN-SUFFIX,bingads.com'
+  - 'DOMAIN-SUFFIX,collector.github.com'

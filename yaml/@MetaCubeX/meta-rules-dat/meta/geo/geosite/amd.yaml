@@ -1,5 +1,4 @@
 payload:
-  - 'DOMAIN,www.amd.com'
   - 'DOMAIN-SUFFIX,amd.com'
   - 'DOMAIN-SUFFIX,amdfanstore.com'
   - 'DOMAIN-SUFFIX,amdgaming.com'
