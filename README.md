@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260819_204555
+Generated 20260820_091223
 
 ## Summary
 
-- Total files: 2208 (2199 SRS, 2201 MRS [4 split domain + 4 split ipcidr], 2199 JSON, 2199 CONF, 2199 YAML)
+- Total files: 2206 (2197 SRS, 2199 MRS [4 split domain + 4 split ipcidr], 2197 JSON, 2197 CONF, 2197 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260819_204555.log`)
+- Compile failures this run: 13 (see `logs/sync_20260820_091223.log`)
 
 ---
 
@@ -110,7 +110,6 @@ Generated 20260819_204555
 - [amazontrust](#amazontrust) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amazontrust.json)
 - [amc](#amc) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amc.json)
 - [amd](#amd) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amd.json)
-- [amd@cn](#amd-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amd@cn.json)
 - [amp](#amp) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amp.json)
 - [amp@cn](#amp-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amp@cn.json)
 - [anaconda](#anaconda) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/anaconda.json)
@@ -1992,7 +1991,6 @@ Generated 20260819_204555
 - [ubiquiti](#ubiquiti) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubiquiti.json)
 - [ubiquiti@cn](#ubiquiti-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubiquiti@cn.json)
 - [ubisoft](#ubisoft) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubisoft.json)
-- [ubisoft@cn](#ubisoft-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubisoft@cn.json)
 - [ubuntu](#ubuntu) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubuntu.json)
 - [ubuntukylin](#ubuntukylin) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubuntukylin.json)
 - [uc](#uc) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/uc.json)
@@ -3202,16 +3200,6 @@ Generated 20260819_204555
 | Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.conf) |
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd.yaml) |
-
-### [amd@cn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amd@cn.json)
-
-| Client/Engine | Format | GitHub | CDN |
-|---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amd@cn.yaml) |
 
 ### [amp](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amp.json)
 
@@ -22023,16 +22011,6 @@ Generated 20260819_204555
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft.yaml) |
 
-### [ubisoft@cn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubisoft@cn.json)
-
-| Client/Engine | Format | GitHub | CDN |
-|---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/ubisoft@cn.yaml) |
-
 ### [ubuntu](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/ubuntu.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24306,5 +24284,5 @@ Generated 20260819_204555
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260819_204555.log)
-- [Release summary](logs/summary_20260819_204555.md)
+- [Sync log](logs/sync_20260820_091223.log)
+- [Release summary](logs/summary_20260820_091223.md)
