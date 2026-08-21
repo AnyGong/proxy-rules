@@ -2602,6 +2602,7 @@ payload:
   - 'DOMAIN,proxy.joinmastodon.org'
   - 'DOMAIN,public.flourish.studio'
   - 'DOMAIN,res-geo.cdn.office.net'
+  - 'DOMAIN,resource.logitechg.com'
   - 'DOMAIN,resource.video.nimg.jp'
   - 'DOMAIN,resources.allstate.com'
   - 'DOMAIN,rv-assets.softonic.com'
