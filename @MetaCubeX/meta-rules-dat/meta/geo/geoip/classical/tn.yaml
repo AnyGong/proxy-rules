@@ -286,6 +286,7 @@ payload:
     - IP-CIDR,2a09:bac6:5888::/45
     - IP-CIDR,2a09:bac6:5890::/45
     - IP-CIDR,2a0b:4e07:3:7880::/60
+    - IP-CIDR,2a0e:cbc0:92::/48
     - IP-CIDR,2a0e:ec05:d880::/41
     - IP-CIDR,2a0e:ec05:d900::/40
     - IP-CIDR,2a0e:ec05:da00::/41

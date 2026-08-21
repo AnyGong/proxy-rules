@@ -1,4 +1,6 @@
 payload:
+    - +.pinggy.io
+    - +.pinggy.link
     - +.tailscale.com
     - +.tailscale.io
     - +.ts.net
@@ -13,5 +15,3 @@ payload:
     - +.ngrok.io
     - +.ngrok.pizza
     - +.ngrok.pro
-    - +.pinggy.io
-    - +.pinggy.link
