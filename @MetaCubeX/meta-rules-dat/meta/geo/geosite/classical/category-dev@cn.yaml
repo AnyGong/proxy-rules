@@ -13,9 +13,6 @@ payload:
     - DOMAIN-SUFFIX,researchkit.com.cn
     - DOMAIN-SUFFIX,swiftui.cn
     - DOMAIN-SUFFIX,swiftui.com.cn
-    - DOMAIN,cdn.ampproject.org
-    - DOMAIN-SUFFIX,jetbrains.com.cn
-    - DOMAIN-SUFFIX,cdn.jetbrains.com
     - DOMAIN-SUFFIX,microsoftreactor.cn
     - DOMAIN-SUFFIX,microsoftreactor.com.cn
     - DOMAIN-SUFFIX,reactorms.com.cn
@@ -23,3 +20,6 @@ payload:
     - DOMAIN,crashlyticsreports-pa.googleapis.com
     - DOMAIN,firebase-settings.crashlytics.com
     - DOMAIN,update.crashlytics.com
+    - DOMAIN,cdn.ampproject.org
+    - DOMAIN-SUFFIX,jetbrains.com.cn
+    - DOMAIN-SUFFIX,cdn.jetbrains.com
