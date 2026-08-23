@@ -4,8 +4,6 @@ payload:
     - +.nip.io
     - +.sslip.io
     - +.traefik.me
-    - +.cloudns.nz
-    - +.cloudns.ph
     - +.1cooldns.com
     - +.4cloud.click
     - +.accesscam.org
@@ -110,3 +108,5 @@ payload:
     - +.webhop.me
     - +.workisboring.com
     - +.zapto.org
+    - +.cloudns.nz
+    - +.cloudns.ph

@@ -1,15 +1,4 @@
 payload:
-    - +.ad.games.dmm.com
-    - +.bluekai.com
-    - +.fout.jp
-    - +.gmossp-sp.jp
-    - +.i-mobile.co.jp
-    - +.im-apps.net
-    - +.impact-ad.jp
-    - +.ladsp.com
-    - +.microad.co.jp
-    - +.microad.jp
-    - +.socdm.com
     - ad.ozone.ru
     - adv.ozon.ru
     - agency-adv.ozon.ru
@@ -44,3 +33,14 @@ payload:
     - sentry.wb.ru
     - web-analytics.wildberries.ru
     - stats.avito.ru
+    - +.ad.games.dmm.com
+    - +.bluekai.com
+    - +.fout.jp
+    - +.gmossp-sp.jp
+    - +.i-mobile.co.jp
+    - +.im-apps.net
+    - +.impact-ad.jp
+    - +.ladsp.com
+    - +.microad.co.jp
+    - +.microad.jp
+    - +.socdm.com
