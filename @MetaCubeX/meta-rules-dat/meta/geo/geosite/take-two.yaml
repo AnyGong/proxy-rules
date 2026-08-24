@@ -3,6 +3,12 @@ payload:
     - media-rockstargames-com.akamaized.net
     - videos-rockstargames-com.akamaized.net
     - +.take2games.com
+    - +.2k.com
+    - +.2kcoretech.online
+    - +.2kct.onl
+    - +.2kgames.com
+    - +.2ksports.com
+    - +.2kweb.online
     - +.rockstargames.com
     - +.rockstarnorth.com
     - +.rsg.ms
@@ -10,9 +16,3 @@ payload:
     - +.zynga.com
     - +.zyngaplayersupport.com
     - +.zyngapoker.com
-    - +.2k.com
-    - +.2kcoretech.online
-    - +.2kct.onl
-    - +.2kgames.com
-    - +.2ksports.com
-    - +.2kweb.online

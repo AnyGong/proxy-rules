@@ -10,6 +10,8 @@ payload:
     - +.tmall.hk
     - +.tmall.ru
     - +.fliggy.hk
+    - +.youku.tv
+    - +.youkuplay.com
     - +.alibabacloud.co.in
     - +.alibabacloud.com
     - +.alibabacloud.com.au
@@ -18,8 +20,6 @@ payload:
     - +.alibabacloud.com.sg
     - +.alibabacloud.com.tw
     - +.alicloud.com
-    - +.youku.tv
-    - +.youkuplay.com
     - +.ap-southeast-1.aliyuncs.com
     - +.cn-hongkong.aliyuncs.com
     - +.oss-ap-northeast-1.aliyuncs.com

@@ -2,7 +2,7 @@ payload:
     - cueme-api.quark.cn
     - ai.zhaomi.cn
     - +.clawhub-mirror.com
-    - +.obricclouddw.com
+    - +.oceancloudapi.com
     - +.liblib.tv
     - +.rwkv.cn
     - +.rwkv.com
@@ -20,7 +20,7 @@ payload:
     - +.sleeplesshorizon.cn
     - +.dumate.cn
     - +.miaoda.cn
-    - +.diandianlife.top
+    - +.xiaomimimo.com
     - +.mcpworld.com
     - +.tiangong.cn
     - +.bigmodel.cn
@@ -30,16 +30,16 @@ payload:
     - +.zhipucn.com
     - +.kimi.com
     - +.moonshot.cn
-    - +.askdiandian.com
-    - +.xiaomimimo.com
+    - +.xiaoaiassist.com
+    - +.miaibox.com
     - +.safeskill.cn
     - +.hailuoai.com
     - +.minimaxi.com
     - +.xingyeai.com
     - +.codebuddy.cn
-    - +.xiaoaiassist.com
-    - +.miaibox.com
     - +.yoma.cn
+    - +.trae.guru
+    - +.trae.cn
     - +.baichuan-ai.com
     - +.cueme.cn
     - +.n.cn
@@ -57,11 +57,13 @@ payload:
     - +.duiopen.com
     - +.liblib.cloud
     - +.liblib.art
-    - +.trae.guru
+    - +.tcwqqdy.guru
     - +.zhiexa.com
     - +.linka2a.net
     - +.yzsgo.com
     - +.shunjing.xin
+    - +.askdiandian.com
+    - +.diandianlife.top
     - +.deepseek.com
     - +.butterfly-static.cn
     - +.butterflyai.cn
@@ -89,9 +91,9 @@ payload:
     - +.hi-butterfly.cn
     - +.maoxiangai.com
     - +.myparallelstory.com
-    - +.oceancloudapi.com
-    - +.obriccloud.com
     - +.skillhub.cn
+    - +.obriccloud.com
+    - +.obricclouddw.com
     - +.picpic-ai.cn
     - +.pixeldance.com
     - +.api-building.fun
@@ -101,14 +103,12 @@ payload:
     - +.mcdemo.show
     - +.mchost.guru
     - +.mcprev.cn
-    - +.tcwqqdy.guru
-    - +.trae.cn
     - +.xinghuo.xfyun.cn
     - +.yuanqi.tencent.com
-    - +.marscode.com.cn
-    - +.trae.com.cn
     - +.yuanbao.tencent.com
     - +.hunyuan.tencent.com
+    - +.marscode.com.cn
+    - +.trae.com.cn
     - +.yiyan.baidu.com
     - +.tongyi.aliyun.com
     - +.qianwen.aliyun.com
