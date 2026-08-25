@@ -1,6 +1,8 @@
 payload:
     - +.ir
     - +.xn--mgba3a4f16a
+    - +.abrarnews.com
+    - +.novininsurance.com
     - +.loxblog.com
     - +.niniweblog.com
     - +.rozblog.com
@@ -20,6 +22,42 @@ payload:
     - +.mahex.com
     - +.podro.com
     - +.tipaxco.com
+    - +.agrieng.org
+    - +.cinematicket.org
+    - +.melodify.app
+    - +.melodify.pw
+    - +.telewebion.com
+    - +.aparat.com
+    - +.aparatkids.com
+    - +.aparatsport.com
+    - +.filimo.com
+    - +.filimo.school
+    - +.vandar.app
+    - +.behpardakht.com
+    - +.bitbarg.me
+    - +.mydigipay.com
+    - +.asanpardakht.net
+    - +.zarinpal.com
+    - +.asanpardakht.com
+    - +.vandar.io
+    - +.weswap.digital
+    - +.flightio.com
+    - +.mrbilit.com
+    - +.tap30.services
+    - +.tap33.me
+    - +.tapsi.cab
+    - +.adivery.com
+    - +.kaprila.com
+    - +.najva.com
+    - +.sabavision.com
+    - +.yektanet.com
+    - +.mellatinsurance.com
+    - +.bimehasia.com
+    - +.dana-insurance.com
+    - +.dayins.com
+    - +.bimeh.com
+    - +.bimeonline.com
+    - +.sinainsurance.com
     - +.digi-kala.com
     - +.janebi.com
     - +.sheypoor.com
@@ -30,20 +68,7 @@ payload:
     - +.digistyle.com
     - +.divar.cloud
     - +.divarcdn.com
-    - +.cdnsnapptrip.com
-    - +.snapp-box.com
-    - +.snapp.cab
-    - +.snapp.doctor
-    - +.snapp.express
-    - +.snapp.ninja
-    - +.snapp.site
-    - +.snapp.supply
-    - +.snapp.taxi
-    - +.snapp.tech
-    - +.snappcloud.io
-    - +.snappfood.dev
-    - +.snapproom.com
-    - +.snapptrip.com
+    - +.quera.org
     - +.asriran.com
     - +.eghtesadnews.com
     - +.fararu.com
@@ -57,7 +82,8 @@ payload:
     - +.tasnimnews.com
     - +.tejaratnews.com
     - +.7sobh.com
-    - +.abrarnews.com
+    - +.blogfa.com
+    - +.blogsky.com
     - +.donya-e-eqtesad.com
     - +.ebtekarnews.com
     - +.ettelaat.com
@@ -67,49 +93,9 @@ payload:
     - +.khorasannews.com
     - +.resalat-news.com
     - +.tehrantimes.com
-    - +.sanjesh.org
-    - +.sharif.edu
-    - +.srttu.edu
-    - +.bale.ai
-    - +.eitaa.com
-    - +.asanpardakht.net
-    - +.gap.im
-    - +.gaplication.com
-    - +.niniban.com
-    - +.ninisite.com
-    - +.virasty.com
-    - +.flightio.com
-    - +.mrbilit.com
-    - +.tap30.services
-    - +.tap33.me
-    - +.tapsi.cab
-    - +.cinematicket.org
-    - +.melodify.app
-    - +.melodify.pw
-    - +.telewebion.com
-    - +.aparat.com
-    - +.aparatkids.com
-    - +.aparatsport.com
-    - +.filimo.com
-    - +.filimo.school
-    - +.faradars.org
-    - +.maktabkhooneh.org
-    - +.newdars.com
-    - +.toplearn.com
-    - +.melotar.com
-    - +.iranlms.org
-    - +.zarinpal.com
-    - +.vandar.app
-    - +.behpardakht.com
-    - +.bitbarg.me
-    - +.mydigipay.com
-    - +.blogfa.com
-    - +.blogsky.com
-    - +.webinarplus.online
-    - +.asanpardakht.com
-    - +.vandar.io
-    - +.weswap.digital
     - +.abrha.net
+    - +.tetherland.com
+    - +.tabdeal.org
     - +.afranet.com
     - +.arvancloud.com
     - +.arzex.io
@@ -133,11 +119,39 @@ payload:
     - +.softgozar.com
     - +.yasdl.com
     - +.zhaket.com
-    - +.adivery.com
-    - +.kaprila.com
-    - +.najva.com
-    - +.sabavision.com
-    - +.yektanet.com
+    - +.cdnsnapptrip.com
+    - +.snapp-box.com
+    - +.snapp.cab
+    - +.snapp.doctor
+    - +.snapp.express
+    - +.snapp.ninja
+    - +.snapp.site
+    - +.snapp.supply
+    - +.snapp.taxi
+    - +.snapp.tech
+    - +.snappcloud.io
+    - +.snappfood.dev
+    - +.snapproom.com
+    - +.snapptrip.com
+    - +.faradars.org
+    - +.maktabkhooneh.org
+    - +.newdars.com
+    - +.toplearn.com
+    - +.melotar.com
+    - +.iranlms.org
+    - +.webinarplus.online
+    - +.sanjesh.org
+    - +.sharif.edu
+    - +.srttu.edu
+    - +.ramzinex.com
+    - +.ompfinex.com
+    - +.bale.ai
+    - +.eitaa.com
+    - +.gap.im
+    - +.gaplication.com
+    - +.niniban.com
+    - +.ninisite.com
+    - +.virasty.com
     - +.agri-bank.com
     - +.ansarbank.com
     - +.blubank.com
@@ -175,17 +189,3 @@ payload:
     - +.farhad-exchange.com
     - +.jibitex.com
     - +.ok-ex.io
-    - +.ompfinex.com
-    - +.ramzinex.com
-    - +.tabdeal.org
-    - +.tetherland.com
-    - +.sinainsurance.com
-    - +.quera.org
-    - +.agrieng.org
-    - +.mellatinsurance.com
-    - +.bimehasia.com
-    - +.dana-insurance.com
-    - +.dayins.com
-    - +.bimeh.com
-    - +.bimeonline.com
-    - +.novininsurance.com

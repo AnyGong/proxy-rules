@@ -48,14 +48,6 @@ payload:
     - DOMAIN-SUFFIX,trace.qq.com
     - DOMAIN-SUFFIX,ugdtimg.com
     - DOMAIN-SUFFIX,wit.qq.com
-    - DOMAIN-SUFFIX,inte.sogou.com
-    - DOMAIN-SUFFIX,inte.sogoucdn.com
-    - DOMAIN-SUFFIX,lu.sogou.com
-    - DOMAIN-SUFFIX,lu.sogoucdn.com
-    - DOMAIN-SUFFIX,pb.i.sogou.com
-    - DOMAIN-SUFFIX,theta.sogoucdn.com
-    - DOMAIN-SUFFIX,uranus.sogou.com
-    - DOMAIN-SUFFIX,wuliao.epro.sogou.com
     - DOMAIN-SUFFIX,badjs.weixinbridge.com
     - DOMAIN-SUFFIX,ad.tencentmusic.com
     - DOMAIN-SUFFIX,adstats.tencentmusic.com
@@ -70,3 +62,11 @@ payload:
     - DOMAIN-SUFFIX,adbehavior.ximalaya.com
     - DOMAIN-SUFFIX,adse.wsa.ximalaya.com
     - DOMAIN-SUFFIX,adse.ximalaya.com
+    - DOMAIN-SUFFIX,inte.sogou.com
+    - DOMAIN-SUFFIX,inte.sogoucdn.com
+    - DOMAIN-SUFFIX,lu.sogou.com
+    - DOMAIN-SUFFIX,lu.sogoucdn.com
+    - DOMAIN-SUFFIX,pb.i.sogou.com
+    - DOMAIN-SUFFIX,theta.sogoucdn.com
+    - DOMAIN-SUFFIX,uranus.sogou.com
+    - DOMAIN-SUFFIX,wuliao.epro.sogou.com

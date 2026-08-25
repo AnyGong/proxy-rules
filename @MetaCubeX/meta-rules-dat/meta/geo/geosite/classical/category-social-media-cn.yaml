@@ -19,9 +19,6 @@ payload:
     - DOMAIN-SUFFIX,meipian.me
     - DOMAIN-SUFFIX,laiyagushi.com
     - DOMAIN-SUFFIX,vzuu.com
-    - DOMAIN-SUFFIX,coolapk.com
-    - DOMAIN-SUFFIX,coolapkmarket.com
-    - DOMAIN-SUFFIX,coolapkmarket.net
     - DOMAIN-SUFFIX,douban.com
     - DOMAIN-SUFFIX,douban.fm
     - DOMAIN-SUFFIX,doubanio.com
@@ -31,6 +28,9 @@ payload:
     - DOMAIN-SUFFIX,hupucdn.com
     - DOMAIN-SUFFIX,shihuo.cn
     - DOMAIN-SUFFIX,meipian.cn
+    - DOMAIN-SUFFIX,coolapk.com
+    - DOMAIN-SUFFIX,coolapkmarket.com
+    - DOMAIN-SUFFIX,coolapkmarket.net
     - DOMAIN-SUFFIX,ivwen.com
     - DOMAIN-SUFFIX,hoopchina.com.cn
     - DOMAIN-SUFFIX,tieba.baidu.com

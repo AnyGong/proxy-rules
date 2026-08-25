@@ -10,8 +10,6 @@ payload:
     - +.mcafee.com
     - +.norton.com
     - +.pandasecurity.com
-    - +.symantec.com
-    - +.symantecliveupdate.com
     - +.comodo.com
     - +.comodo.net
     - +.drweb.by
@@ -53,6 +51,8 @@ payload:
     - +.kaspersky.dk
     - +.kaspersky.dz
     - +.kaspersky.es
+    - +.symantec.com
+    - +.symantecliveupdate.com
     - +.drweb.co.jp
     - +.kaspersky.co.uk
     - +.kaspersky.com.vn

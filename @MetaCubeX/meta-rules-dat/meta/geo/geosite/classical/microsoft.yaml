@@ -6,8 +6,8 @@ payload:
     - DOMAIN,statics-marketingsites-eas-ms-com.akamaized.net
     - DOMAIN,statics-marketingsites-eus-ms-com.akamaized.net
     - DOMAIN,statics-marketingsites-wcus-ms-com.akamaized.net
-    - DOMAIN,prodforza.blob.core.windows.net
     - DOMAIN,flightsimulator.azureedge.net
+    - DOMAIN,prodforza.blob.core.windows.net
     - DOMAIN,azure.microsoft.com
     - DOMAIN,azuremarketplace.microsoft.com
     - DOMAIN,location.microsoft.com
@@ -345,6 +345,8 @@ payload:
     - DOMAIN-SUFFIX,xboxservices.com
     - DOMAIN-SUFFIX,xboxstudios.com
     - DOMAIN-SUFFIX,xbx.lv
+    - DOMAIN-SUFFIX,asobostudio.com
+    - DOMAIN-SUFFIX,flightsimulator.com
     - DOMAIN-SUFFIX,beth.games
     - DOMAIN-SUFFIX,bethesda.net
     - DOMAIN-SUFFIX,bethesdagamestudios.com
@@ -361,8 +363,6 @@ payload:
     - DOMAIN-SUFFIX,minecraftservices.com
     - DOMAIN-SUFFIX,minecraftshop.com
     - DOMAIN-SUFFIX,mojang.com
-    - DOMAIN-SUFFIX,asobostudio.com
-    - DOMAIN-SUFFIX,flightsimulator.com
     - DOMAIN-SUFFIX,microsoft.be
     - DOMAIN-SUFFIX,aadrm.com
     - DOMAIN-SUFFIX,azure-api.net

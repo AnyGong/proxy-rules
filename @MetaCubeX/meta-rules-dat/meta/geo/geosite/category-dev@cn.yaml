@@ -4,10 +4,6 @@ payload:
     - update.crashlytics.com
     - +.jetbrains.com.cn
     - +.cdn.jetbrains.com
-    - +.microsoftreactor.cn
-    - +.microsoftreactor.com.cn
-    - +.reactorms.com.cn
-    - download.visualstudio.microsoft.com
     - cdn.ampproject.org
     - cdn.apple-mapkit.com
     - cdn1.apple-mapkit.com
@@ -23,3 +19,7 @@ payload:
     - +.researchkit.com.cn
     - +.swiftui.cn
     - +.swiftui.com.cn
+    - +.microsoftreactor.cn
+    - +.microsoftreactor.com.cn
+    - +.reactorms.com.cn
+    - download.visualstudio.microsoft.com

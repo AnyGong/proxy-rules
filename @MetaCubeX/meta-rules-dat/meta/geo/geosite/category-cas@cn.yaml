@@ -1,5 +1,4 @@
 payload:
-    - +.sslcom.cn
     - certs-lb.apple.com.akadns.net
     - certs.apple.com
     - crl-lb.apple.com.akadns.net
@@ -8,6 +7,8 @@ payload:
     - ocsp2.apple.com
     - valid.apple.com
     - valid.origin-apple.com.akadns.net
+    - +.sslcom.cn
+    - www.entrust.cn
     - +.alphassl.com
     - +.easy-signing.com
     - +.globalsign.cn
@@ -15,6 +16,11 @@ payload:
     - +.globalsigncdn.com
     - cdn.globalsigncdn.com.cdn.cloudflare.net
     - crl.globalsign.net
+    - +.oemssl.cn
+    - +.oemssl.cn.cdn.cloudflare.net
+    - +.sectigochina.com
+    - +.sectigochina.com.cdn.cloudflare.net
+    - +.trust-provider.cn
     - pki-goog.l.google.com
     - c.pki.goog
     - i.pki.goog
@@ -24,9 +30,3 @@ payload:
     - ocsp.pki.goog
     - +.dcocsp.cn
     - +.digicert.cn
-    - www.entrust.cn
-    - +.oemssl.cn
-    - +.oemssl.cn.cdn.cloudflare.net
-    - +.sectigochina.com
-    - +.sectigochina.com.cdn.cloudflare.net
-    - +.trust-provider.cn
