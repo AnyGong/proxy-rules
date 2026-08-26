@@ -1,22 +1,8 @@
 payload:
-    - +.leagueoflegends.cn
-    - +.lpl.com.cn
-    - +.xboxlive.cn
     - +.yostar.cn
-    - gog.qtlglb.com
-    - +.legendofzelda.cn
-    - +.legendofzelda.com.cn
-    - +.miitomo.com.cn
-    - +.nintendolabo.cn
-    - +.nintendoswitch.cn
-    - +.nintendoswitch.com.cn
-    - +.supersmashbros.cn
-    - +.supersmashbros.com.cn
-    - +.xn--mts47c3w9b1qr.cn
-    - +.mariokart.cn
-    - +.mariokart.com.cn
-    - +.supermariobros.com.cn
     - +.bluearchive-cn.com
+    - +.xboxlive.cn
+    - gog.qtlglb.com
     - +.steamserver.net
     - +.steamusercontent.com
     - +.csgo.com.cn
@@ -36,3 +22,17 @@ payload:
     - xz.pphimalayanrt.com
     - +.steamchina.com
     - +.gstore.val.manlaxy.com
+    - +.leagueoflegends.cn
+    - +.lpl.com.cn
+    - +.legendofzelda.cn
+    - +.legendofzelda.com.cn
+    - +.miitomo.com.cn
+    - +.nintendolabo.cn
+    - +.nintendoswitch.cn
+    - +.nintendoswitch.com.cn
+    - +.supersmashbros.cn
+    - +.supersmashbros.com.cn
+    - +.xn--mts47c3w9b1qr.cn
+    - +.mariokart.cn
+    - +.mariokart.com.cn
+    - +.supermariobros.com.cn
