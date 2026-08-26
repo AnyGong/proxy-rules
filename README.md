@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260825_204602
+Generated 20260826_091648
 
 ## Summary
 
-- Total files: 2206 (2197 SRS, 2199 MRS [4 split domain + 4 split ipcidr], 2197 JSON, 2197 CONF, 2197 YAML)
+- Total files: 2204 (2195 SRS, 2197 MRS [4 split domain + 4 split ipcidr], 2195 JSON, 2195 CONF, 2195 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260825_204602.log`)
+- Compile failures this run: 13 (see `logs/sync_20260826_091648.log`)
 
 ---
 
@@ -2032,8 +2032,6 @@ Generated 20260825_204602
 - [verisign](#verisign) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verisign.json)
 - [verisign-pki](#verisign-pki) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verisign-pki.json)
 - [verizon](#verizon) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verizon.json)
-- [verizon@ads](#verizon-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verizon@ads.json)
-- [verizon@cn](#verizon-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verizon@cn.json)
 - [vg](#vg) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/vg.json)
 - [vgtime](#vgtime) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vgtime.json)
 - [vi](#vi) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/vi.json)
@@ -22421,26 +22419,6 @@ Generated 20260825_204602
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon.yaml) |
 
-### [verizon@ads](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verizon@ads.json)
-
-| Client/Engine | Format | GitHub | CDN |
-|---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@ads.yaml) |
-
-### [verizon@cn](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/verizon@cn.json)
-
-| Client/Engine | Format | GitHub | CDN |
-|---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/verizon@cn.yaml) |
-
 ### [vg](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/vg.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24284,5 +24262,5 @@ Generated 20260825_204602
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260825_204602.log)
-- [Release summary](logs/summary_20260825_204602.md)
+- [Sync log](logs/sync_20260826_091648.log)
+- [Release summary](logs/summary_20260826_091648.md)
