@@ -86,7 +86,6 @@ payload:
   - 'DOMAIN-SUFFIX,dcg.microsoft.com'
   - 'DOMAIN-SUFFIX,dl.delivery.mp.microsoft.com'
   - 'DOMAIN-SUFFIX,download.windowsupdate.com'
-  - 'DOMAIN-SUFFIX,xboxlive.cn'
   - 'DOMAIN-SUFFIX,21vbc.com'
   - 'DOMAIN-SUFFIX,21vbluecloud.com'
   - 'DOMAIN-SUFFIX,21vbluecloud.net'
@@ -188,3 +187,4 @@ payload:
   - 'DOMAIN-SUFFIX,reactorms.com.cn'
   - 'DOMAIN-SUFFIX,microsoftnews.cn'
   - 'DOMAIN-SUFFIX,msn.cn'
+  - 'DOMAIN-SUFFIX,xboxlive.cn'
