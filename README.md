@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260826_205145
+Generated 20260827_154754
 
 ## Summary
 
-- Total files: 2204 (2195 SRS, 2197 MRS [4 split domain + 4 split ipcidr], 2195 JSON, 2195 CONF, 2195 YAML)
+- Total files: 2205 (2196 SRS, 2198 MRS [4 split domain + 4 split ipcidr], 2196 JSON, 2196 CONF, 2196 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260826_205145.log`)
+- Compile failures this run: 13 (see `logs/sync_20260827_154754.log`)
 
 ---
 
@@ -1422,6 +1422,7 @@ Generated 20260826_205145
 - [netlify](#netlify) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/netlify.json)
 - [neuralink](#neuralink) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/neuralink.json)
 - [newegg](#newegg) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newegg.json)
+- [newgrounds](#newgrounds) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newgrounds.json)
 - [newscorp](#newscorp) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newscorp.json)
 - [newsmax](#newsmax) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newsmax.json)
 - [nexitally](#nexitally) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/nexitally.json)
@@ -16319,6 +16320,16 @@ Generated 20260826_205145
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newegg.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newegg.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newegg.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newegg.yaml) |
 
+### [newgrounds](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newgrounds.json)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/newgrounds.yaml) |
+
 ### [newscorp](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/newscorp.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24262,5 +24273,5 @@ Generated 20260826_205145
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260826_205145.log)
-- [Release summary](logs/summary_20260826_205145.md)
+- [Sync log](logs/sync_20260827_154754.log)
+- [Release summary](logs/summary_20260827_154754.md)
