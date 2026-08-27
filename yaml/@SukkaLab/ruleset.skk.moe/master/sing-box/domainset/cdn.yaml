@@ -4360,6 +4360,7 @@ payload:
   - 'DOMAIN-SUFFIX,paypalobjects.com'
   - 'DOMAIN-SUFFIX,pressidiumcdn.com'
   - 'DOMAIN-SUFFIX,proxy.ustclug.org'
+  - 'DOMAIN-SUFFIX,reconvert-cdn.com'
   - 'DOMAIN-SUFFIX,res.office365.com'
   - 'DOMAIN-SUFFIX,rescript-lang.org'
   - 'DOMAIN-SUFFIX,shoppulse88.store'
