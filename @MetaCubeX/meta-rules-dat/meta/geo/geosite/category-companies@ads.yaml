@@ -1,25 +1,35 @@
 payload:
-    - sentry.hetzner.company
-    - api-eu.carrotquest.app
-    - api-eu.carrotquest.io
-    - api-ru.carrotquest.app
-    - api-ru.carrotquest.io
-    - api-secure.carrotquest.app
-    - api-secure.carrottrack.app
-    - api.carrotquest.app
-    - api.carrotquest.io
-    - api.carrottrack.app
-    - api.dashly.app
-    - api.dashlytrack.app
+    - +.clarity.ms
+    - +.microsoftads.com
+    - +.msads.net
+    - +.nelreports.net
+    - +.bingads.com
+    - +.collector.github.com
+    - copilot-telemetry-service.githubusercontent.com
+    - copilot-telemetry.githubusercontent.com
+    - +.browser.events.data.msn.cn
+    - +.browser.events.data.msn.com
+    - +.e.mindbox.ru
+    - +.g.mindbox.ru
+    - +.s.mindbox.ru
+    - api-js.mindbox.ru
+    - api-ru.mindbox.cloud
+    - api-staging.mindbox.ru
+    - api.mindbox.cloud
+    - api.mindbox.ru
+    - sentry.mindbox.ru
+    - sentry.popmechanic.ru
     - +.samsungadhub.com
     - +.samsungads.com
+    - +.snapads.com
+    - sentry.iptv.rt.ru
+    - +.ads-api.duolingo.com
+    - +.analytics.vpc.duolingo.com
+    - +.metrics.duolingo.com
     - ads-img.mozilla.org
     - ads.mozilla.org
     - incoming.telemetry.mozilla.org
     - incoming-telemetry.thunderbird.net
-    - +.ads.yahoo.com
-    - +.gemini.yahoo.com
-    - +.ysm.yahoo.com
     - +.2mdn-cn.net
     - +.2mdn.net
     - +.admob-cn.com
@@ -74,25 +84,13 @@ payload:
     - +.urchin.com
     - analytics.google.com
     - +.ads.youtube.com
+    - +.graph.whatsapp.com
+    - +.graph.whatsapp.net
     - +.analytics.facebook.com
     - +.facebookads.com
     - +.pixel.facebook.com
     - +.graph.instagram.com
     - +.graph-fallback.instagram.com
-    - +.graph.whatsapp.com
-    - +.graph.whatsapp.net
-    - +.e.mindbox.ru
-    - +.g.mindbox.ru
-    - +.s.mindbox.ru
-    - api-js.mindbox.ru
-    - api-ru.mindbox.cloud
-    - api-staging.mindbox.ru
-    - api.mindbox.cloud
-    - api.mindbox.ru
-    - sentry.mindbox.ru
-    - sentry.popmechanic.ru
-    - +.amazon-adsystem.com
-    - +.serving-sys.com
     - +.adfox.ru
     - +.adfox.yandex.ru
     - +.admetrica.ru
@@ -135,18 +133,25 @@ payload:
     - mc.yango.com
     - pixel.yandex.com
     - report.ap.yandex-net.ru
-    - +.clarity.ms
-    - +.microsoftads.com
-    - +.msads.net
-    - +.nelreports.net
-    - +.bingads.com
-    - +.collector.github.com
-    - copilot-telemetry-service.githubusercontent.com
-    - copilot-telemetry.githubusercontent.com
-    - +.browser.events.data.msn.cn
-    - +.browser.events.data.msn.com
+    - +.ads.yahoo.com
+    - +.gemini.yahoo.com
+    - +.ysm.yahoo.com
+    - +.amazon-adsystem.com
+    - +.serving-sys.com
     - +.a.mts.ru
     - +.obs.mts.ru
+    - sentry.hetzner.company
+    - api-eu.carrotquest.app
+    - api-eu.carrotquest.io
+    - api-ru.carrotquest.app
+    - api-ru.carrotquest.io
+    - api-secure.carrotquest.app
+    - api-secure.carrottrack.app
+    - api.carrotquest.app
+    - api.carrotquest.io
+    - api.carrottrack.app
+    - api.dashly.app
+    - api.dashlytrack.app
     - +.ad.mail.ru
     - +.ads.viqeo.tv
     - +.adsadvisor.io
@@ -220,13 +225,8 @@ payload:
     - +.advertising.adobe.com
     - +.demdex.net
     - +.tubemogul.com
-    - +.ads-api.duolingo.com
-    - +.analytics.vpc.duolingo.com
-    - +.metrics.duolingo.com
-    - +.snapads.com
     - +.advertising.apple.com
     - +.api-adservices.apple.com
     - +.iadsdk.apple.com
     - +.iad.apple.com
     - +.qwapi.com
-    - sentry.iptv.rt.ru

@@ -1,4 +1,7 @@
 payload:
+    - DOMAIN-SUFFIX,ggpht.cn
+    - DOMAIN,amp-api.podcasts.apple.com
+    - DOMAIN,podcasts.apple.com
     - DOMAIN-SUFFIX,apple-itunes.cn
     - DOMAIN-SUFFIX,itunes-apple.cn
     - DOMAIN-SUFFIX,itunesapple.cn
@@ -49,15 +52,17 @@ payload:
     - DOMAIN,itunes.apple.com
     - DOMAIN,itunesconnect.apple.com
     - DOMAIN,osxapps.itunes.g.aaplimg.com
-    - DOMAIN-SUFFIX,ggpht.cn
-    - DOMAIN,amp-api.podcasts.apple.com
-    - DOMAIN,podcasts.apple.com
     - DOMAIN-SUFFIX,amazonprimevideo.cn
     - DOMAIN-SUFFIX,amazonprimevideo.com.cn
-    - DOMAIN-SUFFIX,yostar.cn
-    - DOMAIN-SUFFIX,bluearchive-cn.com
+    - DOMAIN,amp-api-edge.music.apple.com
+    - DOMAIN,amp-api.music.apple.com
+    - DOMAIN,js-cdn.music.apple.com
+    - DOMAIN,music.apple.com
+    - DOMAIN,musicstatus.music.apple.com
+    - DOMAIN,play.music.apple.com
+    - DOMAIN,speedysub.music.apple.com
+    - DOMAIN-SUFFIX,shanghaidisneyresort.com
     - DOMAIN-SUFFIX,xboxlive.cn
-    - DOMAIN,gog.qtlglb.com
     - DOMAIN-SUFFIX,steamserver.net
     - DOMAIN-SUFFIX,steamusercontent.com
     - DOMAIN-SUFFIX,csgo.com.cn
@@ -77,10 +82,9 @@ payload:
     - DOMAIN,xz.pphimalayanrt.com
     - DOMAIN-SUFFIX,steamchina.com
     - DOMAIN-SUFFIX,gstore.val.manlaxy.com
-    - DOMAIN-REGEX,^cdn\d-epicgames-\d+\.file\.myqcloud\.com$
-    - DOMAIN-REGEX,^epicgames-download\d-\d+\.file\.myqcloud\.com$
-    - DOMAIN-SUFFIX,leagueoflegends.cn
-    - DOMAIN-SUFFIX,lpl.com.cn
+    - DOMAIN,gog.qtlglb.com
+    - DOMAIN-SUFFIX,yostar.cn
+    - DOMAIN-SUFFIX,bluearchive-cn.com
     - DOMAIN-SUFFIX,legendofzelda.cn
     - DOMAIN-SUFFIX,legendofzelda.com.cn
     - DOMAIN-SUFFIX,miitomo.com.cn
@@ -93,11 +97,7 @@ payload:
     - DOMAIN-SUFFIX,mariokart.cn
     - DOMAIN-SUFFIX,mariokart.com.cn
     - DOMAIN-SUFFIX,supermariobros.com.cn
-    - DOMAIN,amp-api-edge.music.apple.com
-    - DOMAIN,amp-api.music.apple.com
-    - DOMAIN,js-cdn.music.apple.com
-    - DOMAIN,music.apple.com
-    - DOMAIN,musicstatus.music.apple.com
-    - DOMAIN,play.music.apple.com
-    - DOMAIN,speedysub.music.apple.com
-    - DOMAIN-SUFFIX,shanghaidisneyresort.com
+    - DOMAIN-SUFFIX,leagueoflegends.cn
+    - DOMAIN-SUFFIX,lpl.com.cn
+    - DOMAIN-REGEX,^cdn\d-epicgames-\d+\.file\.myqcloud\.com$
+    - DOMAIN-REGEX,^epicgames-download\d-\d+\.file\.myqcloud\.com$
