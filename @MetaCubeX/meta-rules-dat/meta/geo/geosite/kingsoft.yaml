@@ -12,6 +12,19 @@ payload:
     - +.ksyun.com
     - +.ksyuncdn.com
     - +.ksyungslb.com
+    - +.wps.cn
+    - +.wps.com
+    - +.wpscdn.cn
+    - +.wpscdn.com
+    - +.qwps.cn
+    - +.kimxz.com
+    - +.51dzt.com
+    - +.iciba.com
+    - +.docer.com
+    - +.kdocs.cn
+    - +.wpsmail.net
+    - +.papocket.com
+    - +.wpspdf.cn
     - +.cheetahfun.com
     - +.cmcm.com
     - +.cmcmcdn.com
@@ -29,16 +42,3 @@ payload:
     - +.xoyocdn.com
     - +.cbjq.com
     - +.testplus.cn
-    - +.wps.cn
-    - +.wps.com
-    - +.wpscdn.cn
-    - +.wpscdn.com
-    - +.qwps.cn
-    - +.kimxz.com
-    - +.51dzt.com
-    - +.iciba.com
-    - +.docer.com
-    - +.kdocs.cn
-    - +.wpsmail.net
-    - +.papocket.com
-    - +.wpspdf.cn

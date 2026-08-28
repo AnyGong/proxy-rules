@@ -173,8 +173,6 @@ payload:
     - +.vkplay.live
     - +.youla.io
     - +.youla.ru
-    - +.dzen.ru
-    - +.dzeninfra.ru
     - +.odnoklassniki.eu
     - +.odnoklassniki.lv
     - +.odkl.ru
@@ -228,6 +226,8 @@ payload:
     - +.vkpay.com
     - +.vkpay.io
     - +.vkpay.ru
+    - +.dzen.ru
+    - +.dzeninfra.ru
     - +.odnoklassniki.co.ee
     - +.ad.mail.ru
     - +.ads.viqeo.tv
@@ -282,8 +282,6 @@ payload:
     - top-staging.mail.ru
     - whiteline.mail.ru
     - xray.mail.ru
-    - +.log.dzen.ru
-    - +.ms.dzen.ru
     - +.adv.vk.com
     - +.analytics.vk.com
     - +.ms.vk.com
@@ -299,3 +297,5 @@ payload:
     - analytics.vk.ru
     - stats.vk-portal.net
     - target.vk.com
+    - +.log.dzen.ru
+    - +.ms.dzen.ru

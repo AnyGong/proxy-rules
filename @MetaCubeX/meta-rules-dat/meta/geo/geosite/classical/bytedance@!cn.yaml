@@ -7,6 +7,13 @@ payload:
     - DOMAIN,bytedance.map.fastly.net
     - DOMAIN-SUFFIX,capcut.com
     - DOMAIN-SUFFIX,capcutcdn-us.com
+    - DOMAIN-SUFFIX,coze.com
+    - DOMAIN-SUFFIX,marscode.com
+    - DOMAIN-SUFFIX,trae.ai
+    - DOMAIN-SUFFIX,cici.com
+    - DOMAIN-SUFFIX,ciciai.com
+    - DOMAIN-SUFFIX,ciciaicdn.com
+    - DOMAIN-SUFFIX,dola.com
     - DOMAIN-SUFFIX,bytedapm.com
     - DOMAIN-SUFFIX,muscdn.com
     - DOMAIN-SUFFIX,musical.ly
@@ -42,10 +49,3 @@ payload:
     - DOMAIN,roovza.inapps.appsflyersdk.com
     - DOMAIN,roovza.launches.appsflyersdk.com
     - DOMAIN,roovza.skadsdk.appsflyersdk.com
-    - DOMAIN-SUFFIX,coze.com
-    - DOMAIN-SUFFIX,marscode.com
-    - DOMAIN-SUFFIX,trae.ai
-    - DOMAIN-SUFFIX,cici.com
-    - DOMAIN-SUFFIX,ciciai.com
-    - DOMAIN-SUFFIX,ciciaicdn.com
-    - DOMAIN-SUFFIX,dola.com
