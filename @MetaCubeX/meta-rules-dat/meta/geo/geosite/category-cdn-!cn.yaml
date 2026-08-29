@@ -7,6 +7,8 @@ payload:
     - +.gcdn.co
     - +.gcore.com
     - +.gcore.pro
+    - +.cdn77.com
+    - +.cdn77.org
     - +.argotunnel.com
     - +.browser.run
     - +.cfargotunnel.com
@@ -63,8 +65,18 @@ payload:
     - +.workers.dev
     - +.cf-ipfs.com
     - +.cloudflare-ipfs.com
+    - +.fastly-edge.com
+    - +.fastly-terrarium.com
+    - +.fastly.com
+    - +.fastly.io
+    - +.fastly.net
+    - +.fastlylabs.com
+    - +.fastlylb.net
     - +.imgix.com
     - +.imgix.net
+    - +.esm.run
+    - +.jsdelivr.com
+    - +.jsdelivr.net
     - +.delvenetworks.com
     - +.limelight.com
     - +.lldns.net
@@ -73,7 +85,8 @@ payload:
     - +.llnw.net
     - +.llnwd.net
     - +.llnwi.net
-    - +.quantil.com
+    - +.pagecdn.com
+    - +.pagecdn.io
     - +.vrcdn.cloud
     - +.vrcdn.live
     - +.vrcdn.video
@@ -146,20 +159,7 @@ payload:
     - +.iamakamai.net
     - +.soasta-dswb.com
     - +.srtcdn.net
-    - +.cdn77.com
-    - +.cdn77.org
-    - +.fastly-edge.com
-    - +.fastly-terrarium.com
-    - +.fastly.com
-    - +.fastly.io
-    - +.fastly.net
-    - +.fastlylabs.com
-    - +.fastlylb.net
-    - +.esm.run
-    - +.jsdelivr.com
-    - +.jsdelivr.net
-    - +.pagecdn.com
-    - +.pagecdn.io
+    - +.quantil.com
     - +.stackpath.com
     - +.stackpath.dev
     - +.one.one.one

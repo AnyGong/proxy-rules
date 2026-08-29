@@ -164,24 +164,26 @@ payload:
     - +.yeyousg.com
     - +.xinyan.cn
     - +.xiangrikuisite.com
-    - +.kugou.com
-    - +.kugou.net
-    - +.xmcdn.com
-    - +.ximalaya.com
+    - +.ktv.com
+    - +.kugoo.com
     - +.kuwo.cn
+    - +.koowo.com
+    - +.koowo.cn
     - +.lrts.me
     - +.mting.info
     - +.wting.info
     - +.qqmusic.com
     - +.tingmall.com
     - +.ultimatemusic.cn
+    - +.ximalaya.com
+    - +.xmcdn.com
     - +.fanxingliveshow.com
-    - +.kgimg.com
-    - +.kglink.cn
     - +.tencentmusic.com
-    - +.ktv.com
+    - +.kgimg.com
     - +.97ting.com
-    - +.kugoo.com
+    - +.kglink.cn
+    - +.kugou.com
+    - +.kugou.net
     - +.kugouaudio.com
     - +.kugouipv6.com
     - +.kugoukid.com
@@ -191,8 +193,6 @@ payload:
     - +.kugoustore.com
     - +.kugouvoice.com
     - +.kugouyouth.com
-    - +.koowo.cn
-    - +.koowo.com
     - +.xiangrikuijianzhan.com
     - +.wannianqingjianzhan.com
     - +.teemo.cn
@@ -279,7 +279,7 @@ payload:
     - +.xn--r70as2s.xn--fiqs8s
     - +.tencentcs.com
     - +.my-qcloud.com
-    - +.dnspod.org
+    - +.discuz.org
     - +.myelasticsearch.com
     - +.myqcloud.com
     - +.onexmail.com
@@ -296,9 +296,9 @@ payload:
     - +.qcloudclass.com
     - +.qcloudcos.cn
     - +.qcloudcos.com
-    - +.dnsv5.com
-    - +.dns.pub
-    - +.dnsv3.com
+    - +.discuz.net
+    - +.comsenz.com
+    - +.dnspod.org
     - +.qclouder.com
     - +.qcloudgme.com
     - +.qcloudimg.com
@@ -372,7 +372,7 @@ payload:
     - +.tencentcloudses.com
     - +.tencentcos.cn
     - +.tencentcos.com
-    - +.dnsapi.cn
+    - +.dnsv5.com
     - +.tencentcs.cn
     - +.qq.xn--fiqs8s
     - +.tencentdayu.com
@@ -392,12 +392,12 @@ payload:
     - +.tencentyun.com
     - +.tendbcluster.com
     - +.tendis.net
-    - +.doh.pub
+    - +.dns.pub
     - +.testmeet.cn
     - +.testwaf.com
     - +.tgovcloud.com
     - +.tidaas.com
-    - +.dnsv2.com
+    - +.dnsv3.com
     - +.timmerse.com
     - +.tlivecdn.com
     - +.tlivemcdn.com
@@ -407,7 +407,7 @@ payload:
     - +.tourismuser.cn
     - +.tsparkling.com
     - +.tx-exhibition.com
-    - +.dnspod.mobi
+    - +.dnsapi.cn
     - +.txidc.wang
     - +.txlivecdn.com
     - +.txtyxg.com
@@ -422,7 +422,7 @@ payload:
     - +.wework-studio.com
     - +.xqymuy.com
     - +.yufuid.com
-    - +.dot.pub
+    - +.doh.pub
     - +.yufuid.net
     - +.tencentclb.com
     - +.dnse0.cn
@@ -467,13 +467,13 @@ payload:
     - +.tdnsv13.net
     - +.tdnsv14.net
     - +.tdnsv15.net
+    - +.dnsv2.com
+    - +.dnspod.mobi
+    - +.dot.pub
     - +.dnspod.com
     - +.dnspod.cn
     - +.dnsv4.com
     - +.dnspod.net
-    - +.discuz.org
-    - +.discuz.net
-    - +.comsenz.com
     - +.rumt-zh.com
     - +.tamaegis.com
     - +.ym.run
@@ -515,14 +515,14 @@ payload:
     - +.qcloudcos.com.cn
     - +.tencentcdb.com.cn
     - +.yufuid.com.cn
-    - +.jrzk.net.cn
+    - +.dnspod.com.cn
     - +.oracle-tencent.com.cn
     - +.oracle-tencent.net.cn
     - +.timatrix.com.cn
     - +.soso.com.cn
+    - +.jrzk.net.cn
     - +.ectencent.com.cn
     - +.dnsv1.com.cn
-    - +.dnspod.com.cn
     - +.qq.com.cn
     - +.rtx.com.cn
     - +.testjrzk.net.cn
@@ -598,12 +598,12 @@ payload:
     - +.stat.y.qq.com
     - +.tmead.y.qq.com
     - +.tmeadcomm.y.qq.com
-    - +.ads.service.kugou.com
-    - +.adserviceretry.kglink.cn
-    - +.adserviceretry.kugou.com
     - +.adbehavior.ximalaya.com
     - +.adse.wsa.ximalaya.com
     - +.adse.ximalaya.com
+    - +.ads.service.kugou.com
+    - +.adserviceretry.kglink.cn
+    - +.adserviceretry.kugou.com
     - +.webnovel.com
     - +.intltencentcos.com
     - +.ap-hongkong.myqcloud.com
