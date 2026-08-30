@@ -1373,6 +1373,7 @@ payload:
   - 'DOMAIN,redstone-launcher.mojang.com'
   - 'DOMAIN,softwareupdate.pilotmoon.com'
   - 'DOMAIN,update.code.visualstudio.com'
+  - 'DOMAIN,assets-tcpviewer.proxyman.com'
   - 'DOMAIN,centos-stream.ip-connect.info'
   - 'DOMAIN,debian-mirror.puq.apoapsis.cl'
   - 'DOMAIN,download-core.sys.truenas.net'
