@@ -1,4 +1,5 @@
 payload:
+  - 'DOMAIN,data.bilibili.com'
   - 'DOMAIN,stats.grafana.org'
   - 'DOMAIN,stat.youpin.mi.com'
   - 'DOMAIN,dataflow.biliapi.com'
