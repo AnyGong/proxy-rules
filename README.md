@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260831_000919
+Generated 20260831_115913
 
 ## Summary
 
-- Total files: 2205 (2196 SRS, 2198 MRS [4 split domain + 4 split ipcidr], 2196 JSON, 2196 CONF, 2196 YAML)
+- Total files: 2207 (2198 SRS, 2200 MRS [4 split domain + 4 split ipcidr], 2198 JSON, 2198 CONF, 2198 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260831_000919.log`)
+- Compile failures this run: 13 (see `logs/sync_20260831_115913.log`)
 
 ---
 
@@ -112,6 +112,8 @@ Generated 20260831_000919
 - [amd](#amd) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amd.json)
 - [amp](#amp) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amp.json)
 - [amp@cn](#amp-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amp@cn.json)
+- [amplitude](#amplitude) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amplitude.json)
+- [amplitude@ads](#amplitude-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amplitude@ads.json)
 - [anaconda](#anaconda) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/anaconda.json)
 - [anandtech](#anandtech) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/anandtech.json)
 - [android](#android) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/android.json)
@@ -3219,6 +3221,26 @@ Generated 20260831_000919
 | Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.conf) |
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amp@cn.yaml) |
+
+### [amplitude](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amplitude.json)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude.yaml) |
+
+### [amplitude@ads](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/amplitude@ads.json)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/amplitude@ads.yaml) |
 
 ### [anaconda](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/anaconda.json)
 
@@ -24273,5 +24295,5 @@ Generated 20260831_000919
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260831_000919.log)
-- [Release summary](logs/summary_20260831_000919.md)
+- [Sync log](logs/sync_20260831_115913.log)
+- [Release summary](logs/summary_20260831_115913.md)
