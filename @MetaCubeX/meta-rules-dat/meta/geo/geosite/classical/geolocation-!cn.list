@@ -817,8 +817,8 @@ DOMAIN-SUFFIX,aws
 DOMAIN-SUFFIX,apple
 DOMAIN-SUFFIX,android
 DOMAIN-SUFFIX,amazon
-DOMAIN-SUFFIX,jfrog.org
-DOMAIN-SUFFIX,youtube.se
+DOMAIN-SUFFIX,jfrog.com
+DOMAIN-SUFFIX,usercontent.dev
 DOMAIN-SUFFIX,12vpn.com
 DOMAIN-SUFFIX,12vpn.net
 DOMAIN-SUFFIX,1337x.gd
@@ -2839,7 +2839,7 @@ DOMAIN-SUFFIX,appleone.community
 DOMAIN-SUFFIX,appleone.film
 DOMAIN-SUFFIX,appleone.guide
 DOMAIN-SUFFIX,appleone.host
-DOMAIN-SUFFIX,appleone.space
+DOMAIN-SUFFIX,jiuse823.com
 DOMAIN-SUFFIX,appleone.tech
 DOMAIN-SUFFIX,appleone.website
 DOMAIN-SUFFIX,appleonline.com
@@ -3739,7 +3739,7 @@ DOMAIN-SUFFIX,youtube.si
 DOMAIN-SUFFIX,youtube.sg
 DOMAIN-SUFFIX,bbcchinese.com
 DOMAIN-SUFFIX,bbchat.tv
-DOMAIN-SUFFIX,jiuse823.com
+DOMAIN-SUFFIX,youtube.se
 DOMAIN-SUFFIX,youtube.sa
 DOMAIN-SUFFIX,bbcpersian.com
 DOMAIN-SUFFIX,bbcpornonly.com
@@ -9130,7 +9130,7 @@ DOMAIN-SUFFIX,faceebook.com
 DOMAIN-SUFFIX,faceebot.com
 DOMAIN-SUFFIX,facegbok.com
 DOMAIN-SUFFIX,facegbook.com
-DOMAIN-SUFFIX,jivara.global
+DOMAIN-SUFFIX,faceid99.com
 DOMAIN-SUFFIX,faceid99.net
 DOMAIN-SUFFIX,faceidglobal.com
 DOMAIN-SUFFIX,faceit-cdn.net
@@ -10526,6 +10526,7 @@ DOMAIN-SUFFIX,geti2p.net
 DOMAIN-SUFFIX,getlantern.org
 DOMAIN-SUFFIX,getmalus.com
 DOMAIN-SUFFIX,getmdl.io
+DOMAIN-SUFFIX,getmonero.org
 DOMAIN-SUFFIX,getnews.jp
 DOMAIN-SUFFIX,getoutline.org
 DOMAIN-SUFFIX,getpaint.net
@@ -13379,7 +13380,7 @@ DOMAIN-SUFFIX,ipadair.tw
 DOMAIN-SUFFIX,ipadaustralia.com
 DOMAIN-SUFFIX,ipadmini.cm
 DOMAIN-SUFFIX,xfockers.com
-DOMAIN-SUFFIX,ipadmini.lk
+DOMAIN-SUFFIX,jiuse821.com
 DOMAIN-SUFFIX,ipadpro.buzz
 DOMAIN-SUFFIX,ipdefenseforum.com
 DOMAIN-SUFFIX,ipfire.org
@@ -13883,8 +13884,8 @@ DOMAIN-SUFFIX,jex.com
 DOMAIN-SUFFIX,xboxone.co
 DOMAIN-SUFFIX,jfengtime.com
 DOMAIN-SUFFIX,jfn.su
-DOMAIN-SUFFIX,jfrog.com
 DOMAIN-SUFFIX,000webhost.com
+DOMAIN-SUFFIX,jfrog.org
 DOMAIN-SUFFIX,jgg18.xyz
 DOMAIN-SUFFIX,jgoodies.com
 DOMAIN-SUFFIX,jhelab.org
@@ -13918,10 +13919,10 @@ DOMAIN-SUFFIX,xboxgamestudios.com
 DOMAIN-SUFFIX,jiuse.icu
 DOMAIN-SUFFIX,jiuse.io
 DOMAIN-SUFFIX,jiuse6666.com
-DOMAIN-SUFFIX,jiuse821.com
-DOMAIN-SUFFIX,spaceforce.mil
+DOMAIN-SUFFIX,ipadmini.lk
 DOMAIN-SUFFIX,12joursdecadeauxdeitunes.com
-DOMAIN-SUFFIX,faceid99.com
+DOMAIN-SUFFIX,appleone.space
+DOMAIN-SUFFIX,jivara.global
 DOMAIN-SUFFIX,jivo.chat
 DOMAIN-SUFFIX,jivo.ru
 DOMAIN-SUFFIX,xboxgamepass.com
@@ -21763,7 +21764,7 @@ DOMAIN-SUFFIX,soyjak.party
 DOMAIN-SUFFIX,soyjak.st
 DOMAIN-SUFFIX,sp.cool
 DOMAIN-SUFFIX,spaceexplored.com
-DOMAIN-SUFFIX,jiuse822.com
+DOMAIN-SUFFIX,spaceforce.mil
 DOMAIN-SUFFIX,waltermartin.com
 DOMAIN-SUFFIX,spacemail.com
 DOMAIN-SUFFIX,waltdisneystudios.com
@@ -23841,7 +23842,7 @@ DOMAIN-SUFFIX,useplannr.com
 DOMAIN-SUFFIX,userapi.com
 DOMAIN-SUFFIX,userapi.ru
 DOMAIN-SUFFIX,usercentrics.eu
-DOMAIN-SUFFIX,usercontent.dev
+DOMAIN-SUFFIX,jiuse822.com
 DOMAIN-SUFFIX,userdrive.org
 DOMAIN-SUFFIX,userpxt.io
 DOMAIN-SUFFIX,usersdrive.com

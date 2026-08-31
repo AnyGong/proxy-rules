@@ -1,5 +1,10 @@
-+.dcocsp.cn
-+.digicert.cn
++.alphassl.com
++.easy-signing.com
++.globalsign.cn
++.globalsign.com
++.globalsigncdn.com
+cdn.globalsigncdn.com.cdn.cloudflare.net
+crl.globalsign.net
 certs-lb.apple.com.akadns.net
 certs.apple.com
 crl-lb.apple.com.akadns.net
@@ -9,13 +14,6 @@ ocsp2.apple.com
 valid.apple.com
 valid.origin-apple.com.akadns.net
 www.entrust.cn
-+.alphassl.com
-+.easy-signing.com
-+.globalsign.cn
-+.globalsign.com
-+.globalsigncdn.com
-cdn.globalsigncdn.com.cdn.cloudflare.net
-crl.globalsign.net
 pki-goog.l.google.com
 c.pki.goog
 i.pki.goog
@@ -28,4 +26,6 @@ ocsp.pki.goog
 +.sectigochina.com
 +.sectigochina.com.cdn.cloudflare.net
 +.trust-provider.cn
++.dcocsp.cn
++.digicert.cn
 +.sslcom.cn

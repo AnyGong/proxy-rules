@@ -1,4 +1,5 @@
 payload:
+    - +.snapads.com
     - +.clarity.ms
     - +.microsoftads.com
     - +.msads.net
@@ -9,12 +10,16 @@ payload:
     - +.collector.github.com
     - copilot-telemetry-service.githubusercontent.com
     - copilot-telemetry.githubusercontent.com
-    - +.advertising.adobe.com
-    - +.demdex.net
-    - +.tubemogul.com
-    - +.ads.yahoo.com
-    - +.gemini.yahoo.com
-    - +.ysm.yahoo.com
+    - +.e.mindbox.ru
+    - +.g.mindbox.ru
+    - +.s.mindbox.ru
+    - api-js.mindbox.ru
+    - api-ru.mindbox.cloud
+    - api-staging.mindbox.ru
+    - api.mindbox.cloud
+    - api.mindbox.ru
+    - sentry.mindbox.ru
+    - sentry.popmechanic.ru
     - +.adfox.ru
     - +.adfox.yandex.ru
     - +.admetrica.ru
@@ -57,44 +62,12 @@ payload:
     - mc.yango.com
     - pixel.yandex.com
     - report.ap.yandex-net.ru
-    - +.e.mindbox.ru
-    - +.g.mindbox.ru
-    - +.s.mindbox.ru
-    - api-js.mindbox.ru
-    - api-ru.mindbox.cloud
-    - api-staging.mindbox.ru
-    - api.mindbox.cloud
-    - api.mindbox.ru
-    - sentry.mindbox.ru
-    - sentry.popmechanic.ru
     - ads-img.mozilla.org
     - ads.mozilla.org
     - incoming.telemetry.mozilla.org
     - incoming-telemetry.thunderbird.net
-    - +.a.mts.ru
-    - +.obs.mts.ru
-    - +.snapads.com
-    - sentry.hetzner.company
-    - +.advertising.apple.com
-    - +.api-adservices.apple.com
-    - +.iadsdk.apple.com
-    - +.iad.apple.com
-    - +.qwapi.com
     - +.amazon-adsystem.com
     - +.serving-sys.com
-    - sentry.iptv.rt.ru
-    - +.samsungadhub.com
-    - +.samsungads.com
-    - +.ads-api.duolingo.com
-    - +.analytics.vpc.duolingo.com
-    - +.metrics.duolingo.com
-    - +.graph.instagram.com
-    - +.graph-fallback.instagram.com
-    - +.graph.whatsapp.com
-    - +.graph.whatsapp.net
-    - +.analytics.facebook.com
-    - +.facebookads.com
-    - +.pixel.facebook.com
     - api-eu.carrotquest.app
     - api-eu.carrotquest.io
     - api-ru.carrotquest.app
@@ -106,6 +79,13 @@ payload:
     - api.carrottrack.app
     - api.dashly.app
     - api.dashlytrack.app
+    - +.graph.whatsapp.com
+    - +.graph.whatsapp.net
+    - +.analytics.facebook.com
+    - +.facebookads.com
+    - +.pixel.facebook.com
+    - +.graph.instagram.com
+    - +.graph-fallback.instagram.com
     - +.ad.mail.ru
     - +.ads.viqeo.tv
     - +.adsadvisor.io
@@ -159,6 +139,8 @@ payload:
     - top-staging.mail.ru
     - whiteline.mail.ru
     - xray.mail.ru
+    - +.log.dzen.ru
+    - +.ms.dzen.ru
     - +.adv.vk.com
     - +.analytics.vk.com
     - +.ms.vk.com
@@ -174,8 +156,24 @@ payload:
     - analytics.vk.ru
     - stats.vk-portal.net
     - target.vk.com
-    - +.log.dzen.ru
-    - +.ms.dzen.ru
+    - +.ads-api.duolingo.com
+    - +.analytics.vpc.duolingo.com
+    - +.metrics.duolingo.com
+    - +.a.mts.ru
+    - +.obs.mts.ru
+    - +.ads.yahoo.com
+    - +.gemini.yahoo.com
+    - +.ysm.yahoo.com
+    - +.advertising.apple.com
+    - +.api-adservices.apple.com
+    - +.iadsdk.apple.com
+    - +.iad.apple.com
+    - +.qwapi.com
+    - sentry.iptv.rt.ru
+    - +.advertising.adobe.com
+    - +.demdex.net
+    - +.tubemogul.com
+    - sentry.hetzner.company
     - +.2mdn-cn.net
     - +.2mdn.net
     - +.admob-cn.com
@@ -230,3 +228,5 @@ payload:
     - +.urchin.com
     - analytics.google.com
     - +.ads.youtube.com
+    - +.samsungadhub.com
+    - +.samsungads.com
