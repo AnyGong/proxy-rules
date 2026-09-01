@@ -818,8 +818,8 @@ payload:
     - DOMAIN-SUFFIX,apple
     - DOMAIN-SUFFIX,android
     - DOMAIN-SUFFIX,amazon
-    - DOMAIN-SUFFIX,jfrog.com
-    - DOMAIN-SUFFIX,usercontent.dev
+    - DOMAIN-SUFFIX,jfrog.org
+    - DOMAIN-SUFFIX,bang-movies.com
     - DOMAIN-SUFFIX,12vpn.com
     - DOMAIN-SUFFIX,12vpn.net
     - DOMAIN-SUFFIX,1337x.gd
@@ -2840,7 +2840,7 @@ payload:
     - DOMAIN-SUFFIX,appleone.film
     - DOMAIN-SUFFIX,appleone.guide
     - DOMAIN-SUFFIX,appleone.host
-    - DOMAIN-SUFFIX,jiuse823.com
+    - DOMAIN-SUFFIX,appleone.space
     - DOMAIN-SUFFIX,appleone.tech
     - DOMAIN-SUFFIX,appleone.website
     - DOMAIN-SUFFIX,appleonline.com
@@ -3657,7 +3657,7 @@ payload:
     - DOMAIN-SUFFIX,bandpage.com
     - DOMAIN-SUFFIX,bandwagonhost.com
     - DOMAIN-SUFFIX,bang-dream.com
-    - DOMAIN-SUFFIX,bang-movies.com
+    - DOMAIN-SUFFIX,jiuse823.com
     - DOMAIN-SUFFIX,bangbros.com
     - DOMAIN-SUFFIX,bangbrosnetwork.com
     - DOMAIN-SUFFIX,bangchen.net
@@ -4445,6 +4445,7 @@ payload:
     - DOMAIN-SUFFIX,blackandstacked.com
     - DOMAIN-SUFFIX,blackboxgames.com
     - DOMAIN-SUFFIX,blacked.com
+    - DOMAIN-SUFFIX,blackedraw.com
     - DOMAIN-SUFFIX,blackfridaydrebeatsnew.com
     - DOMAIN-SUFFIX,blackfridaydrebeatsshop.com
     - DOMAIN-SUFFIX,blackhomeporn.com
@@ -10347,6 +10348,8 @@ payload:
     - DOMAIN-SUFFIX,gate.cc
     - DOMAIN-SUFFIX,gate.com
     - DOMAIN-SUFFIX,gate.io
+    - DOMAIN-SUFFIX,gate.tv
+    - DOMAIN-SUFFIX,gateapi.io
     - DOMAIN-SUFFIX,gatecoin.com
     - DOMAIN-SUFFIX,gatedata.org
     - DOMAIN-SUFFIX,gateimg.com
@@ -13381,7 +13384,7 @@ payload:
     - DOMAIN-SUFFIX,ipadaustralia.com
     - DOMAIN-SUFFIX,ipadmini.cm
     - DOMAIN-SUFFIX,xfockers.com
-    - DOMAIN-SUFFIX,jiuse821.com
+    - DOMAIN-SUFFIX,ipadmini.lk
     - DOMAIN-SUFFIX,ipadpro.buzz
     - DOMAIN-SUFFIX,ipdefenseforum.com
     - DOMAIN-SUFFIX,ipfire.org
@@ -13885,8 +13888,8 @@ payload:
     - DOMAIN-SUFFIX,xboxone.co
     - DOMAIN-SUFFIX,jfengtime.com
     - DOMAIN-SUFFIX,jfn.su
+    - DOMAIN-SUFFIX,jfrog.com
     - DOMAIN-SUFFIX,000webhost.com
-    - DOMAIN-SUFFIX,jfrog.org
     - DOMAIN-SUFFIX,jgg18.xyz
     - DOMAIN-SUFFIX,jgoodies.com
     - DOMAIN-SUFFIX,jhelab.org
@@ -13920,10 +13923,10 @@ payload:
     - DOMAIN-SUFFIX,jiuse.icu
     - DOMAIN-SUFFIX,jiuse.io
     - DOMAIN-SUFFIX,jiuse6666.com
-    - DOMAIN-SUFFIX,ipadmini.lk
+    - DOMAIN-SUFFIX,jiuse821.com
+    - DOMAIN-SUFFIX,wix.com
     - DOMAIN-SUFFIX,12joursdecadeauxdeitunes.com
-    - DOMAIN-SUFFIX,appleone.space
-    - DOMAIN-SUFFIX,jivara.global
+    - DOMAIN-SUFFIX,npmjs.org
     - DOMAIN-SUFFIX,jivo.chat
     - DOMAIN-SUFFIX,jivo.ru
     - DOMAIN-SUFFIX,xboxgamepass.com
@@ -15834,6 +15837,7 @@ payload:
     - DOMAIN-SUFFIX,milftube.pro
     - DOMAIN-SUFFIX,milftugs.com
     - DOMAIN-SUFFIX,milfvr.com
+    - DOMAIN-SUFFIX,milfy.com
     - DOMAIN-SUFFIX,milfzr.com
     - DOMAIN-SUFFIX,miliav.com
     - DOMAIN-SUFFIX,milkmanbook.com
@@ -16190,7 +16194,7 @@ payload:
     - DOMAIN-SUFFIX,mixmaturesex.com
     - DOMAIN-SUFFIX,mixvintagesex.com
     - DOMAIN-SUFFIX,mixx.com
-    - DOMAIN-SUFFIX,wix.com
+    - DOMAIN-SUFFIX,jiuse822.com
     - DOMAIN-SUFFIX,wix-code.com
     - DOMAIN-SUFFIX,mizzmona.com
     - DOMAIN-SUFFIX,mji.rip
@@ -17583,7 +17587,7 @@ payload:
     - DOMAIN-SUFFIX,wikileaks.pl
     - DOMAIN-SUFFIX,npm.community
     - DOMAIN-SUFFIX,npmjs.com
-    - DOMAIN-SUFFIX,npmjs.org
+    - DOMAIN-SUFFIX,jivara.global
     - DOMAIN-SUFFIX,npnt.me
     - DOMAIN-SUFFIX,npr.org
     - DOMAIN-SUFFIX,npsboost.com
@@ -21459,6 +21463,7 @@ payload:
     - DOMAIN-SUFFIX,slashine.onl
     - DOMAIN-SUFFIX,slavbank.ru
     - DOMAIN-SUFFIX,slavicstar.com
+    - DOMAIN-SUFFIX,slayed.com
     - DOMAIN-SUFFIX,slc.tl
     - DOMAIN-SUFFIX,sldolls.com
     - DOMAIN-SUFFIX,sleazyfork.org
@@ -23477,6 +23482,7 @@ payload:
     - DOMAIN-SUFFIX,tusco.ru
     - DOMAIN-SUFFIX,tushy.com
     - DOMAIN-SUFFIX,tushycash.com
+    - DOMAIN-SUFFIX,tushyraw.com
     - DOMAIN-SUFFIX,tuta.com
     - DOMAIN-SUFFIX,tuta.io
     - DOMAIN-SUFFIX,tutamail.com
@@ -23843,7 +23849,7 @@ payload:
     - DOMAIN-SUFFIX,userapi.com
     - DOMAIN-SUFFIX,userapi.ru
     - DOMAIN-SUFFIX,usercentrics.eu
-    - DOMAIN-SUFFIX,jiuse822.com
+    - DOMAIN-SUFFIX,usercontent.dev
     - DOMAIN-SUFFIX,userdrive.org
     - DOMAIN-SUFFIX,userpxt.io
     - DOMAIN-SUFFIX,usersdrive.com
@@ -24459,6 +24465,7 @@ payload:
     - DOMAIN-SUFFIX,vivaxnxx.com
     - DOMAIN-SUFFIX,vivthomas.com
     - DOMAIN-SUFFIX,vixen.com
+    - DOMAIN-SUFFIX,vixengroup.com
     - DOMAIN-SUFFIX,vixvids.to
     - DOMAIN-SUFFIX,vjav.com
     - DOMAIN-SUFFIX,voachinese.com
