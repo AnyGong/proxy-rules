@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260901_025047
+Generated 20260901_115013
 
 ## Summary
 
-- Total files: 2207 (2198 SRS, 2200 MRS [4 split domain + 4 split ipcidr], 2198 JSON, 2198 CONF, 2198 YAML)
+- Total files: 2208 (2199 SRS, 2201 MRS [4 split domain + 4 split ipcidr], 2199 JSON, 2199 CONF, 2199 YAML)
 - Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260901_025047.log`)
+- Compile failures this run: 13 (see `logs/sync_20260901_115013.log`)
 
 ---
 
@@ -2047,6 +2047,7 @@ Generated 20260901_025047
 - [viu](#viu) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/viu.json)
 - [vivo](#vivo) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vivo.json)
 - [vivo@!cn](#vivo--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vivo@!cn.json)
+- [vixengroup](#vixengroup) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vixengroup.json)
 - [vk](#vk) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vk.json)
 - [vk@ads](#vk-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vk@ads.json)
 - [vmware](#vmware) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vmware.json)
@@ -22572,6 +22573,16 @@ Generated 20260901_025047
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vivo@!cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vivo@!cn.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vivo@!cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vivo@!cn.yaml) |
 
+### [vixengroup](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vixengroup.json)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/vixengroup.yaml) |
+
 ### [vk](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/vk.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -24295,5 +24306,5 @@ Generated 20260901_025047
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260901_025047.log)
-- [Release summary](logs/summary_20260901_025047.md)
+- [Sync log](logs/sync_20260901_115013.log)
+- [Release summary](logs/summary_20260901_115013.md)
