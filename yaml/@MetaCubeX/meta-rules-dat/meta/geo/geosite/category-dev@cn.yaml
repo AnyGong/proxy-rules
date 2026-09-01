@@ -1,9 +1,9 @@
 payload:
-  - 'DOMAIN,download.visualstudio.microsoft.com'
-  - 'DOMAIN,cdn.ampproject.org'
   - 'DOMAIN,crashlyticsreports-pa.googleapis.com'
   - 'DOMAIN,firebase-settings.crashlytics.com'
   - 'DOMAIN,update.crashlytics.com'
+  - 'DOMAIN,download.visualstudio.microsoft.com'
+  - 'DOMAIN,cdn.ampproject.org'
   - 'DOMAIN,cdn.apple-mapkit.com'
   - 'DOMAIN,cdn1.apple-mapkit.com'
   - 'DOMAIN,cdn2.apple-mapkit.com'
