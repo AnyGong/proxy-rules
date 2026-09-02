@@ -1,12 +1,12 @@
 # Access Links
 
-Generated 20260902_110934
+Generated 20260902_194021
 
 ## Summary
 
-- Total files: 2208 (2199 SRS, 2201 MRS [4 split domain + 4 split ipcidr], 2199 JSON, 2199 CONF, 2199 YAML)
-- Sources: 5
-- Compile failures this run: 13 (see `logs/sync_20260902_110934.log`)
+- Total files: 2213 (2204 SRS, 2206 MRS [4 split domain + 4 split ipcidr], 2204 JSON, 2204 CONF, 2204 YAML)
+- Sources: 6
+- Compile failures this run: 13 (see `logs/sync_20260902_194021.log`)
 
 ---
 
@@ -84,7 +84,7 @@ Generated 20260902_110934
 - [akamai@cn](#akamai-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/akamai@cn.json)
 - [akiko](#akiko) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/akiko.json)
 - [al](#al) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/al.json)
-- [alibaba](#alibaba) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.json)
+- [alibaba](#alibaba) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/alibaba.conf)
 - [alibaba@!cn](#alibaba--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba@!cn.json)
 - [alibaba@ads](#alibaba-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba@ads.json)
 - [alibaba@cn](#alibaba-cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba@cn.json)
@@ -198,7 +198,7 @@ Generated 20260902_110934
 - [b3log](#b3log) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/b3log.json)
 - [ba](#ba) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/ba.json)
 - [bahamut](#bahamut) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.json)
-- [baidu](#baidu) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/baidu.json)
+- [baidu](#baidu) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/baidu.conf)
 - [baidu@ads](#baidu-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/baidu@ads.json)
 - [baishancloud](#baishancloud) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/baishancloud.json)
 - [baltamatica](#baltamatica) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/baltamatica.json)
@@ -228,7 +228,7 @@ Generated 20260902_110934
 - [bg](#bg) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/bg.json)
 - [bh](#bh) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/bh.json)
 - [bi](#bi) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/bi.json)
-- [bilibili](#bilibili) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.json)
+- [bilibili](#bilibili) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/bilibili.conf)
 - [bilibili-cdn](#bilibili-cdn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili-cdn.json)
 - [bilibili-cdn@!cn](#bilibili-cdn--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili-cdn@!cn.json)
 - [bilibili-game](#bilibili-game) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili-game.json)
@@ -298,7 +298,7 @@ Generated 20260902_110934
 - [bw](#bw) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/bw.json)
 - [by](#by) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/by.json)
 - [bybit](#bybit) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bybit.json)
-- [bytedance](#bytedance) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance.json)
+- [bytedance](#bytedance) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/bytedance.conf)
 - [bytedance-ai-!cn](#bytedance-ai--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance-ai-!cn.json)
 - [bytedance-ai-!cn@!cn](#bytedance-ai--cn--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance-ai-!cn@!cn.json)
 - [bytedance@!cn](#bytedance--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance@!cn.json)
@@ -998,6 +998,7 @@ Generated 20260902_110934
 - [hongkongpost](#hongkongpost) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hongkongpost.json)
 - [honor](#honor) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/honor.json)
 - [hooligapps](#hooligapps) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hooligapps.json)
+- [hotspot_captive_portal](#hotspot-captive-portal) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.conf)
 - [hotstar](#hotstar) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hotstar.json)
 - [hoyoverse](#hoyoverse) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hoyoverse.json)
 - [hoyoverse@ads](#hoyoverse-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hoyoverse@ads.json)
@@ -1198,6 +1199,9 @@ Generated 20260902_110934
 - [la](#la) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/la.json)
 - [lagou](#lagou) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/lagou.json)
 - [lan](#lan) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/lan.json)
+- [lan_with_realip](#lan-with-realip) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.conf)
+- [lan_without_real_ip](#lan-without-real-ip) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.conf)
+- [lancache](#lancache) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.conf)
 - [landian](#landian) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/landian.json)
 - [lantern](#lantern) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/lantern.json)
 - [lanzou](#lanzou) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/lanzou.json)
@@ -1615,7 +1619,7 @@ Generated 20260902_110934
 - [qcloud](#qcloud) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qcloud.json)
 - [qcloud@!cn](#qcloud--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qcloud@!cn.json)
 - [qianxin](#qianxin) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qianxin.json)
-- [qihoo360](#qihoo360) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qihoo360.json)
+- [qihoo360](#qihoo360) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/qihoo360.conf)
 - [qihoo360@ads](#qihoo360-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qihoo360@ads.json)
 - [qimao](#qimao) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qimao.json)
 - [qingcloud](#qingcloud) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qingcloud.json)
@@ -1675,6 +1679,7 @@ Generated 20260902_110934
 - [rossiyasegodnya](#rossiyasegodnya) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/rossiyasegodnya.json)
 - [rostelecom](#rostelecom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/rostelecom.json)
 - [rostelecom@ads](#rostelecom-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/rostelecom@ads.json)
+- [router](#router) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.conf)
 - [rs](#rs) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/rs.json)
 - [rsshub](#rsshub) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/rsshub.json)
 - [rsshub-3rd](#rsshub-3rd) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/rsshub-3rd.json)
@@ -1892,7 +1897,7 @@ Generated 20260902_110934
 - [telegram](#telegram) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/ip/telegram.json)
 - [telekom](#telekom) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/telekom.json)
 - [temp-mail](#temp-mail) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/temp-mail.json)
-- [tencent](#tencent) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/tencent.json)
+- [tencent](#tencent) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/tencent.conf)
 - [tencent-dev](#tencent-dev) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/tencent-dev.json)
 - [tencent-dev@ads](#tencent-dev-ads) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/tencent-dev@ads.json)
 - [tencent-games](#tencent-games) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/tencent-games.json)
@@ -2139,7 +2144,7 @@ Generated 20260902_110934
 - [xiaoheihe](#xiaoheihe) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaoheihe.json)
 - [xiaohongshu](#xiaohongshu) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaohongshu.json)
 - [xiaohongshu@!cn](#xiaohongshu--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaohongshu@!cn.json)
-- [xiaomi](#xiaomi) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaomi.json)
+- [xiaomi](#xiaomi) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/xiaomi.conf)
 - [xiaomi-ai](#xiaomi-ai) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaomi-ai.json)
 - [xiaomi-iot](#xiaomi-iot) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaomi-iot.json)
 - [xiaomi@!cn](#xiaomi--cn) — [source](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaomi@!cn.json)
@@ -2943,7 +2948,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/al.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/al.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/al.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/al.yaml) |
 
-### [alibaba](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.json)
+### [alibaba](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/alibaba.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -4083,7 +4088,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bahamut.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bahamut.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bahamut.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bahamut.yaml) |
 
-### [baidu](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/baidu.json)
+### [baidu](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/baidu.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -4383,7 +4388,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/bi.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/bi.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/bi.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/bi.yaml) |
 
-### [bilibili](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.json)
+### [bilibili](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/bilibili.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -5083,7 +5088,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bybit.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bybit.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bybit.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/bybit.yaml) |
 
-### [bytedance](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance.json)
+### [bytedance](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/bytedance.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -12083,6 +12088,16 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/hooligapps.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/hooligapps.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/hooligapps.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/hooligapps.yaml) |
 
+### [hotspot_captive_portal](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.conf)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/hotspot_captive_portal.yaml) |
+
 ### [hotstar](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/hotstar.json)
 
 | Client/Engine | Format | GitHub | CDN |
@@ -14077,11 +14092,41 @@ Generated 20260902_110934
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
-| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.srs) |
-| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.json) |
-| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.conf) |
-| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.mrs) |
-| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/sing-box/non_ip/lan.yaml) |
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan.yaml) |
+
+### [lan_with_realip](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.conf)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_with_realip.yaml) |
+
+### [lan_without_real_ip](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.conf)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lan_without_real_ip.yaml) |
+
+### [lancache](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.conf)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/lancache.yaml) |
 
 ### [landian](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/landian.json)
 
@@ -18253,7 +18298,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/qianxin.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/qianxin.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/qianxin.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/qianxin.yaml) |
 
-### [qihoo360](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/qihoo360.json)
+### [qihoo360](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/qihoo360.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -18852,6 +18897,16 @@ Generated 20260902_110934
 | Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.conf) |
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/rostelecom@ads.yaml) |
+
+### [router](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.conf)
+
+| Client/Engine | Format | GitHub | CDN |
+|---|---|---|---|
+| Sing-box | srs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.srs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/srs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.srs) |
+| Sing-box | json | [link](https://github.com/AnyGong/proxy-rules/blob/dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.json) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/json/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.json) |
+| Surge | conf | [link](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.conf) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.conf) |
+| Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.mrs) |
+| Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/router.yaml) |
 
 ### [rs](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geoip/classical/rs.json)
 
@@ -21023,7 +21078,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/temp-mail.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/temp-mail.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/temp-mail.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/temp-mail.yaml) |
 
-### [tencent](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/tencent.json)
+### [tencent](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/tencent.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -23493,7 +23548,7 @@ Generated 20260902_110934
 | Clash Meta | mrs | [link](https://github.com/AnyGong/proxy-rules/blob/dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaohongshu@!cn.mrs) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/mrs/@MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaohongshu@!cn.mrs) |
 | Clash Meta | yaml | [link](https://github.com/AnyGong/proxy-rules/blob/dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaohongshu@!cn.yaml) | [link](https://testingcf.jsdelivr.net/gh/AnyGong/proxy-rules@dist/yaml/@MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaohongshu@!cn.yaml) |
 
-### [xiaomi](https://github.com/AnyGong/proxy-rules/blob/dist/json/@MetaCubeX/meta-rules-dat/meta/geo/geosite/classical/xiaomi.json)
+### [xiaomi](https://github.com/AnyGong/proxy-rules/blob/dist/conf/@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping/xiaomi.conf)
 
 | Client/Engine | Format | GitHub | CDN |
 |---|---|---|---|
@@ -24306,5 +24361,5 @@ Generated 20260902_110934
 ## Related
 
 - [Changelog](CHANGELOG.md)
-- [Sync log](logs/sync_20260902_110934.log)
-- [Release summary](logs/summary_20260902_110934.md)
+- [Sync log](logs/sync_20260902_194021.log)
+- [Release summary](logs/summary_20260902_194021.md)
