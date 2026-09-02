@@ -181,9 +181,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "${{ steps.sync.outputs.tag }}" \
-            --title "${{ steps.sync.outputs.tag }}" \
-            --notes-file "/tmp/build_out/summary.md" \
-            "/tmp/build_out/README.md"
+          --title "${{ steps.sync.outputs.tag }}" \
+          "/tmp/build_out/README.md"
 
       - name: No changes
         if: steps.sync.outputs.changed != 'true'
