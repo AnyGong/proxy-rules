@@ -1,0 +1,4 @@
+payload:
+  - 'DOMAIN,captive.apple.com'
+  - 'DOMAIN,hotspot.cslwifi.com'
+  - 'DOMAIN-SUFFIX,securelogin.com.cn'

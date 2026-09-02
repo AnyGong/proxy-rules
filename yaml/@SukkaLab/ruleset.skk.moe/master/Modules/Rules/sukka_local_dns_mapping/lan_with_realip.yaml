@@ -1,0 +1,5 @@
+payload:
+  - 'DOMAIN-SUFFIX,lan'
+  - 'DOMAIN-SUFFIX,internal'
+  - 'DOMAIN-SUFFIX,home.arpa'
+  - 'DOMAIN-SUFFIX,localdomain'

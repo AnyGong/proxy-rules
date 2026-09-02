@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "7h1s_rul35et_i5_mad3_by_5ukk4w-ruleset.skk.moe",
+        "mobile.hotspot",
+        "unifi",
+        "ntt.setup",
+        "pi.hole",
+        "homerouter.cpe",
+        "setmeup.arubanetworks.com",
+        "instant.arubanetworks.com",
+        "console.gl-inet.com",
+        "repeater.asus.com",
+        "router.asus.com",
+        "aterm.me"
+      ],
+      "domain_suffix": [
+        "router",
+        "plex.direct",
+        "ui.direct",
+        "home",
+        "tplinkrepeater.net",
+        "tplinkplclogin.net",
+        "tplinkmodem.net",
+        "routerlogin.net",
+        "tplinkwifi.net",
+        "tplinkap.net",
+        "huaweimobilewifi.com",
+        "routerlogin.com",
+        "asusrouter.com",
+        "tplogin.cn"
+      ]
+    }
+  ]
+}
