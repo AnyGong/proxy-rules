@@ -940,150 +940,6 @@ def main():
     srs_ok_count = len(srs_compile_results) - len([r for r in srs_compile_results if not r[3]])
     mrs_ok_count = len(mrs_compile_results) - len([r for r in mrs_compile_results if not r[3]])
 
-    latest_by_base = {}  # base_filename (no extension) -> {"srs": url, "mrs"/"mrs_domain"/"mrs_ipcidr": url, "json": url, "conf": url}
-
-    gh_base = f"https://github.com/{cdn_owner}/{cdn_repo}/blob/{cdn_branch}"
-
-    for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel, variant in compile_results:
-        if not ok:
-            continue
-        latest_full = f"{format_name}/{latest_rel}"
-        cdn_url = jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, latest_full)
-        github_url = f"{gh_base}/{latest_full}"
-        # Group by the *source* file's base name (not latest_rel's), since a
-        # split mrs variant's filename carries a _domain/_ipcidr suffix that
-        # would otherwise put it in its own row instead of alongside its
-        # srs/json/conf siblings.
-        base = Path(rel_path).stem
-        link_key = f"{format_name}_{variant}" if variant else format_name
-        latest_by_base.setdefault(base, {})[link_key] = {"cdn": cdn_url, "github": github_url}
-
-    for res in source_results:
-        kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
-        namespace_path = res["namespace_path"]
-        for r in res["per_file_reports"]:
-            if r["file"] not in kept or r["kind"] not in ("json", "conf", "list", "text", "yaml"):
-                continue
-            base = Path(r["file"]).stem
-
-            # Every parseable kind now produces all three text renditions in
-            # lockstep (see sync_local_tree) — r["file"] is always the .json
-            # rel_path, so json/conf/yaml rel paths are just suffix swaps.
-            json_rel = f"json/{namespace_path.as_posix()}/{r['file']}"
-            conf_file = str(Path(r["file"]).with_suffix(".conf"))
-            conf_rel = f"conf/{namespace_path.as_posix()}/{conf_file}"
-            yaml_file = str(Path(r["file"]).with_suffix(".yaml"))
-            yaml_rel = f"yaml/{namespace_path.as_posix()}/{yaml_file}"
-
-            entry = latest_by_base.setdefault(base, {})
-            for fmt, rel in (("json", json_rel), ("conf", conf_rel), ("yaml", yaml_rel)):
-                entry[fmt] = {
-                    "cdn": jsdelivr_url(cdn_base_url, cdn_owner, cdn_repo, cdn_branch, rel),
-                    "github": f"{gh_base}/{rel}",
-                }
-            # Link the source heading to wherever this file's "native" format
-            # rendition lives on GitHub (kind's own tree), falling back to json/.
-            native_rel = {"json": json_rel, "conf": conf_rel, "yaml": yaml_rel}.get(r["kind"], json_rel)
-            entry.setdefault("_source_github_url", f"{gh_base}/{native_rel}")
-
-    latest_entries = sorted(latest_by_base.items(), key=lambda kv: (kv[0].lower(), kv[0]))
-
-    def slugify(text: str) -> str:
-        return "".join(c.lower() if c.isalnum() else "-" for c in text).strip("-")
-
-    # ---------- Single manifest: README.md ----------
-    # Flat, alphabetically-sorted per-file index — one entry per base filename,
-    # each rendered as a Client/Format/GitHub/CDN table. Overwritten every run
-    # so it always reflects the current file set.
-    links_path = ROOT / "README.md"
-    active_namespaces = sorted(set(r[1] for r in compile_results)) or \
-                        [str(source_namespace(s)) for s in sources]
-    format_order = ("srs", "mrs", "mrs_domain", "mrs_ipcidr", "json", "conf", "yaml")
-    total_by_format = {fmt: sum(1 for _, urls in latest_entries if fmt in urls) for fmt in format_order}
-    mrs_total = total_by_format["mrs"] + total_by_format["mrs_domain"] + total_by_format["mrs_ipcidr"]
-    mrs_split_note = ""
-    if total_by_format["mrs_domain"] or total_by_format["mrs_ipcidr"]:
-        mrs_split_note = (f" [{total_by_format['mrs_domain']} split domain + "
-                          f"{total_by_format['mrs_ipcidr']} split ipcidr]")
-
-    # (client/engine label, format label, urls key(s) to look up). "mrs" is
-    # handled specially below since a mixed domain+ip_cidr rule-set splits
-    # into mrs_domain/mrs_ipcidr instead of a single "mrs" entry.
-    TABLE_ROWS = (
-        ("Sing-box", "srs", ("srs",)),
-        ("Sing-box", "json", ("json",)),
-        ("Surge", "conf", ("conf",)),
-        ("Clash Meta", "mrs", ("mrs", "mrs_domain", "mrs_ipcidr")),
-        ("Clash Meta", "yaml", ("yaml",)),
-    )
-
-    def table_cells(urls: dict, keys: tuple):
-        """Build the (GitHub, CDN) cell text for one table row. A plain key
-        ('srs') yields a single link; the mrs row's three candidate keys
-        yield either its one plain link or its two split-variant links
-        stacked with <br> — 'X' if none of the keys are present at all."""
-        gh_links, cdn_links = [], []
-        variant_labels = {"mrs_domain": "domain", "mrs_ipcidr": "ipcidr"}
-        for key in keys:
-            if key not in urls:
-                continue
-            label = variant_labels.get(key)
-            entry = urls[key]
-            gh_links.append(f"[{label}]({entry['github']})" if label else f"[link]({entry['github']})")
-            cdn_links.append(f"[{label}]({entry['cdn']})" if label else f"[link]({entry['cdn']})")
-            if key == "mrs":
-                break  # unsplit mrs takes priority over any stray split entries
-        if not gh_links:
-            return "X", "X"
-        return "<br>".join(gh_links), "<br>".join(cdn_links)
-
-    with open(links_path, "w", encoding="utf-8") as f:
-        f.write("# Access Links\n\n")
-        f.write(f"Generated {run_ts}\n\n")
-
-        f.write("## Summary\n\n")
-        f.write(f"- Total files: {len(latest_entries)} "
-                f"({total_by_format['srs']} SRS, {mrs_total} MRS{mrs_split_note}, "
-                f"{total_by_format['json']} JSON, {total_by_format['conf']} CONF, "
-                f"{total_by_format['yaml']} YAML)\n")
-        f.write(f"- Sources: {len(active_namespaces)}\n")
-        if compile_failures:
-            f.write(f"- Compile failures this run: {len(compile_failures)} "
-                    f"(see `logs/sync_{run_ts}.log`)\n")
-        f.write("\n---\n\n")
-
-        f.write("## Navigation\n\n")
-        for base, urls in latest_entries:
-            anchor = slugify(base)
-            source_url = urls.get("_source_github_url", "")
-            if source_url:
-                f.write(f"- [{base}](#{anchor}) — [source]({source_url})\n")
-            else:
-                f.write(f"- [{base}](#{anchor})\n")
-        f.write("\n---\n\n")
-
-        for base, urls in latest_entries:
-            anchor = slugify(base)
-            source_url = urls.get("_source_github_url", "")
-            # Heading is a clickable link to the source (sync/custom) file on
-            # GitHub. The table below it covers every converted format.
-            if source_url:
-                f.write(f"### [{base}]({source_url})\n\n")
-            else:
-                f.write(f"### {base}\n\n")
-
-            f.write("| Client/Engine | Format | GitHub | CDN |\n")
-            f.write("|---|---|---|---|\n")
-            for client_label, fmt_label, keys in TABLE_ROWS:
-                gh_cell, cdn_cell = table_cells(urls, keys)
-                f.write(f"| {client_label} | {fmt_label} | {gh_cell} | {cdn_cell} |\n")
-            f.write("\n")
-
-        f.write("## Related\n\n")
-        f.write("- [Changelog](CHANGELOG.md)\n")
-        f.write(f"- [Sync log](logs/sync_{run_ts}.log)\n")
-        f.write(f"- [Release summary](logs/summary_{run_ts}.md)\n")
-
     # ---------- Detailed log ----------
     kind_totals = {"json": 0, "conf": 0, "list": 0, "text": 0, "yaml": 0, "srs": 0, "mrs": 0, "other": 0}
     other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
@@ -1227,26 +1083,45 @@ def main():
                 f"[`README.md`](../README.md) (ref: "
                 f"`{cdn_ref}`).\n")
 
-    changelog_path = ROOT / "CHANGELOG.md"
-    body = summary_path.read_text(encoding="utf-8")
+    # ---------- Build README.md from changelog (no CHANGELOG.md) ----------
+    # Read existing README (acts as historical changelog)
+    readme_path = ROOT / "README.md"
+    existing_readme = readme_path.read_text(encoding="utf-8") if readme_path.exists() else "# Changelog\n"
+
+    # Extract header (first line) and old entries (everything after it)
+    header, _, old_entries = existing_readme.partition("\n")
+    old_entries = old_entries.lstrip("\n")
+
     if changed:
-        # summary_path's own top line is "## Sync summary — <run_ts>"; drop it
-        # in favour of a per-release "## [<tag>]" / "### Summary" heading pair
-        # so each changelog entry is addressable by its release tag and the
-        # existing summary statistics land unchanged underneath it.
+        # Get summary body, but remove "### Added" and "### Dropped" sections
+        body = summary_path.read_text(encoding="utf-8")
         _, _, body_rest = body.partition("\n")
         body_rest = body_rest.lstrip("\n")
-        entry = f"## [{tag_name}]\n### Summary\n{body_rest}".rstrip("\n")
 
-        existing = changelog_path.read_text(encoding="utf-8") if changelog_path.exists() else "# Changelog\n"
-        header, _, old_entries = existing.partition("\n")
-        old_entries = old_entries.lstrip("\n")
+        # Filter out "### Added" and "### Dropped" sections
+        filtered_lines = []
+        skip_section = False
+        for line in body_rest.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("### Added") or stripped.startswith("### Dropped"):
+                skip_section = True
+                continue
+            if skip_section and stripped.startswith("### "):
+                skip_section = False
+            if not skip_section:
+                filtered_lines.append(line)
+        filtered_body = "\n".join(filtered_lines).strip()
+
+        entry = f"## [{tag_name}]\n### Summary\n{filtered_body}".rstrip("\n")
 
         if old_entries:
-            new_changelog = f"{header}\n{entry}\n---\n{old_entries}"
+            new_readme = f"{header}\n{entry}\n---\n{old_entries}"
         else:
-            new_changelog = f"{header}\n{entry}\n"
-        changelog_path.write_text(new_changelog, encoding="utf-8")
+            new_readme = f"{header}\n{entry}\n"
+
+        readme_path.write_text(new_readme, encoding="utf-8")
+
+    # No CHANGELOG.md file is created anymore.
 
     gha_output = os.environ.get("GITHUB_OUTPUT")
     if gha_output:
@@ -1254,12 +1129,12 @@ def main():
             f.write(f"changed={'true' if changed else 'false'}\n")
             f.write(f"tag={tag_name}\n")
             f.write(f"summary_path={summary_path.relative_to(ROOT)}\n")
-            f.write(f"links_path={links_path.relative_to(ROOT)}\n")
+            f.write(f"links_path={readme_path.relative_to(ROOT)}\n")
 
     print(f"\nDone. changed={changed}")
     print(f"Detail log:   {detail_log_path}")
     print(f"Summary:      {summary_path}")
-    print(f"Access links: {links_path}")
+    print(f"README (changelog): {readme_path}")
 
 
 if __name__ == "__main__":
