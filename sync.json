@@ -9,6 +9,13 @@
       "directory_name": "sing-box"
     },
     {
+      "owner": "SukkaLab",
+      "repo": "ruleset.skk.moe",
+      "branch": "master",
+      "upstream_path": "Modules/Rules/sukka_local_dns_mapping",
+      "directory_name": "Modules/Rules/sukka_local_dns_mapping"
+    },
+    {
       "owner": "MetaCubeX",
       "repo": "meta-rules-dat",
       "branch": "meta",
