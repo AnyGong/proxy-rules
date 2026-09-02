@@ -1229,9 +1229,24 @@ def main():
 
     changelog_path = ROOT / "CHANGELOG.md"
     body = summary_path.read_text(encoding="utf-8")
-    existing = changelog_path.read_text(encoding="utf-8") if changelog_path.exists() else "# Changelog\n\n"
     if changed:
-        changelog_path.write_text(existing + "\n" + body + "\n---\n\n", encoding="utf-8")
+        # summary_path's own top line is "## Sync summary — <run_ts>"; drop it
+        # in favour of a per-release "## [<tag>]" / "### Summary" heading pair
+        # so each changelog entry is addressable by its release tag and the
+        # existing summary statistics land unchanged underneath it.
+        _, _, body_rest = body.partition("\n")
+        body_rest = body_rest.lstrip("\n")
+        entry = f"## [{tag_name}]\n### Summary\n{body_rest}".rstrip("\n")
+
+        existing = changelog_path.read_text(encoding="utf-8") if changelog_path.exists() else "# Changelog\n"
+        header, _, old_entries = existing.partition("\n")
+        old_entries = old_entries.lstrip("\n")
+
+        if old_entries:
+            new_changelog = f"{header}\n{entry}\n---\n{old_entries}"
+        else:
+            new_changelog = f"{header}\n{entry}\n"
+        changelog_path.write_text(new_changelog, encoding="utf-8")
 
     gha_output = os.environ.get("GITHUB_OUTPUT")
     if gha_output:
