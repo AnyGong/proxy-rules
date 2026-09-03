@@ -1,5 +1,4 @@
 payload:
-    - +.webnovel.com
     - +.bytedapm.com
     - +.muscdn.com
     - +.musical.ly
@@ -35,3 +34,4 @@ payload:
     - roovza.inapps.appsflyersdk.com
     - roovza.launches.appsflyersdk.com
     - roovza.skadsdk.appsflyersdk.com
+    - +.webnovel.com
