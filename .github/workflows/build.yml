@@ -6,6 +6,7 @@ on:
     paths:
       - 'custom/**'
       - 'sync.json'
+      - 'sync_and_clean.json'
       - '.github/workflows/build.yml'
   schedule:
     - cron: "0 */12 * * *"   # every 12 hours
