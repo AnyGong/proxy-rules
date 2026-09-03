@@ -102,17 +102,41 @@ jobs:
       - name: Commit documentation to main branch
         if: steps.sync.outputs.changed == 'true'
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
           if [ -n "$(git status --porcelain README.md)" ]; then
             git commit -m "docs(sync): update README.md [${{ steps.sync.outputs.tag }}]"
-            git push origin main
+
+            # main can move between this job's initial checkout (potentially
+            # minutes ago, before the source clones + tool installs + sync
+            # ran) and this push, e.g. another run or a manual commit. A
+            # single blind `git push` then fails non-fast-forward. Retry
+            # with a fetch+rebase in between instead of failing outright.
+            max_attempts=5
+            attempt=1
+            until git push origin HEAD:main; do
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "::error::Failed to push README.md to main after ${max_attempts} attempts — remote main keeps moving or a real conflict needs manual resolution."
+                exit 1
+              fi
+              echo "Push to main rejected (attempt ${attempt}/${max_attempts}) — fetching and rebasing before retry."
+              git fetch origin main
+              if ! git rebase origin/main; then
+                echo "::error::Rebase onto origin/main hit a real conflict (likely two runs both editing README.md's top) — aborting for manual resolution."
+                git rebase --abort
+                exit 1
+              fi
+              attempt=$((attempt + 1))
+              sleep $((RANDOM % 5 + 1))
+            done
           fi
 
       - name: Commit raw source rules to @sync-rules branch
         if: steps.sync.outputs.changed == 'true'
         run: |
+          set -euo pipefail
           mkdir -p /tmp/sync_rules_out
           if [ -d "@rules" ]; then
             cp -r "@rules/." /tmp/sync_rules_out/
@@ -137,13 +161,33 @@ jobs:
 
           git add -A
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "chore(sync-rules): update raw source rules [${{ steps.sync.outputs.tag }}]"
-            git push origin "@sync-rules"
+            commit_msg="chore(sync-rules): update raw source rules [${{ steps.sync.outputs.tag }}]"
+            git commit -m "$commit_msg"
+
+            max_attempts=5
+            attempt=1
+            until git push origin "HEAD:@sync-rules"; do
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "::error::Failed to push @sync-rules after ${max_attempts} attempts."
+                exit 1
+              fi
+              echo "Push to @sync-rules rejected (attempt ${attempt}/${max_attempts}) — retrying against the latest remote tip."
+              git fetch origin "@sync-rules"
+              # This branch is a fully-regenerated snapshot each run (rm -rf
+              # + recreate), so there's no meaningful history to rebase
+              # commit-by-commit — just re-stage the same rebuilt tree on
+              # top of whatever the remote tip now is.
+              git reset --soft "origin/@sync-rules"
+              git commit -m "$commit_msg" --allow-empty
+              attempt=$((attempt + 1))
+              sleep $((RANDOM % 5 + 1))
+            done
           fi
 
       - name: Commit changes to dist branch
         if: steps.sync.outputs.changed == 'true'
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -165,24 +209,72 @@ jobs:
           [ -d /tmp/build_out/logs ] && cp -r /tmp/build_out/logs .
           git add -A
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "chore(dist): ${{ steps.sync.outputs.tag }}"
-            git push origin dist
+            commit_msg="chore(dist): ${{ steps.sync.outputs.tag }}"
+            git commit -m "$commit_msg"
+
+            max_attempts=5
+            attempt=1
+            until git push origin HEAD:dist; do
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "::error::Failed to push dist after ${max_attempts} attempts."
+                exit 1
+              fi
+              echo "Push to dist rejected (attempt ${attempt}/${max_attempts}) — retrying against the latest remote tip."
+              git fetch origin dist
+              # Same reasoning as @sync-rules: dist is a fully-regenerated
+              # snapshot, so rebuild the commit on the new tip rather than
+              # attempting a content rebase.
+              git reset --soft origin/dist
+              git commit -m "$commit_msg" --allow-empty
+              attempt=$((attempt + 1))
+              sleep $((RANDOM % 5 + 1))
+            done
           fi
 
       - name: Tag release
         if: steps.sync.outputs.changed == 'true'
         run: |
-          git tag ${{ steps.sync.outputs.tag }}
-          git push origin ${{ steps.sync.outputs.tag }}
+          set -euo pipefail
+          tag="${{ steps.sync.outputs.tag }}"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "Tag ${tag} already exists on origin — skipping (nothing to do)."
+            exit 0
+          fi
+
+          git tag "${tag}"
+
+          max_attempts=5
+          attempt=1
+          until git push origin "${tag}"; do
+            if [ "$attempt" -ge "$max_attempts" ]; then
+              echo "::error::Failed to push tag ${tag} after ${max_attempts} attempts."
+              exit 1
+            fi
+            if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+              echo "Tag ${tag} appeared on origin from another run — treating as success."
+              exit 0
+            fi
+            echo "Push of tag ${tag} rejected (attempt ${attempt}/${max_attempts}) — retrying."
+            attempt=$((attempt + 1))
+            sleep $((RANDOM % 5 + 1))
+          done
 
       - name: Create GitHub release
         if: steps.sync.outputs.changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ steps.sync.outputs.tag }}" \
-          --title "${{ steps.sync.outputs.tag }}" \
-          "/tmp/build_out/README.md"
+          set -euo pipefail
+          tag="${{ steps.sync.outputs.tag }}"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release ${tag} already exists — skipping creation."
+          else
+            gh release create "$tag" \
+              --title "$tag" \
+              "/tmp/build_out/README.md"
+          fi
 
       - name: No changes
         if: steps.sync.outputs.changed != 'true'

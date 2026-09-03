@@ -1044,44 +1044,69 @@ def main():
     updated_ns = [f"{res['namespace']}/{p}" for res in source_results for p in res["updated"]]
     deleted_ns = [f"{res['namespace']}/{p}" for res in source_results for p in res["deleted"]]
 
+    # Per-source added/updated/deleted breakdown, in source order (sources
+    # first, custom/ last — matches how source_results was built above).
+    source_entries = []
+    for src, res in zip(sources, source_results):
+        source_entries.append((
+            f"`{source_namespace(src)}`",
+            f"`{src['owner']}/{src['repo']}` @ `{src['branch']}` (`{src['upstream_path']}`)",
+            res,
+        ))
+    if enable_custom and len(source_results) > len(sources):
+        custom_res = source_results[len(sources)]
+        source_entries.append((
+            f"`{sync_cfg.get('custom_dir_name', 'custom')}`", "local files (not fetched)", custom_res,
+        ))
+
     with open(summary_path, "w", encoding="utf-8") as f:
-        f.write(f"## Sync summary — {run_ts}\n\n")
-        f.write("Sources:\n")
-        for src in sources:
-            f.write(f"- `{source_namespace(src)}` ← "
-                    f"`{src['owner']}/{src['repo']}` @ `{src['branch']}` (`{src['upstream_path']}`)\n")
-        if enable_custom:
-            f.write(f"- `{sync_cfg.get('custom_dir_name', 'custom')}` ← local files (not fetched)\n")
+        f.write(f"## 🔄 Sync summary — `{run_ts}`\n\n")
+
+        f.write("### 📦 Sources\n\n")
+        f.write("| Namespace | Upstream | Added | Updated | Deleted |\n")
+        f.write("|:----------|:---------|------:|--------:|--------:|\n")
+        for namespace_cell, upstream_cell, res in source_entries:
+            f.write(f"| {namespace_cell} | {upstream_cell} "
+                    f"| {len(res['added'])} | {len(res['updated'])} | {len(res['deleted'])} |\n")
         f.write("\n")
-        f.write(f"- Files added: **{len(all_added)}**\n")
-        f.write(f"- Files updated: **{len(all_updated)}**\n")
-        f.write(f"- Files deleted: **{len(all_deleted)}**\n")
-        f.write(f"- Files unchanged: {len(all_unchanged)}\n")
-        f.write(f"- Blacklisted entries removed: **{total_removed_all}**\n")
-        f.write(f"- Empty rules discarded: **{total_discarded_rules}**\n")
-        f.write(f"- Files dropped entirely (all rules emptied): **{len(discarded_files)}**\n")
-        f.write(f"- SRS files compiled/copied: **{srs_ok_count}/{len(srs_compile_results)}**\n")
-        f.write(f"- MRS files compiled/copied: **{mrs_ok_count}/{len(mrs_compile_results)}**\n\n")
+
+        f.write("### 📊 Overview\n\n")
+        f.write("| Metric | Count |\n")
+        f.write("|:-------|------:|\n")
+        f.write(f"| Files added | **{len(all_added)}** |\n")
+        f.write(f"| Files updated | **{len(all_updated)}** |\n")
+        f.write(f"| Files deleted | **{len(all_deleted)}** |\n")
+        f.write(f"| Files unchanged | {len(all_unchanged)} |\n")
+        f.write(f"| Blacklisted entries removed | **{total_removed_all}** |\n")
+        f.write(f"| Empty rules discarded | **{total_discarded_rules}** |\n")
+        f.write(f"| Files dropped entirely (all rules emptied) | **{len(discarded_files)}** |\n")
+        f.write(f"| SRS files compiled/copied | **{srs_ok_count}/{len(srs_compile_results)}** |\n")
+        f.write(f"| MRS files compiled/copied | **{mrs_ok_count}/{len(mrs_compile_results)}** |\n\n")
 
         if compile_failures:
-            f.write("### Compile failures\n" +
-                    "\n".join(f"- `[{r[0]}] {r[1]}/{r[2]}`: {r[4]}" for r in compile_failures) + "\n\n")
+            f.write("### ⚠️ Compile failures\n\n")
+            f.write("| Format | Source | File | Reason |\n")
+            f.write("|:-------|:-------|:-----|:-------|\n")
+            for r in compile_failures:
+                f.write(f"| `{r[0]}` | `{r[1]}` | `{r[2]}` | {r[4]} |\n")
+            f.write("\n")
 
-        if added_ns:
-            f.write("### Added\n" + "\n".join(f"- `{p}`" for p in sorted(added_ns)) + "\n\n")
-        if updated_ns:
-            f.write("### Updated\n" + "\n".join(f"- `{p}`" for p in sorted(updated_ns)) + "\n\n")
-        if deleted_ns:
-            f.write("### Deleted\n" + "\n".join(f"- `{p}`" for p in sorted(deleted_ns)) + "\n\n")
-        if discarded_files:
-            f.write("### Dropped (all rules removed by blacklist)\n" +
-                    "\n".join(f"- `{p}`" for p in sorted(discarded_files)) + "\n\n")
+        def write_file_list(title: str, emoji: str, paths: list):
+            if not paths:
+                return
+            f.write(f"<details>\n<summary>{emoji} <strong>{title}</strong> ({len(paths)})</summary>\n\n")
+            f.write("\n".join(f"- `{p}`" for p in sorted(paths)))
+            f.write("\n\n</details>\n\n")
 
-        f.write("Full per-file cleanup detail is attached in the workflow logs "
-                f"(`logs/sync_{run_ts}.log`).\n\n")
-        f.write("CDN access links for every file in this release are in "
-                f"[`README.md`](../README.md) (ref: "
-                f"`{cdn_ref}`).\n")
+        write_file_list("Added", "🆕", added_ns)
+        write_file_list("Updated", "✏️", updated_ns)
+        write_file_list("Deleted", "🗑️", deleted_ns)
+        write_file_list("Dropped (all rules removed by blacklist)", "🚫", discarded_files)
+
+        f.write("---\n\n")
+        f.write(f"📄 Full per-file cleanup detail: [`logs/sync_{run_ts}.log`](../logs/sync_{run_ts}.log)\n\n")
+        f.write(f"🔗 CDN ref for this release: `{cdn_ref}` (see [`README.md`](../README.md) "
+                f"for the changelog entry)\n")
 
     # ---------- Build README.md from changelog (no CHANGELOG.md) ----------
     # Read existing README (acts as historical changelog)
@@ -1093,31 +1118,52 @@ def main():
     old_entries = old_entries.lstrip("\n")
 
     if changed:
-        # Get summary body, but remove "### Added" and "### Dropped" sections
-        body = summary_path.read_text(encoding="utf-8")
-        _, _, body_rest = body.partition("\n")
-        body_rest = body_rest.lstrip("\n")
+        # The README changelog entry is built directly from the same data
+        # used for summary.md — not by text-filtering summary.md — so it
+        # can't drift out of sync with what that data actually contains.
+        # It keeps the per-source stats table (added/updated/deleted per
+        # repo — requirement 1) and the file-level Updated/Deleted detail,
+        # but always drops "Compile failures" (requirement 2, an internal
+        # build diagnostic with no reader value here) as well as the
+        # Added/Dropped file lists (too noisy for a public changelog; the
+        # per-source counts above already cover "how much changed").
+        entry_lines = [f"## 🚀 `{tag_name}`", f"*{run_ts.replace('_', ' ')} (UTC+8)*", ""]
 
-        # Filter out "### Added" and "### Dropped" sections
-        filtered_lines = []
-        skip_section = False
-        for line in body_rest.splitlines():
-            stripped = line.strip()
-            if stripped.startswith("### Added") or stripped.startswith("### Dropped"):
-                skip_section = True
-                continue
-            if skip_section and stripped.startswith("### "):
-                skip_section = False
-            if not skip_section:
-                filtered_lines.append(line)
-        filtered_body = "\n".join(filtered_lines).strip()
+        entry_lines += ["### 📦 Sources", "", "| Namespace | Upstream | Added | Updated | Deleted |",
+                        "|:----------|:---------|------:|--------:|--------:|"]
+        for namespace_cell, upstream_cell, res in source_entries:
+            entry_lines.append(f"| {namespace_cell} | {upstream_cell} "
+                               f"| {len(res['added'])} | {len(res['updated'])} | {len(res['deleted'])} |")
+        entry_lines.append("")
 
-        entry = f"## [{tag_name}]\n### Summary\n{filtered_body}".rstrip("\n")
+        entry_lines += ["### 📊 Overview", "", "| Metric | Count |", "|:-------|------:|",
+                        f"| Files added | **{len(all_added)}** |",
+                        f"| Files updated | **{len(all_updated)}** |",
+                        f"| Files deleted | **{len(all_deleted)}** |",
+                        f"| Files unchanged | {len(all_unchanged)} |",
+                        f"| Blacklisted entries removed | **{total_removed_all}** |",
+                        f"| Empty rules discarded | **{total_discarded_rules}** |",
+                        f"| Files dropped entirely (all rules emptied) | **{len(discarded_files)}** |",
+                        f"| SRS files compiled/copied | **{srs_ok_count}/{len(srs_compile_results)}** |",
+                        f"| MRS files compiled/copied | **{mrs_ok_count}/{len(mrs_compile_results)}** |", ""]
+
+        if updated_ns:
+            entry_lines += [f"<details>\n<summary>✏️ <strong>Updated</strong> ({len(updated_ns)})</summary>", ""]
+            entry_lines += [f"- `{p}`" for p in sorted(updated_ns)]
+            entry_lines += ["", "</details>", ""]
+        if deleted_ns:
+            entry_lines += [f"<details>\n<summary>🗑️ <strong>Deleted</strong> ({len(deleted_ns)})</summary>", ""]
+            entry_lines += [f"- `{p}`" for p in sorted(deleted_ns)]
+            entry_lines += ["", "</details>", ""]
+
+        entry_lines += [f"🔗 CDN ref for this release: `{cdn_ref}`"]
+
+        entry = "\n".join(entry_lines).rstrip("\n")
 
         if old_entries:
-            new_readme = f"{header}\n{entry}\n---\n{old_entries}"
+            new_readme = f"{header}\n\n{entry}\n\n---\n\n{old_entries}"
         else:
-            new_readme = f"{header}\n{entry}\n"
+            new_readme = f"{header}\n\n{entry}\n"
 
         readme_path.write_text(new_readme, encoding="utf-8")
 
