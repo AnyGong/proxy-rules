@@ -56,6 +56,7 @@ For every source, this script applies the following per-file conversion matrix:
 Exit code is always 0 unless a hard error occurs; "did anything change"
 is communicated via the `changed` output, not exit code.
 """
+import concurrent.futures
 import json
 import os
 import shutil
@@ -468,7 +469,7 @@ def _run_mihomo_convert(mihomo_bin: str, behavior: str, payload_lines: list, out
     return True, f"ok (behavior={behavior})"
 
 
-def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path) -> list:
+def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path, doc: dict = None) -> list:
     """Compile a cleaned sing-box rule-set JSON file into one or two binary
     .mrs files via mihomo's `convert-ruleset` command.
 
@@ -480,16 +481,24 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path) -> list:
     doc_to_mihomo_variants). domain_keyword / process_name entries can't
     be represented in .mrs at all and are dropped, noted in the message.
 
+    `doc` lets the caller pass the already-parsed, already-cleaned
+    document straight from the sync stage (it was just written to
+    json_path moments ago) so this doesn't re-read and re-parse the same
+    JSON off disk for every single file. Falls back to reading json_path
+    when doc isn't supplied, so this remains a drop-in standalone
+    compiler like compile_to_srs.
+
     Returns a list of variant result dicts:
         [{"variant": "" | "domain" | "ipcidr", "ok": bool,
           "msg": str, "dated_path": Path}, ...]
     "variant" is "" (and dated_path == mrs_path) for the unsplit case.
     """
-    try:
-        doc = json.loads(json_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as e:
-        return [{"variant": "", "ok": False, "dated_path": mrs_path,
-                 "msg": f"could not read/parse {json_path.name} for mrs conversion: {e}"}]
+    if doc is None:
+        try:
+            doc = json.loads(json_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            return [{"variant": "", "ok": False, "dated_path": mrs_path,
+                     "msg": f"could not read/parse {json_path.name} for mrs conversion: {e}"}]
 
     variants = doc_to_mihomo_variants(doc)
     domain_lines, ipcidr_lines = variants["domain"], variants["ipcidr"]
@@ -510,16 +519,20 @@ def compile_to_mrs(mihomo_bin: str, json_path: Path, mrs_path: Path) -> list:
 
     if domain_lines and ipcidr_lines:
         # Mixed rule-set — split into two independent .mrs files rather than
-        # ever passing 'classical' behavior to mihomo's mrs converter.
-        results = []
+        # ever passing 'classical' behavior to mihomo's mrs converter. The
+        # two conversions are independent subprocess calls, so run them
+        # concurrently instead of waiting on one before starting the other.
         domain_path = _variant_path(mrs_path, "domain")
-        ok_d, msg_d = _run_mihomo_convert(mihomo_bin, "domain", domain_lines, domain_path)
-        results.append({"variant": "domain", "ok": ok_d, "msg": msg_d + dropped_note, "dated_path": domain_path})
-
         ipcidr_path = _variant_path(mrs_path, "ipcidr")
-        ok_i, msg_i = _run_mihomo_convert(mihomo_bin, "ipcidr", ipcidr_lines, ipcidr_path)
-        results.append({"variant": "ipcidr", "ok": ok_i, "msg": msg_i, "dated_path": ipcidr_path})
-        return results
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+            domain_future = pool.submit(_run_mihomo_convert, mihomo_bin, "domain", domain_lines, domain_path)
+            ipcidr_future = pool.submit(_run_mihomo_convert, mihomo_bin, "ipcidr", ipcidr_lines, ipcidr_path)
+            ok_d, msg_d = domain_future.result()
+            ok_i, msg_i = ipcidr_future.result()
+        return [
+            {"variant": "domain", "ok": ok_d, "msg": msg_d + dropped_note, "dated_path": domain_path},
+            {"variant": "ipcidr", "ok": ok_i, "msg": msg_i, "dated_path": ipcidr_path},
+        ]
 
     # Neither domain nor ip_cidr entries survived — nothing left to compile
     # into .mrs (only keyword/process_name entries, or a fully empty rule-set).
@@ -590,7 +603,16 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
     if json_output_dir.exists():
         for p in json_output_dir.rglob("*"):
             if p.is_file():
-                existing_before[str(p.relative_to(json_output_dir))] = (p.read_bytes(), p)
+                existing_before[str(p.relative_to(json_output_dir))] = p
+
+    def read_old_bytes(rel: str):
+        p = existing_before.get(rel)
+        if p is None:
+            return None
+        try:
+            return p.read_bytes()
+        except OSError:
+            return None
 
     json_output_dir.mkdir(parents=True, exist_ok=True)
     conf_output_dir.mkdir(parents=True, exist_ok=True)
@@ -656,8 +678,7 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
                 report["conf_skipped_count"] = conv_stats["skipped_count"]
                 report["conf_skipped_lines"] = conv_stats["skipped_lines"]
 
-            old_bytes_entry = existing_before.get(json_rel)
-            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
+            old_bytes = read_old_bytes(json_rel)
 
             if cleaned_doc is None:
                 report["action"] = "discarded_all_rules_empty_file"
@@ -670,6 +691,10 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
                 continue
 
             new_bytes = canonical_dump(cleaned_doc).encode("utf-8")
+            # Kept for the compile stage, so it can compile straight from
+            # this already-parsed, already-cleaned document instead of
+            # re-reading and re-parsing the JSON file it's about to write.
+            report["_cleaned_doc"] = cleaned_doc
 
             if old_bytes is None:
                 report["action"] = "added"
@@ -733,8 +758,7 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
                 "fields_cleared": [], "action": None,
             }
 
-            old_bytes_entry = existing_before.get(rel_path)
-            old_bytes = old_bytes_entry[0] if old_bytes_entry else None
+            old_bytes = read_old_bytes(rel_path)
             if old_bytes is None:
                 report["action"] = "added"
                 added.append(rel_path)
@@ -750,7 +774,7 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
             per_file_reports.append(report)
 
     # Delete anything left in json_output_dir that wasn't touched this run.
-    for rel_path, (bytes_val, p_path) in existing_before.items():
+    for rel_path, p_path in existing_before.items():
         if rel_path not in seen_relpaths:
             if p_path.exists():
                 p_path.unlink()
@@ -822,9 +846,18 @@ def main():
     run_ts = datetime.now(DISPLAY_TZ).strftime("%Y%m%d_%H%M%S")
     date_str = run_ts.split("_")[0]  # YYYYMMDD
 
-    source_results = [process_source(src, sync_cfg, blacklist_lower) for src in sources]
-    if enable_custom:
-        source_results.append(process_custom(sync_cfg, blacklist_lower))
+    # Each source (and custom/) reads/writes an entirely independent set of
+    # directories, so there's no shared state to worry about — sync them
+    # concurrently instead of one at a time. This is disk/IO-bound work
+    # (lots of small file reads/writes per source), so threads are enough;
+    # no need for separate processes.
+    sync_workers = sync_cfg.get("sync_workers") or min(8, max(1, len(sources) + (1 if enable_custom else 0)))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=sync_workers) as pool:
+        source_futures = [pool.submit(process_source, src, sync_cfg, blacklist_lower) for src in sources]
+        custom_future = pool.submit(process_custom, sync_cfg, blacklist_lower) if enable_custom else None
+        source_results = [f.result() for f in source_futures]
+        if custom_future is not None:
+            source_results.append(custom_future.result())
 
     all_added = sum((r["added"] for r in source_results), [])
     all_updated = sum((r["updated"] for r in source_results), [])
@@ -850,89 +883,125 @@ def main():
     sing_box_bin = sync_cfg.get("sing_box_bin", "sing-box")
     mihomo_bin = sync_cfg.get("mihomo_bin", "mihomo")
 
-    def run_compile_stage(format_name: str, binary: str, compiler_fn, precompiled_kind: str):
-        format_root = ROOT / format_name
-        results = []
+    # Each file's srs/mrs compile is a separate external-process invocation
+    # (`sing-box rule-set compile`, `mihomo convert-ruleset`) that spends
+    # almost all of its wall-clock time waiting on that subprocess, not
+    # doing Python-side work — a textbook case for thread-pool concurrency
+    # (subprocess.run releases the GIL while the child runs). Running these
+    # one at a time, as before, means total wall time scales linearly with
+    # file count purely from per-process spawn overhead; running them
+    # concurrently collapses that to roughly (file count / worker count).
+    # Override via sync.json's "compile_workers"; default scales with the
+    # runner's CPU count but is capped to avoid overwhelming it, since the
+    # compiler binaries themselves also use CPU once running.
+    compile_workers = sync_cfg.get("compile_workers") or min(16, max(4, (os.cpu_count() or 4) * 2))
 
+    def build_work_items(precompiled_kind: str):
+        items = []
         for res in source_results:
             if res["error"]:
                 continue
             namespace_path = res["namespace_path"]
             json_output_dir = res["json_output_dir"]
             kept_relpaths = sorted(set(res["added"]) | set(res["updated"]) | set(res["unchanged"]))
-            kind_lookup = {r["file"]: r["kind"] for r in res["per_file_reports"]}
+            report_lookup = {r["file"]: r for r in res["per_file_reports"]}
 
             for rel_path in kept_relpaths:
-                kind = kind_lookup.get(rel_path)
+                r = report_lookup.get(rel_path)
+                kind = r["kind"] if r else None
                 if kind == "other":
                     continue
                 if kind not in ("json", "conf", "list", "text", "yaml", precompiled_kind):
                     continue
+                items.append((res, namespace_path, json_output_dir, rel_path, kind, r.get("_cleaned_doc")))
+        return items
 
-                # Every parseable kind's canonical cleaned document lives in
-                # json_output_dir at rel_path (always the .json rendition —
-                # see sync_local_tree). Compilation always reads from there
-                # regardless of the file's original source format.
-                source_file_path = json_output_dir / rel_path
+    def run_compile_stage(format_name: str, binary: str, compiler_fn, precompiled_kind: str):
+        format_root = ROOT / format_name
+        work_items = build_work_items(precompiled_kind)
+        if not work_items:
+            return []
 
-                rel = Path(rel_path)
-                out_filename = rel.with_suffix(f".{format_name}").name
-                subdir = rel.parent
-                if str(subdir) in (".", ""):
-                    dated_rel = namespace_path / date_str / out_filename
-                    latest_rel = namespace_path / out_filename
+        def compile_one(item):
+            res, namespace_path, json_output_dir, rel_path, kind, cleaned_doc = item
+            file_results = []
+
+            # Every parseable kind's canonical cleaned document lives in
+            # json_output_dir at rel_path (always the .json rendition —
+            # see sync_local_tree). Compilation always reads from there
+            # regardless of the file's original source format.
+            source_file_path = json_output_dir / rel_path
+
+            rel = Path(rel_path)
+            out_filename = rel.with_suffix(f".{format_name}").name
+            subdir = rel.parent
+            if str(subdir) in (".", ""):
+                dated_rel = namespace_path / date_str / out_filename
+                latest_rel = namespace_path / out_filename
+            else:
+                dated_rel = namespace_path / subdir / date_str / out_filename
+                latest_rel = namespace_path / subdir / out_filename
+
+            dated_path = format_root / dated_rel
+            latest_path = format_root / latest_rel
+
+            if kind in ("json", "conf", "list", "text", "yaml"):
+                if format_name == "mrs":
+                    raw = compiler_fn(binary, source_file_path, dated_path, cleaned_doc)
+                    variant_results = raw  # already [{"variant","ok","msg","dated_path"}, ...]
                 else:
-                    dated_rel = namespace_path / subdir / date_str / out_filename
-                    latest_rel = namespace_path / subdir / out_filename
-
-                dated_path = format_root / dated_rel
-                latest_path = format_root / latest_rel
-
-                if kind in ("json", "conf", "list", "text", "yaml"):
-                    raw = compiler_fn(binary, source_file_path, dated_path)
-                    if format_name == "mrs":
-                        variant_results = raw  # already [{"variant","ok","msg","dated_path"}, ...]
-                    else:
-                        ok, msg = raw
-                        variant_results = [{"variant": "", "ok": ok, "msg": msg, "dated_path": dated_path}]
-                else:  # precompiled_kind
-                    try:
-                        dated_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(source_file_path, dated_path)
-                        latest_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(source_file_path, latest_path)
-                        ok, msg = True, f"synced (pre-compiled upstream .{format_name}, not recompiled)"
-                    except OSError as e:
-                        ok, msg = False, f"failed to copy pre-compiled .{format_name}: {e}"
-                        print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
+                    ok, msg = compiler_fn(binary, source_file_path, dated_path)
                     variant_results = [{"variant": "", "ok": ok, "msg": msg, "dated_path": dated_path}]
+            else:  # precompiled_kind
+                try:
+                    dated_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source_file_path, dated_path)
+                    latest_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source_file_path, latest_path)
+                    ok, msg = True, f"synced (pre-compiled upstream .{format_name}, not recompiled)"
+                except OSError as e:
+                    ok, msg = False, f"failed to copy pre-compiled .{format_name}: {e}"
+                    print(f"  [{res['namespace']}] ! {msg} ({rel_path})", file=sys.stderr)
+                variant_results = [{"variant": "", "ok": ok, "msg": msg, "dated_path": dated_path}]
 
-                for vr in variant_results:
-                    variant, ok, msg = vr["variant"], vr["ok"], vr["msg"]
-                    actual_dated_path = vr["dated_path"]
-                    actual_dated_rel = _variant_path(dated_rel, variant)
-                    actual_latest_rel = _variant_path(latest_rel, variant)
-                    actual_latest_path = format_root / actual_latest_rel
+            for vr in variant_results:
+                variant, ok, msg = vr["variant"], vr["ok"], vr["msg"]
+                actual_dated_path = vr["dated_path"]
+                actual_dated_rel = _variant_path(dated_rel, variant)
+                actual_latest_rel = _variant_path(latest_rel, variant)
+                actual_latest_path = format_root / actual_latest_rel
 
-                    if ok:
-                        actual_latest_path.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(actual_dated_path, actual_latest_path)
-                    else:
-                        tag = f" ({variant})" if variant else ""
-                        print(f"  [{res['namespace']}] ! {format_name.upper()}{tag} compile failed "
-                              f"for {rel_path}: {msg}", file=sys.stderr)
+                if ok:
+                    actual_latest_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(actual_dated_path, actual_latest_path)
+                else:
+                    tag = f" ({variant})" if variant else ""
+                    print(f"  [{res['namespace']}] ! {format_name.upper()}{tag} compile failed "
+                          f"for {rel_path}: {msg}", file=sys.stderr)
 
-                    results.append((
-                        format_name, res["namespace"], rel_path, ok, msg,
-                        f"json/{namespace_path.as_posix()}/{rel_path}",
-                        actual_dated_rel.as_posix() if ok else None,
-                        actual_latest_rel.as_posix() if ok else None, variant,
-                    ))
+                file_results.append((
+                    format_name, res["namespace"], rel_path, ok, msg,
+                    f"json/{namespace_path.as_posix()}/{rel_path}",
+                    actual_dated_rel.as_posix() if ok else None,
+                    actual_latest_rel.as_posix() if ok else None, variant,
+                ))
 
+            return file_results
+
+        results = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=compile_workers) as pool:
+            for file_results in pool.map(compile_one, work_items):
+                results.extend(file_results)
         return results
 
-    srs_compile_results = run_compile_stage("srs", sing_box_bin, compile_to_srs, "srs")
-    mrs_compile_results = run_compile_stage("mrs", mihomo_bin, compile_to_mrs, "mrs")
+    # The SRS and MRS stages are fully independent of each other (different
+    # binaries, different output trees), so run them concurrently too
+    # rather than one stage completing before the next starts.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as stage_pool:
+        srs_future = stage_pool.submit(run_compile_stage, "srs", sing_box_bin, compile_to_srs, "srs")
+        mrs_future = stage_pool.submit(run_compile_stage, "mrs", mihomo_bin, compile_to_mrs, "mrs")
+        srs_compile_results = srs_future.result()
+        mrs_compile_results = mrs_future.result()
     compile_results = srs_compile_results + mrs_compile_results
 
     compile_failures = [r for r in compile_results if not r[3]]
