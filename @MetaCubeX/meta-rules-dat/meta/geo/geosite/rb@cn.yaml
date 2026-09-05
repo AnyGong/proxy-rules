@@ -1,20 +1,16 @@
 payload:
     - +.reckittbenckiser.cn
     - +.reckittbenckiser.com.cn
-    - +.airwick.com.cn
-    - +.enfinitas.com.cn
-    - +.meadjohnson.com.cn
     - +.nurofen.cn
     - +.nurofen.com.cn
-    - +.aerogard.com.cn
-    - +.calgon.cn
-    - +.mortein.cn
     - +.veet.cn
     - +.veet.com.cn
-    - +.woolite.cn
-    - +.woolite.com.cn
+    - +.aerogard.com.cn
+    - +.airwick.com.cn
     - +.dishwashingexpert.com.cn
     - +.finish.com.cn
+    - +.mortein.cn
+    - +.calgon.cn
     - +.movefree.cn
     - +.strepsils.cn
     - +.strepsils.com.cn
@@ -27,3 +23,7 @@ payload:
     - +.lovesexdurex.cn
     - +.lysol.cn
     - +.lysol.com.cn
+    - +.enfinitas.com.cn
+    - +.meadjohnson.com.cn
+    - +.woolite.cn
+    - +.woolite.com.cn

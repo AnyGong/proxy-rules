@@ -1,25 +1,22 @@
 payload:
-    - +.fanxingliveshow.com
-    - +.kgimg.com
-    - +.kugouyouth.com
-    - +.kugouvoice.com
-    - +.kugoustore.com
+    - +.ktv.com
+    - +.kugoo.com
+    - +.kuwo.cn
+    - +.koowo.com
+    - +.koowo.cn
     - +.lrts.me
     - +.mting.info
     - +.wting.info
     - +.qqmusic.com
     - +.tingmall.com
     - +.ultimatemusic.cn
-    - +.koowo.cn
-    - +.koowo.com
-    - +.kuwo.cn
-    - +.tencentmusic.com
     - +.ximalaya.com
-    - +.97ting.com
     - +.xmcdn.com
+    - +.fanxingliveshow.com
+    - +.tencentmusic.com
+    - +.kgimg.com
+    - +.97ting.com
     - +.kglink.cn
-    - +.ktv.com
-    - +.kugoo.com
     - +.kugou.com
     - +.kugou.net
     - +.kugouaudio.com
@@ -28,6 +25,9 @@ payload:
     - +.kugouliveshow.com
     - +.kugouringtone.com
     - +.kugousenior.com
+    - +.kugoustore.com
+    - +.kugouvoice.com
+    - +.kugouyouth.com
     - +.y.qq.com
     - +.music.qq.com
     - +.kg.qq.com
