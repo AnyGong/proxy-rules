@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain_keyword": [
+        "openai"
+      ],
+      "network": "udp",
+      "port": 443
+    }
+  ]
+}

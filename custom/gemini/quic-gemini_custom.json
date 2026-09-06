@@ -3,12 +3,7 @@
   "rules": [
     {
       "domain_keyword": [
-        "openai",
-        "anthropic",
-        "gemini",
-        "copilot",
-        "antigravity",
-        "cursor"
+        "gemini"
       ],
       "network": "udp",
       "port": 443

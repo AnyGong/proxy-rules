@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "statsigapi.net",
+        "cloudflareinsights.com"
+      ]
+    },
+    {
+      "domain": [
+        "browser-intake-us5-datadoghq.com",
+        "cdn.usefathom.com",
+        "challenges.cloudflare.com"
+      ]
+    }
+  ]
+}
