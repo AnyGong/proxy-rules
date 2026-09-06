@@ -1,0 +1,4 @@
+payload:
+  - 'PROCESS-NAME,Cursor'
+  - 'PROCESS-NAME,Cursor Helper'
+  - 'PROCESS-NAME,language_server_macos_arm'

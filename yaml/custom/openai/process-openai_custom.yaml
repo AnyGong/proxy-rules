@@ -1,0 +1,7 @@
+payload:
+  - 'PROCESS-NAME,Codex'
+  - 'PROCESS-NAME,Codex Helper'
+  - 'PROCESS-NAME,ChatGPT'
+  - 'PROCESS-NAME,ChatGPT Helper'
+  - 'PROCESS-NAME,Codex (Service)'
+  - 'PROCESS-NAME,Codex Computer Use'

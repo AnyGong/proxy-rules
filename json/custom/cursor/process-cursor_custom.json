@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "process_name": [
+        "Cursor",
+        "Cursor Helper",
+        "language_server_macos_arm"
+      ]
+    }
+  ]
+}

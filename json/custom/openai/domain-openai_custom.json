@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "openai.com",
+        "chatgpt.com",
+        "chatgpt.com.cdn.cloudflare.net",
+        "openaiapi-site.azureedge.net",
+        "oaistatic.com",
+        "oaiusercontent.com"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "openai",
+        "chatgpt"
+      ]
+    }
+  ]
+}

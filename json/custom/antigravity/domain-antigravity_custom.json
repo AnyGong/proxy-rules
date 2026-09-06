@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "antigravity.google",
+        "antigravity.codes",
+        "antigravitylab.net"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "antigravity"
+      ]
+    }
+  ]
+}

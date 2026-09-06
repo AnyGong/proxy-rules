@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "cursor.com",
+        "cursor.sh",
+        "cursor.com.cdn.cloudflare.net"
+      ]
+    },
+    {
+      "domain": [
+        "cursor-static.s3.amazonaws.com",
+        "cursor.replicate.delivery"
+      ]
+    }
+  ]
+}

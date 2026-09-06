@@ -1,0 +1,6 @@
+payload:
+  - 'DOMAIN-SUFFIX,cursor.com'
+  - 'DOMAIN-SUFFIX,cursor.sh'
+  - 'DOMAIN-SUFFIX,cursor.com.cdn.cloudflare.net'
+  - 'DOMAIN,cursor-static.s3.amazonaws.com'
+  - 'DOMAIN,cursor.replicate.delivery'

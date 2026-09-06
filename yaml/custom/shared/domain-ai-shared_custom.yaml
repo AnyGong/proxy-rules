@@ -1,0 +1,6 @@
+payload:
+  - 'DOMAIN-SUFFIX,statsigapi.net'
+  - 'DOMAIN-SUFFIX,cloudflareinsights.com'
+  - 'DOMAIN,browser-intake-us5-datadoghq.com'
+  - 'DOMAIN,cdn.usefathom.com'
+  - 'DOMAIN,challenges.cloudflare.com'
