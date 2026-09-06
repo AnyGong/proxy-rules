@@ -3,7 +3,7 @@ payload:
     - opencourse.pku.edu.cn
     - study.163.com
     - +.llsserver.com
-    - +.xiyouyingyu.com
+    - +.17zuoye.cn
     - +.edu.cn
     - +.xuetangx.com
     - +.smartedu.cn
@@ -30,17 +30,17 @@ payload:
     - +.100tal.com
     - +.gfbzb.net
     - +.ncss.cn
-    - +.tongxuepie.com
-    - +.schoopia.com
-    - +.applysquare.net
+    - +.shanbay.com
+    - +.baydn.com
+    - +.koopass.com
     - +.qgzb.net
-    - +.applysquare.com
+    - +.koolearn.com
     - +.zbbm.net
     - +.neea.cn
-    - +.17zuoye.net
+    - +.koocdn.com
     - +.mypep.cn
+    - +.17zuoye.net
     - +.17zuoye.com
-    - +.17zuoye.cn
     - +.21cnjy.com
     - +.91yunxiao.com
     - +.aiyunxiao.com
@@ -95,8 +95,8 @@ payload:
     - +.llsapp.com
     - +.llscdn.com
     - +.yushiyan.net
-    - +.pmphmooc.com
     - +.yudou.cn
+    - +.xiyouyingyu.com
     - +.maimemostatus.com
     - +.markji.com
     - +.neoscholar.com
@@ -106,7 +106,7 @@ payload:
     - +.qingtingai.net
     - +.quyixian.com
     - +.rongdeji.cn
-    - +.openlearning.com
+    - +.pmphmooc.com
     - +.saduck.top
     - +.tesoon.com
     - +.unipus.cn
@@ -133,6 +133,8 @@ payload:
     - +.qianxuecloud.com
     - +.qianxueyunke.com
     - +.zhixingyunke.com
+    - +.applysquare.com
+    - +.applysquare.net
     - +.hugecore.net
     - +.shareintelli.com
     - +.mojidict.com
@@ -141,11 +143,8 @@ payload:
     - +.hjfile.cn
     - +.hujiang.com
     - +.yeshj.com
-    - +.koocdn.com
-    - +.koolearn.com
-    - +.koopass.com
-    - +.baydn.com
-    - +.shanbay.com
+    - +.schoopia.com
+    - +.tongxuepie.com
     - +.banmaaike.com
     - +.xiaoyuankousuan.com
     - +.ybccode.com
@@ -165,6 +164,7 @@ payload:
     - +.icourse163.org
     - +.icourses.cn
     - +.mooc.cn
+    - +.openlearning.com
     - +.qgzb.gov.cn
     - +.zbbm.gov.cn
     - +.modex.com.cn

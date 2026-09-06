@@ -27,6 +27,7 @@ payload:
     - DOMAIN-SUFFIX,pglstatp-toutiao.com
     - DOMAIN-SUFFIX,sf3-ttcdn-tos.pstatp.com
     - DOMAIN-SUFFIX,shoppingads.cn
+    - DOMAIN-SUFFIX,analytics.tiktok.com
     - DOMAIN,ads3-normal-hl.zijieapi.com
     - DOMAIN,ads3-normal.zijieapi.com
     - DOMAIN,ads5-normal-hl.zijieapi.com
@@ -42,4 +43,3 @@ payload:
     - DOMAIN,rtlog3-applog.fqnovel.com
     - DOMAIN,rtlog5-applog-hl.fqnovel.com
     - DOMAIN,rtlog5-applog.fqnovel.com
-    - DOMAIN-SUFFIX,analytics.tiktok.com

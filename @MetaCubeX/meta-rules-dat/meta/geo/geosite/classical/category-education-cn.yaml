@@ -3,7 +3,7 @@ payload:
     - DOMAIN,opencourse.pku.edu.cn
     - DOMAIN,study.163.com
     - DOMAIN-SUFFIX,llsserver.com
-    - DOMAIN-SUFFIX,xiyouyingyu.com
+    - DOMAIN-SUFFIX,17zuoye.cn
     - DOMAIN-SUFFIX,edu.cn
     - DOMAIN-SUFFIX,xuetangx.com
     - DOMAIN-SUFFIX,smartedu.cn
@@ -30,17 +30,17 @@ payload:
     - DOMAIN-SUFFIX,100tal.com
     - DOMAIN-SUFFIX,gfbzb.net
     - DOMAIN-SUFFIX,ncss.cn
-    - DOMAIN-SUFFIX,tongxuepie.com
-    - DOMAIN-SUFFIX,schoopia.com
-    - DOMAIN-SUFFIX,applysquare.net
+    - DOMAIN-SUFFIX,shanbay.com
+    - DOMAIN-SUFFIX,baydn.com
+    - DOMAIN-SUFFIX,koopass.com
     - DOMAIN-SUFFIX,qgzb.net
-    - DOMAIN-SUFFIX,applysquare.com
+    - DOMAIN-SUFFIX,koolearn.com
     - DOMAIN-SUFFIX,zbbm.net
     - DOMAIN-SUFFIX,neea.cn
-    - DOMAIN-SUFFIX,17zuoye.net
+    - DOMAIN-SUFFIX,koocdn.com
     - DOMAIN-SUFFIX,mypep.cn
+    - DOMAIN-SUFFIX,17zuoye.net
     - DOMAIN-SUFFIX,17zuoye.com
-    - DOMAIN-SUFFIX,17zuoye.cn
     - DOMAIN-SUFFIX,21cnjy.com
     - DOMAIN-SUFFIX,91yunxiao.com
     - DOMAIN-SUFFIX,aiyunxiao.com
@@ -95,8 +95,8 @@ payload:
     - DOMAIN-SUFFIX,llsapp.com
     - DOMAIN-SUFFIX,llscdn.com
     - DOMAIN-SUFFIX,yushiyan.net
-    - DOMAIN-SUFFIX,pmphmooc.com
     - DOMAIN-SUFFIX,yudou.cn
+    - DOMAIN-SUFFIX,xiyouyingyu.com
     - DOMAIN-SUFFIX,maimemostatus.com
     - DOMAIN-SUFFIX,markji.com
     - DOMAIN-SUFFIX,neoscholar.com
@@ -106,7 +106,7 @@ payload:
     - DOMAIN-SUFFIX,qingtingai.net
     - DOMAIN-SUFFIX,quyixian.com
     - DOMAIN-SUFFIX,rongdeji.cn
-    - DOMAIN-SUFFIX,openlearning.com
+    - DOMAIN-SUFFIX,pmphmooc.com
     - DOMAIN-SUFFIX,saduck.top
     - DOMAIN-SUFFIX,tesoon.com
     - DOMAIN-SUFFIX,unipus.cn
@@ -133,6 +133,8 @@ payload:
     - DOMAIN-SUFFIX,qianxuecloud.com
     - DOMAIN-SUFFIX,qianxueyunke.com
     - DOMAIN-SUFFIX,zhixingyunke.com
+    - DOMAIN-SUFFIX,applysquare.com
+    - DOMAIN-SUFFIX,applysquare.net
     - DOMAIN-SUFFIX,hugecore.net
     - DOMAIN-SUFFIX,shareintelli.com
     - DOMAIN-SUFFIX,mojidict.com
@@ -141,11 +143,8 @@ payload:
     - DOMAIN-SUFFIX,hjfile.cn
     - DOMAIN-SUFFIX,hujiang.com
     - DOMAIN-SUFFIX,yeshj.com
-    - DOMAIN-SUFFIX,koocdn.com
-    - DOMAIN-SUFFIX,koolearn.com
-    - DOMAIN-SUFFIX,koopass.com
-    - DOMAIN-SUFFIX,baydn.com
-    - DOMAIN-SUFFIX,shanbay.com
+    - DOMAIN-SUFFIX,schoopia.com
+    - DOMAIN-SUFFIX,tongxuepie.com
     - DOMAIN-SUFFIX,banmaaike.com
     - DOMAIN-SUFFIX,xiaoyuankousuan.com
     - DOMAIN-SUFFIX,ybccode.com
@@ -165,6 +164,7 @@ payload:
     - DOMAIN-SUFFIX,icourse163.org
     - DOMAIN-SUFFIX,icourses.cn
     - DOMAIN-SUFFIX,mooc.cn
+    - DOMAIN-SUFFIX,openlearning.com
     - DOMAIN-SUFFIX,qgzb.gov.cn
     - DOMAIN-SUFFIX,zbbm.gov.cn
     - DOMAIN-SUFFIX,modex.com.cn

@@ -1,6 +1,6 @@
 payload:
-    - +.cdnhwcoem01.com
-    - +.cdnhwcofl101.cn
+    - +.cdnhwcgqa21.com
+    - +.cdnhwcuxc121.cn
     - +.chaspark.com
     - +.dbank.com
     - +.dbankcdn.cn
@@ -28,26 +28,6 @@ payload:
     - +.shanhaitujian.com
     - +.vmall.com
     - +.vmallres.com
-    - +.hiascend.com
-    - +.harmonyos.com
-    - +.devui.design
-    - +.gneec.com
-    - +.teleows.com
-    - +.gneec3.com
-    - +.gneec4.com
-    - +.hikunpeng.cn
-    - +.hiclc.com
-    - +.hiascend.cn
-    - +.bishengcompiler.cn
-    - +.bisheng.cn
-    - +.gneec7.com
-    - +.hikunpeng.com
-    - +.saasops.tech
-    - +.hikunpeng.net
-    - +.hisilicon.com
-    - +.owsgo.com
-    - +.huaweiapaas.com
-    - +.mindspore.cn
     - +.cdnhwckbw08.cn
     - +.myhuaweicloud-obs.cn
     - +.b2bgo.com
@@ -57,6 +37,7 @@ payload:
     - +.hc-cdn.com
     - +.hc-sre.com
     - +.huaweiapaas.cn
+    - +.huaweiapaas.com
     - +.huaweicloud-dns.cn
     - +.huaweicloud-dns.com
     - +.huaweicloud-idme.cn
@@ -64,7 +45,7 @@ payload:
     - +.huaweicloud-koophone.cn
     - +.huaweicloud-koophone.com
     - +.huaweicloud-smn.cn
-    - +.abhouses.com
+    - +.huaweicloud-smn.com
     - +.huaweicloud-smn.net
     - +.huaweicloud.cn
     - +.huaweicloud.com
@@ -84,7 +65,7 @@ payload:
     - +.huaweisre.cn
     - +.huaweisre.com
     - +.huaweiyun.cn
-    - +.huaweiyun.com
+    - +.abhouses.com
     - +.hwastro.cn
     - +.hwastro.com
     - +.hwcdnsre.cn
@@ -146,9 +127,9 @@ payload:
     - +.cdnhwcupf06.com
     - +.cdnhwcxcy07.com
     - +.cdnhwcatq08.com
-    - +.cdnhwcljk104.com
-    - +.agconnect.link
-    - +.huaweicloud-smn.com
+    - +.cdnhwcztu09.com
+    - +.cdnhwcedi10.com
+    - +.cdnhwcoem01.com
     - +.cdnhwcllh11.com
     - +.cdnhwcjog12.com
     - +.cdnhwcpsd13.com
@@ -166,9 +147,9 @@ payload:
     - +.cdnhwcyxb02.cn
     - +.cdnhwcywp03.cn
     - +.cdnhwclkl04.cn
-    - +.cdnhwcjbj05.cn
-    - +.aadcloud.cn
-    - +.cdnhwcgqa21.com
+    - +.cdnhwcedt124.com
+    - +.agconnect.link
+    - +.huaweiyun.com
     - +.cdnhwconz06.cn
     - +.aadcloud.com
     - +.myhuaweicloud.cn
@@ -189,7 +170,7 @@ payload:
     - +.cdnhwczxh101.com
     - +.cdnhwcbzj102.com
     - +.cdnhwcjqv17.cn
-    - +.cdnhwcztu09.com
+    - +.cdnhwcljk104.com
     - +.cdnhwclxu105.com
     - +.cdnhwcbqs106.com
     - +.cdnhwctnm107.com
@@ -209,8 +190,8 @@ payload:
     - +.cdnhwccmz121.com
     - +.cdnhwcibv122.com
     - +.cdnhwcprh113.com
-    - +.cdnhwcedt124.com
-    - +.cdnhwcedi10.com
+    - +.cdnhwcjbj05.cn
+    - +.cdnhwcofl101.cn
     - +.cdnhwclrd102.cn
     - +.cdnhwcurr103.cn
     - +.cdnhwczid104.cn
@@ -230,7 +211,7 @@ payload:
     - +.cdnhwclsl119.cn
     - +.cdnhwcsux118.cn
     - +.cdnhwcbie120.cn
-    - +.cdnhwcuxc121.cn
+    - +.aadcloud.cn
     - +.cdnhwcaip122.cn
     - +.cdnhwcwqz113.cn
     - +.cdnhwcojn124.cn
@@ -291,13 +272,32 @@ payload:
     - +.cdnhwc7.com
     - +.cdnhwc8.com
     - +.cdnhwc9.com
+    - +.hiascend.com
+    - +.harmonyos.com
+    - +.devui.design
+    - +.gneec.com
+    - +.teleows.com
+    - +.gneec3.com
+    - +.gneec4.com
+    - +.hikunpeng.cn
+    - +.hiclc.com
+    - +.hiascend.cn
+    - +.bishengcompiler.cn
+    - +.bisheng.cn
+    - +.gneec7.com
+    - +.hikunpeng.com
+    - +.saasops.tech
+    - +.hikunpeng.net
+    - +.hisilicon.com
+    - +.owsgo.com
+    - +.mindspore.cn
     - +.huawei.com.cn
-    - +.hisilicon.com.cn
-    - +.hikunpeng.com.cn
-    - +.gneec.com.cn
     - +.ami-alliance.org.cn
     - +.hwclouds.org.cn
     - +.myhwclouds.com.cn
+    - +.hisilicon.com.cn
+    - +.hikunpeng.com.cn
+    - +.gneec.com.cn
     - +.dbankcloud.ru
     - +.dt.dbankcloud.ru
     - +.huaweicloud-dns.net
