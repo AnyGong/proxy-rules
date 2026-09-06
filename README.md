@@ -1,5 +1,37 @@
 
 
+## 🚀 `v20260906_153324`
+*20260906 153324 (UTC+8)*
+
+### 📦 Sources
+
+| Namespace | Upstream | Added | Updated | Deleted |
+|:----------|:---------|------:|--------:|--------:|
+| `@SukkaLab/ruleset.skk.moe/master/sing-box` | `SukkaLab/ruleset.skk.moe` @ `master` (`sing-box`) | 56 | 0 | 0 |
+| `@SukkaLab/ruleset.skk.moe/master/Modules/Rules/sukka_local_dns_mapping` | `SukkaLab/ruleset.skk.moe` @ `master` (`Modules/Rules/sukka_local_dns_mapping`) | 13 | 0 | 0 |
+| `@MetaCubeX/meta-rules-dat/meta/geo/geoip` | `MetaCubeX/meta-rules-dat` @ `meta` (`geo/geoip`) | 1040 | 0 | 0 |
+| `@MetaCubeX/meta-rules-dat/meta/geo/geosite` | `MetaCubeX/meta-rules-dat` @ `meta` (`geo/geosite`) | 7569 | 0 | 0 |
+| `@0xWans/my-backup/main/clash/rules` | `0xWans/my-backup` @ `main` (`clash/rules`) | 15 | 0 | 0 |
+| `custom` | local files (not fetched) | 29 | 0 | 0 |
+
+### 📊 Overview
+
+| Metric | Count |
+|:-------|------:|
+| Files added | **8722** |
+| Files updated | **0** |
+| Files deleted | **0** |
+| Files unchanged | 0 |
+| Blacklisted entries removed | **138** |
+| Empty rules discarded | **10** |
+| Files dropped entirely (all rules emptied) | **2196** |
+| SRS files compiled/copied | **4411/4411** |
+| MRS files compiled/copied | **6554/6577** |
+
+🔗 CDN ref for this release: `v20260906_153324`
+
+---
+
 ## 🚀 `v20260906_111248`
 *20260906 111248 (UTC+8)*
 
