@@ -95,6 +95,15 @@ ROOT = Path(__file__).resolve().parent
 CONFIG_DIR = ROOT
 LOG_DIR = ROOT / "logs"
 
+# Per-file conversion/cleaning details (one line per file touched) are ALWAYS
+# written in full to the detail log under LOG_DIR (and from there into the
+# committed logs/ tree) — nothing is lost. They're only echoed to stdout too
+# when SYNC_VERBOSE=1, since on a run touching thousands of files that
+# per-file echo is what buries the handful of lines that actually matter
+# (ERROR:/! Skipping.../compile failed) in CI's console output. Those
+# warning/error lines always print regardless of this flag.
+VERBOSE = os.environ.get("SYNC_VERBOSE") == "1"
+
 CLEAN_FIELDS = ("domain", "domain_suffix", "domain_keyword")
 
 # All generated timestamps use this fixed UTC+8 offset — never labeled "UTC"
@@ -805,7 +814,7 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
             per_file_reports.append(report)
 
             if kind == "json":
-                if total_removed or stats["rules_discarded"]:
+                if VERBOSE and (total_removed or stats["rules_discarded"]):
                     print(f"  [{namespace_str}] {json_rel}: -{total_removed} entries "
                           f"(domain={removed_counts['domain']}, "
                           f"suffix={removed_counts['domain_suffix']}, "
@@ -813,12 +822,13 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
                           f"{stats['rules_discarded']} rule(s) discarded")
             else:
                 convc = conv_stats["converted_counts"]
-                print(f"  [{namespace_str}] {rel_path_src} -> {json_rel} + {conf_rel} + {yaml_rel}: "
-                      f"converted (domain={convc['domain']}, suffix={convc['domain_suffix']}, "
-                      f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
-                      f"process_name={convc['process_name']}), "
-                      f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
-                      + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
+                if VERBOSE:
+                    print(f"  [{namespace_str}] {rel_path_src} -> {json_rel} + {conf_rel} + {yaml_rel}: "
+                          f"converted (domain={convc['domain']}, suffix={convc['domain_suffix']}, "
+                          f"keyword={convc['domain_keyword']}, ip_cidr={convc['ip_cidr']}, "
+                          f"process_name={convc['process_name']}), "
+                          f"{conv_stats['skipped_count']} line(s) unsupported/skipped"
+                          + (f", -{total_removed} blacklisted after conversion" if total_removed else ""))
 
         else:
             # Pre-compiled .srs/.mrs (copied through json_output_dir as a

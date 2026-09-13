@@ -10,7 +10,12 @@ on:
       - '.github/workflows/build.yml'
   schedule:
     - cron: "0 */12 * * *"   # every 12 hours
-  workflow_dispatch: {}       # manual trigger
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: "Echo per-file conversion/cleaning details to the job log too (in addition to the full detail log that's always written to logs/)"
+        type: boolean
+        default: false
 
 # This repo (proxy-rules) is config-only from here on: sync.json,
 # blacklist.json, custom/, sync_and_clean.py, this workflow. Nothing this
@@ -144,6 +149,8 @@ jobs:
 
       - name: Run cleanup + SRS/MRS compile on the checked-out files
         id: sync
+        env:
+          SYNC_VERBOSE: ${{ (github.event_name == 'workflow_dispatch' && inputs.verbose) && '1' || '0' }}
         run: python3 sync_and_clean.py
 
       - name: Save build outputs to /tmp/build_out
@@ -183,7 +190,22 @@ jobs:
         working-directory: /tmp/rules_repo
         run: |
           set -euo pipefail
-          git fetch origin "${DEST_MAIN_BRANCH}:${DEST_MAIN_BRANCH}" || true
+          # `git clone` (previous step) already checked out the repo's
+          # default branch at its latest tip. When that default branch is
+          # DEST_MAIN_BRANCH (the common case), it's the branch currently
+          # checked out here — and git refuses `fetch origin X:X` into
+          # whichever branch is checked out ("refusing to fetch into
+          # branch ... checked out"), since that would silently move the
+          # working tree's HEAD out from under itself. That's harmless
+          # (the clone already made it current) but noisy, so skip the
+          # fetch in that case. Only fetch when DEST_MAIN_BRANCH names a
+          # *different* branch than the one the clone checked out — then
+          # it isn't checked out, the fetch is safe, and it's needed to
+          # create/update the local ref before the checkout below.
+          current_branch=$(git symbolic-ref --quiet --short HEAD || echo "")
+          if [ "$current_branch" != "${DEST_MAIN_BRANCH}" ]; then
+            git fetch origin "${DEST_MAIN_BRANCH}:${DEST_MAIN_BRANCH}" || true
+          fi
           # Full snapshot rebuild every run: wipe both the index AND the
           # working tree before repopulating, so nothing from a previous
           # run (or a previous, differently-shaped commit) can ever
