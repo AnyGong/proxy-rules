@@ -53,8 +53,12 @@ For every source, this script applies the following per-file conversion matrix:
        mrs/@<owner>/<repo>/<branch>/<directory_name>/<...>/<file>.mrs
 4. Any other file format is synced byte-for-byte into json/ but never
    compiled or linked.
-5. Produces a combined detailed log and a release-ready summary/README.md
-   for every file touched this run, across all sources.
+5. Produces a release-ready summary/README.md for every file touched this run,
+   across all sources. (A full per-file detail log used to also be written to
+   logs/sync_<run_ts>.log, but that routinely exceeded GitHub's 100 MB
+   per-file push limit on large runs and has been removed — see
+   SYNC_VERBOSE for the equivalent detail on-demand, printed to stdout
+   instead of written to disk.)
 6. Emits GitHub Actions outputs so the workflow can decide whether to
    commit, tag, and cut a release.
 7. Every source's fetched files are ALSO mirrored byte-for-byte,
@@ -1051,13 +1055,15 @@ def main():
     LOG_DIR.mkdir(exist_ok=True)
     run_ts = datetime.now(DISPLAY_TZ).strftime("%Y%m%d_%H%M%S")
 
-    # logs/ otherwise accumulates one sync_*.log + summary_*.md pair per
-    # run forever. Only this run's pair is meaningful going forward, so
-    # every other dated log/summary file is removed up front — leaving
-    # exactly one (the one about to be written) once this run completes.
+    # logs/ otherwise accumulates one summary_*.md per run forever. Only
+    # this run's is meaningful going forward, so every other dated summary
+    # file is removed up front — leaving exactly one (the one about to be
+    # written) once this run completes. (Old sync_*.log detail-log files
+    # from before that generation was removed are cleaned up too, so
+    # they don't linger indefinitely.)
     for pattern in ("sync_*.log", "summary_*.md"):
         for old_path in LOG_DIR.glob(pattern):
-            if old_path.name not in (f"sync_{run_ts}.log", f"summary_{run_ts}.md"):
+            if old_path.name != f"summary_{run_ts}.md":
                 old_path.unlink(missing_ok=True)
 
     # Each source (and custom/) reads/writes an entirely independent set of
@@ -1226,99 +1232,17 @@ def main():
     srs_ok_count = len(srs_compile_results) - len([r for r in srs_compile_results if not r[3]])
     mrs_ok_count = len(mrs_compile_results) - len([r for r in mrs_compile_results if not r[3]])
 
-    # ---------- Detailed log ----------
-    # kind_totals tracks the processed kinds; the files/ mirror is counted
-    # separately below via the raw_mirror_results.
-    kind_totals = {"json": 0, "conf": 0, "list": 0, "text": 0, "yaml": 0,
-                   "srs": 0, "mrs": 0, "other": 0}
-    other_files = []  # (namespace, rel_path) — synced but not eligible for conversion
-    for res in source_results:
-        kept = set(res["added"]) | set(res["updated"]) | set(res["unchanged"])
-        for r in res["per_file_reports"]:
-            if r["file"] in kept:
-                k = r["kind"]
-                kind_totals[k] = kind_totals.get(k, 0) + 1
-                if k == "other":
-                    other_files.append((res["namespace"], r["file"]))
-
-    detail_log_path = LOG_DIR / f"sync_{run_ts}.log"
-    with open(detail_log_path, "w", encoding="utf-8") as f:
-        f.write(f"Sync run: {run_ts}\n")
-        f.write(f"Sources ({len(sources)}{' + custom' if enable_custom else ''}):\n")
-        for src in sources:
-            clone_url = src.get("repo_url") or f"https://github.com/{src['owner']}/{src['repo']}.git"
-            f.write(f"  - {source_namespace(src)}  <-  "
-                    f"{clone_url}@{src['branch']}:{src['upstream_path']}\n")
-        if enable_custom:
-            f.write(f"  - {sync_cfg.get('custom_dir_name', 'custom')}  <-  local (not fetched)\n")
-        f.write(f"Blacklist entries: {len(blacklist)}\n")
-        f.write(f"  {blacklist}\n\n")
-        f.write(f"Files added:   {len(all_added)}\n")
-        f.write(f"Files updated: {len(all_updated)}\n")
-        f.write(f"Files deleted: {len(all_deleted)}\n")
-        f.write(f"Files unchanged: {len(all_unchanged)}\n\n")
-        f.write(f"Raw files/ mirror: {len(raw_added)} added, {len(raw_updated)} updated, "
-                f"{len(raw_deleted)} deleted, {len(raw_unchanged)} unchanged "
-                f"(byte-for-byte, no cleaning/conversion)\n\n")
-        f.write(f"File kinds synced this run: "
-                f"{kind_totals['json']} json (cleaned → json+conf+yaml+srs+mrs), "
-                f"{kind_totals['conf']} conf (converted → json+conf+yaml+srs+mrs), "
-                f"{kind_totals['list']} list (converted → json+conf+yaml+srs+mrs), "
-                f"{kind_totals['text']} txt (converted → json+conf+yaml+srs+mrs), "
-                f"{kind_totals['yaml']} yaml (converted → json+conf+yaml+srs+mrs), "
-                f"{kind_totals['srs']} srs (pre-compiled, copied through), "
-                f"{kind_totals['mrs']} mrs (pre-compiled, copied through), "
-                f"{kind_totals['other']} other (synced as-is, not converted)\n")
-        if other_files:
-            f.write("Synced but not converted (not json/conf/list/txt/yaml/srs/mrs):\n")
-            for namespace, rel_path in other_files:
-                f.write(f"  - [{namespace}] {rel_path}\n")
-        f.write(f"\nSRS compiled/copied: {srs_ok_count}/{len(srs_compile_results)}\n")
-        f.write(f"MRS compiled/copied: {mrs_ok_count}/{len(mrs_compile_results)}\n")
-        if compile_failures:
-            f.write("SRS/MRS compile/copy failures:\n")
-            for format_name, namespace, rel_path, ok, msg, synced_out_rel, dated_rel, latest_rel, variant in compile_failures:
-                tag = f" ({variant})" if variant else ""
-                f.write(f"  - [{format_name}{tag}] [{namespace}] {rel_path}: {msg}\n")
-        f.write("\n")
-        f.write("=" * 70 + "\n")
-        src_ext_by_kind = {"conf": ".conf", "list": ".list", "text": ".txt", "yaml": ".yaml"}
-        for res in source_results:
-            for r in res["per_file_reports"]:
-                if "source_file" in r:
-                    f.write(f"\n[{res['namespace']}] File: {r['source_file']} -> {r['file']}  "
-                            f"[{r['kind']}] [{r['action']}]\n")
-                else:
-                    f.write(f"\n[{res['namespace']}] File: {r['file']}  [{r['kind']}] [{r['action']}]\n")
-
-                if r["kind"] not in ("json", "conf", "list", "text", "yaml"):
-                    continue
-
-                if r["kind"] in src_ext_by_kind:
-                    src_ext = src_ext_by_kind[r["kind"]]
-                    cc = r["conf_converted_counts"]
-                    f.write(f"  Converted from {src_ext} -> domain: {cc['domain']}, "
-                            f"domain_suffix: {cc['domain_suffix']}, "
-                            f"domain_keyword: {cc['domain_keyword']}, "
-                            f"ip_cidr: {cc['ip_cidr']}, process_name: {cc['process_name']}\n")
-                    if r["conf_skipped_count"]:
-                        f.write(f"  Skipped {r['conf_skipped_count']} unsupported {src_ext} line(s):\n")
-                        for line in r["conf_skipped_lines"]:
-                            f.write(f"    - {line}\n")
-
-                f.write(f"  Total rules: {r['rules_total']}, discarded rules: {r['rules_discarded']}\n")
-                rc = r["removed_counts"]
-                f.write(f"  Removed -> domain: {rc['domain']}, "
-                        f"domain_suffix: {rc['domain_suffix']}, "
-                        f"domain_keyword: {rc['domain_keyword']}\n")
-                if r["fields_cleared"]:
-                    f.write("  Fields fully cleared (rule_index, field):\n")
-                    for idx, field in r["fields_cleared"]:
-                        f.write(f"    - rule[{idx}].{field}\n")
-                for field, values in r["removed_values"].items():
-                    if values:
-                        f.write(f"  Removed {field} entries: {values}\n")
-
+    # NOTE: this script used to also write a full per-file detail log to
+    # logs/sync_<run_ts>.log (one entry per file touched, including every
+    # skipped/discarded line and every removed blacklist value). On a run
+    # touching tens of thousands of files that log routinely exceeded
+    # GitHub's 100 MB per-file push limit, and its contents were rarely
+    # read — everything genuinely useful for diagnosing a run (counts,
+    # failures, per-source breakdown) is already in summary_path below, and
+    # anything needing per-file detail is better re-derived by re-running
+    # with SYNC_VERBOSE=1. That detail-log generation has been removed
+    # entirely rather than just capped/truncated, so there's no per-file
+    # log artifact to manage or accidentally regrow.
     # ---------- Release-ready summary (Markdown) ----------
     summary_path = LOG_DIR / f"summary_{run_ts}.md"
     total_removed_all = sum(
@@ -1467,7 +1391,6 @@ def main():
             f.write(f"links_path={readme_path.relative_to(ROOT)}\n")
 
     print(f"\nDone. changed={changed}")
-    print(f"Detail log:   {detail_log_path}")
     print(f"Summary:      {summary_path}")
     print(f"README (latest run): {readme_path}")
 
