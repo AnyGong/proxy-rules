@@ -42,12 +42,12 @@ concurrency:
 
 env:
   DEST_BRANCH: main
-  DEST_REPO_CONF: AnyGong/prox-rules-conf
-  DEST_REPO_JSON: AnyGong/prox-rules-json
-  DEST_REPO_YAML: AnyGong/prox-rules-yaml
-  DEST_REPO_SRS: AnyGong/prox-rules-srs
-  DEST_REPO_MRS: AnyGong/prox-rules-mrs
-  DEST_REPO_FILES: AnyGong/prox-rules-files
+  DEST_REPO_CONF: AnyGong/proxy-rules-conf
+  DEST_REPO_JSON: AnyGong/proxy-rules-json
+  DEST_REPO_YAML: AnyGong/proxy-rules-yaml
+  DEST_REPO_SRS: AnyGong/proxy-rules-srs
+  DEST_REPO_MRS: AnyGong/proxy-rules-mrs
+  DEST_REPO_FILES: AnyGong/proxy-rules-files
 
 jobs:
   sync:
@@ -190,7 +190,7 @@ jobs:
         run: |
           set -uo pipefail   # NOT -e: one format's failure must not stop the rest
           if [ -z "${RULES_REPO_TOKEN}" ]; then
-            echo "::error::secrets.RULES_REPO_TOKEN is not set — add a PAT with push access to all six prox-rules-* repos under this repo's Settings → Secrets → Actions."
+            echo "::error::secrets.RULES_REPO_TOKEN is not set — add a PAT with push access to all six proxy-rules-* repos under this repo's Settings → Secrets → Actions."
             exit 1
           fi
 
