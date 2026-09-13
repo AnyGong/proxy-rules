@@ -717,6 +717,19 @@ def sync_local_tree(namespace: Path, upstream_dir: Path, json_output_dir: Path,
                 except json.JSONDecodeError as e:
                     print(f"  [{namespace_str}] ! Skipping {rel_path_src}: invalid JSON ({e})", file=sys.stderr)
                     continue
+                if not isinstance(doc, dict):
+                    # A sing-box rule-set document is always a top-level JSON
+                    # object ({"version": ..., "rules": [...]}) — anything
+                    # else (a bare array, a string, a number) isn't a
+                    # rule-set at all, just a same-extension file that
+                    # happens to live in the synced tree (e.g. a plain
+                    # domain/IP list in some upstream's own legacy format).
+                    # Treat it like invalid JSON: skip and log, don't crash
+                    # the whole sync over one unrelated file.
+                    print(f"  [{namespace_str}] ! Skipping {rel_path_src}: "
+                          f"top-level JSON is a {type(doc).__name__}, not an object "
+                          f"— not a sing-box rule-set", file=sys.stderr)
+                    continue
                 conv_stats = None
             else:
                 try:
