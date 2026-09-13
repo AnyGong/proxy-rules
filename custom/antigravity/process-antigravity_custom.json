@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "process_name": [
+        "Antigravity IDE",
+        "Antigravity IDE Helper",
+        "Antigravity IDE Helper (Plugin)",
+        "Antigravity",
+        "Antigravity Helper",
+        "Antigravity Helper (Plugin)"
+      ]
+    },
+    {
+      "process_path": [
+        "/Applications/Antigravity IDE.app/Contents/MacOS/Electron",
+        "/Applications/Antigravity.app/Contents/MacOS/Electron"
+      ]
+    }
+  ]
+}

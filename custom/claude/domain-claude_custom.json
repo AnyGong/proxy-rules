@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "anthropic.com",
+        "claude.ai",
+        "claude.com",
+        "clau.de",
+        "claudemcpclient.com",
+        "claudeusercontent.com"
+      ]
+    },
+    {
+      "domain": [
+        "servd-anthropic-website.b-cdn.net",
+        "anthropic.com.cdn.cloudflare.net",
+        "anthropic.auth0.com",
+        "anthropic-com.ghost.io"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "anthropic",
+        "claude"
+      ]
+    }
+  ]
+}

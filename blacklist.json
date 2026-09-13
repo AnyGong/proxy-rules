@@ -1,0 +1,6 @@
+{
+  "_comment": "Any element in domain/domain_suffix/domain_keyword arrays whose value CONTAINS one of these strings (case-insensitive substring match) will be removed. Add/remove entries freely — no code changes needed.",
+  "blacklist": [
+    "*.skk.moe"
+  ]
+}

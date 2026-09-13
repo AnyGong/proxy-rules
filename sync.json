@@ -1,0 +1,35 @@
+{
+  "_comment": "One or more upstream sources to sync. Each source is cloned by the workflow via `git clone --sparse` into upstream_checkout_root/@<owner>/<repo>/<branch>/<directory_name>/ BEFORE this script runs. Sources are cloned from GitHub by default (https://github.com/<owner>/<repo>.git); set 'repo_url' on a source entry to clone from a different host instead (e.g. GitLab). Every output file — both the cleaned JSON under local_output_root and its compiled SRS under srs/ — is namespaced the same way: @<owner>/<repo>/<branch>/<directory_name>/... Owner+repo+branch is already globally unique, so this keeps multiple sources from ever colliding, and keeps the srs tree's top-level naming identical to the synced-file tree's.",
+  "sources": [
+    {
+      "owner": "SukkaLab",
+      "repo": "ruleset.skk.moe",
+      "branch": "master",
+      "upstream_path": ".",
+      "repo_url": "https://gitlab.com/SukkaW/ruleset.skk.moe.git",
+      "directory_name": "SukkaLab"
+    },
+    {
+      "owner": "MetaCubeX",
+      "repo": "meta-rules-dat",
+      "branch": "meta",
+      "upstream_path": ".",
+      "directory_name": "MetaCubeX"
+    }
+  ],
+  "_sources_note": "Add more entries to 'sources' to sync additional repos/directories — e.g. a second entry with owner 'SagerNet', repo 'sing-geosite', branch 'rule-set', upstream_path 'geosite', directory_name 'geosite'. Each source's files land under its own @owner/repo/branch/directory_name namespace in both local_output_root and srs/, so nothing overwrites another source's files even if filenames match. 'directory_name' defaults to the last path segment of upstream_path if omitted.",
+
+  "local_output_root": "rules",
+  "upstream_checkout_root": "@rules",
+
+  "enable_custom": true,
+  "custom_dir_name": "custom",
+  "_custom_note": "The custom/ directory (multi-level subdirectories supported) holds your own hand-maintained JSON rule-sets — checked into this repo directly, not fetched from anywhere. Every run, files under custom/ go through the same blacklist cleanup as any other source, get written to rules/custom/<...>.json, and get compiled to srs/custom/<...>.srs (dated + latest), exactly like a configured source. If custom/ doesn't exist or is empty, it's silently skipped.",
+
+  "sing_box_bin": "sing-box",
+
+  "cdn_base_url": "https://testingcf.jsdelivr.net/gh",
+  "cdn_ref_mode": "tag",
+  "cdn_branch": "dist",
+  "_cdn_note": "cdn_owner/cdn_repo (used only as a fallback if GITHUB_REPOSITORY isn't set) identify the repo HOSTING these files for jsDelivr — i.e. this repo, not any upstream source. cdn_ref_mode 'tag' links dated SRS snapshots and JSON to the exact release tag just created this run; the 'latest' SRS catalog always links against cdn_branch regardless of this setting, since its contents change every run."
+}

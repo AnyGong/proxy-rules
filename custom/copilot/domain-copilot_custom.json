@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "githubcopilot.com"
+      ]
+    },
+    {
+      "domain": [
+        "api.githubcopilot.com",
+        "copilot-proxy.githubusercontent.com",
+        "copilot-telemetry.githubusercontent.com",
+        "origin-tracker.githubusercontent.com"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "youtubei.googleapis.com",
+        "yt3.ggpht.com"
+      ],
+      "domain_suffix": [
+        "googlevideo.com",
+        "youtube.com",
+        "youtu.be",
+        "yt.be",
+        "ytimg.com",
+        "ggpht.com",
+        "ggpht.cn",
+        "youtube-nocookie.com",
+        "youtubekids.com",
+        "youtubeeducation.com",
+        "youtubegaming.com",
+        "withyoutube.com"
+      ],
+      "domain_keyword": [
+        "youtube"
+      ]
+    }
+  ]
+}

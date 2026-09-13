@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "process_name": [
+        "Codex",
+        "Codex Helper",
+        "ChatGPT",
+        "ChatGPT Helper",
+        "Codex (Service)",
+        "Codex Computer Use"
+      ]
+    },
+    {
+      "process_path": [
+        "/Applications/ChatGPT.app/Contents/Resources/codex"
+      ]
+    }
+  ]
+}

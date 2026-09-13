@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "americanexpress.com",
+        "cash.app",
+        "dinersclub.com",
+        "discover.com",
+        "discoverglobalnetwork.com",
+        "globaljcb.com",
+        "jcb.co.jp",
+        "mastercard.com",
+        "square.com",
+        "squareup.com",
+        "stripe.com",
+        "stripe.network",
+        "visa.com"
+      ]
+    }
+  ]
+}
