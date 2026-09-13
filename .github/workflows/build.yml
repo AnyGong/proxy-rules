@@ -53,6 +53,7 @@ jobs:
 
       - name: Sparse-checkout every configured source
         run: |
+          set -euo pipefail
           mkdir -p "$GITHUB_WORKSPACE/@rules"
           jq -c '.sources[]' sync.json | while read -r src; do
             owner=$(echo "$src" | jq -r '.owner')
@@ -73,10 +74,29 @@ jobs:
             namespace="@${owner}/${repo}/${branch}/${directory_name}"
             echo "== Fetching ${namespace}  <-  ${clone_url}@${branch}:${upstream_path} =="
             rm -rf tmp_clone
-            git clone --depth 1 --filter=blob:none --sparse \
-              --branch "$branch" \
-              "$clone_url" tmp_clone
-            (cd tmp_clone && git sparse-checkout set "$upstream_path")
+
+            if [ "$upstream_path" = "." ]; then
+              # Cone-mode sparse-checkout has no valid pattern meaning "the
+              # whole repo" — "." isn't a real tracked directory, so
+              # `sparse-checkout set .` silently no-ops and leaves the
+              # checkout at whatever `git clone --sparse` defaulted to
+              # (top-level files only). That's invisible for repos with
+              # files at repo root, but for a repo whose entire content
+              # lives under a subdirectory (nothing at top level) it
+              # produces a checkout with ZERO files — no error, no
+              # warning, just an empty directory tree downstream.
+              # Skip sparse-checkout entirely in this case and take
+              # everything via a normal (still shallow, still
+              # blob-filtered) clone instead.
+              git clone --depth 1 --filter=blob:none \
+                --branch "$branch" \
+                "$clone_url" tmp_clone
+            else
+              git clone --depth 1 --filter=blob:none --sparse \
+                --branch "$branch" \
+                "$clone_url" tmp_clone
+              (cd tmp_clone && git sparse-checkout set "$upstream_path")
+            fi
 
             dest="$GITHUB_WORKSPACE/@rules/${namespace}"
             mkdir -p "$dest"

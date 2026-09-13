@@ -2,14 +2,6 @@
   "_comment": "One or more upstream sources to sync. Each source is cloned by the workflow via `git clone --sparse` into upstream_checkout_root/@<owner>/<repo>/<branch>/<directory_name>/ BEFORE this script runs. Sources are cloned from GitHub by default (https://github.com/<owner>/<repo>.git); set 'repo_url' on a source entry to clone from a different host instead (e.g. GitLab). Every output file — both the cleaned JSON under local_output_root and its compiled SRS under srs/ — is namespaced the same way: @<owner>/<repo>/<branch>/<directory_name>/... Owner+repo+branch is already globally unique, so this keeps multiple sources from ever colliding, and keeps the srs tree's top-level naming identical to the synced-file tree's.",
   "sources": [
     {
-      "owner": "SukkaLab",
-      "repo": "ruleset.skk.moe",
-      "branch": "master",
-      "upstream_path": ".",
-      "repo_url": "https://gitlab.com/SukkaW/ruleset.skk.moe.git",
-      "directory_name": "SukkaLab"
-    },
-    {
       "owner": "MetaCubeX",
       "repo": "meta-rules-dat",
       "branch": "meta",
